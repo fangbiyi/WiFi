@@ -1,0 +1,173 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>gmmcGaussianNumEstimate</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="gmmcGaussianNumEstimate_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>gmmcGaussianNumEstimate</h1><!--introduction--><p>GMM training and test, w.r.t. varying number of mixtures</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Example</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li>gmmcData=gmmcGaussianNumEstimate(DS, TS)</li><li>gmmcData=gmmcGaussianNumEstimate(DS, TS, gmmcOpt)</li><li>[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(...)</li></ul></div><h2>Description<a name="2"></a></h2><p>
+<p>[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt)
+	<ul>
+	<li>DS: training set
+	<li>TS: test set
+	<li>gmmcOpt.config.gaussianNum: an matrix indicating numbers of Gaussian components, where each column is the number of Gaussian components for each class during a trial
+	<li>gmmcOpt.config.covType: type of covariance matrix, 1: identity times a constant, 2: diagonal, 3: full
+	<li>gmmcOpt.train: parameter for training GMM
+	<li>gmmcData: GMM parameters
+		<ul>
+		<li>gmmcData(i): in which class j has gmmcOpt.config.gaussianNum(j, i) gaussians
+		<li>gmmcData(i).class(j): gmm of class j at case i
+		<li>gmmcData(i).class(j).gmmPrm(k): gaussian k of class j at case i
+		<li>gmmcData(i).class(j).gmmPrm(k).mu: mean vector
+		<li>gmmcData(i).class(j).gmmPrm(k).sigma: covariance matrix
+		<li>gmmcData(i).class(j).gmmPrm(k).w: weight
+		</ul>
+	<li>recogRate1: inside-test recognition rate
+	<li>recogRate2: outside-test recognition rate
+	<li>validTrialIndex: Actually valid index for
+	<li>gmmcOpt.config.gaussianNum. (We need to have this output
+	<li>parameters since sometimes we are given a large number of mixtures which cannot be used for GMM training at all.)
+	</ul>
+</p><h2>Example<a name="3"></a></h2><pre class="codeinput">[DS, TS]=prData(<span class="string">'nonlinearSeparable'</span>);
+gmmcOpt=gmmcTrain(<span class="string">'defaultOpt'</span>);
+gmmcOpt.config.gaussianNum=1:10;
+gmmcOpt.config.covType=1;
+gmmcOpt.train.maxIteration=50;
+plotOpt=1;
+[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+[rr, index]=max(recogRate2);
+figure; gmmcPlot(TS, gmmcData(index), <span class="string">'2dPdf'</span>);
+figure; gmmcPlot(TS, gmmcData(index), <span class="string">'decBoundary'</span>);
+</pre><pre class="codeoutput">DS data count = 250, TS data count = 250
+DS class data count = [150 100]
+TS class data count = [150 100]
+1/10: No. of Gaussian = [1;1] ===&gt; inside RR = 63.2%, outside RR = 63.6%
+2/10: No. of Gaussian = [2;2] ===&gt; inside RR = 96.4%, outside RR = 96.4%
+3/10: No. of Gaussian = [3;3] ===&gt; inside RR = 98%, outside RR = 97.6%
+4/10: No. of Gaussian = [4;4] ===&gt; inside RR = 98.4%, outside RR = 97.6%
+5/10: No. of Gaussian = [5;5] ===&gt; inside RR = 98.4%, outside RR = 97.6%
+6/10: No. of Gaussian = [6;6] ===&gt; inside RR = 98.8%, outside RR = 97.6%
+7/10: No. of Gaussian = [7;7] ===&gt; inside RR = 99.2%, outside RR = 96.8%
+8/10: No. of Gaussian = [8;8] ===&gt; inside RR = 99.2%, outside RR = 96.8%
+9/10: No. of Gaussian = [9;9] ===&gt; inside RR = 99.2%, outside RR = 96.8%
+10/10: No. of Gaussian = [10;10] ===&gt; inside RR = 99.2%, outside RR = 98.4%
+</pre><img vspace="5" hspace="5" src="gmmcGaussianNumEstimate_help_01.png" alt=""> <img vspace="5" hspace="5" src="gmmcGaussianNumEstimate_help_02.png" alt=""> <img vspace="5" hspace="5" src="gmmcGaussianNumEstimate_help_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% gmmcGaussianNumEstimate
+% GMM training and test, w.r.t. varying number of mixtures
+%% Syntax
+% * 		gmmcData=gmmcGaussianNumEstimate(DS, TS)
+% * 		gmmcData=gmmcGaussianNumEstimate(DS, TS, gmmcOpt)
+% * 		[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(...)
+%% Description
+%
+% <html>
+% <p>[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt)
+% 	<ul>
+% 	<li>DS: training set
+% 	<li>TS: test set
+% 	<li>gmmcOpt.config.gaussianNum: an matrix indicating numbers of Gaussian components, where each column is the number of Gaussian components for each class during a trial
+% 	<li>gmmcOpt.config.covType: type of covariance matrix, 1: identity times a constant, 2: diagonal, 3: full
+% 	<li>gmmcOpt.train: parameter for training GMM
+% 	<li>gmmcData: GMM parameters
+% 		<ul>
+% 		<li>gmmcData(i): in which class j has gmmcOpt.config.gaussianNum(j, i) gaussians
+% 		<li>gmmcData(i).class(j): gmm of class j at case i
+% 		<li>gmmcData(i).class(j).gmmPrm(k): gaussian k of class j at case i
+% 		<li>gmmcData(i).class(j).gmmPrm(k).mu: mean vector
+% 		<li>gmmcData(i).class(j).gmmPrm(k).sigma: covariance matrix
+% 		<li>gmmcData(i).class(j).gmmPrm(k).w: weight
+% 		</ul>
+% 	<li>recogRate1: inside-test recognition rate
+% 	<li>recogRate2: outside-test recognition rate
+% 	<li>validTrialIndex: Actually valid index for
+% 	<li>gmmcOpt.config.gaussianNum. (We need to have this output
+% 	<li>parameters since sometimes we are given a large number of mixtures which cannot be used for GMM training at all.)
+% 	</ul>
+% </html>
+%% Example
+%%
+%
+[DS, TS]=prData('nonlinearSeparable');
+gmmcOpt=gmmcTrain('defaultOpt');
+gmmcOpt.config.gaussianNum=1:10;
+gmmcOpt.config.covType=1;
+gmmcOpt.train.maxIteration=50;
+plotOpt=1;
+[gmmcData, recogRate1, recogRate2, validTrialIndex]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+[rr, index]=max(recogRate2);
+figure; gmmcPlot(TS, gmmcData(index), '2dPdf');
+figure; gmmcPlot(TS, gmmcData(index), 'decBoundary');
+
+##### SOURCE END #####
+--><hr><a href="index.html">Top page</a>&nbsp;&nbsp;&nbsp;Next: <a href="gmmcEval_help.html">gmmcEval.m</a>&nbsp;&nbsp;&nbsp;Prev:<a href="gmmcPlot_help.html">gmmcPlot.m</a>
+<script>
+function keyFunction(){
+if (event.keyCode==37) document.location="gmmcEval_help.html";
+if (event.keyCode==39) document.location="gmmcPlot_help.html";
+if (event.keyCode==69) document.location="matlab: edit gmmcGaussianNumEstimate.m";
+}
+document.onkeydown=keyFunction;
+</script>
+</body></html>

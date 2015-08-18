@@ -1,0 +1,1 @@
+This folder should be placed with third-party tools.

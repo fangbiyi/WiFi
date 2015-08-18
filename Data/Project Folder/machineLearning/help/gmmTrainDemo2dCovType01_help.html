@@ -1,0 +1,345 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>gmmTrainDemo2dCovType01</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="gmmTrainDemo2dCovType01_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>gmmTrainDemo2dCovType01</h1><!--introduction--><p>Animation of GMM training with covType=1 (isotropic) for 2D data</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Example</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li>gmmTrainDemo2dCovType01</li></ul></div><h2>Description<a name="2"></a></h2><p>
+<p>gmmTrainDemo2dCovType01 demonstrates animation of GMM training with
+<p>covType=1 (isotropic) for 2D data.
+</p><h2>Example<a name="3"></a></h2><pre class="codeinput">gmmTrainDemo2dCovType01
+</pre><pre class="codeoutput">	GMM iteration: 0/500, log likelihood. = -2308.477550
+	GMM iteration: 1/500, log likelihood. = -1889.499188
+	GMM iteration: 2/500, log likelihood. = -1813.938149
+	GMM iteration: 3/500, log likelihood. = -1734.253046
+	GMM iteration: 4/500, log likelihood. = -1662.361458
+	GMM iteration: 5/500, log likelihood. = -1609.604700
+	GMM iteration: 6/500, log likelihood. = -1579.691034
+	GMM iteration: 7/500, log likelihood. = -1566.898016
+	GMM iteration: 8/500, log likelihood. = -1562.082078
+	GMM iteration: 9/500, log likelihood. = -1559.758415
+	GMM iteration: 10/500, log likelihood. = -1558.137037
+	GMM iteration: 11/500, log likelihood. = -1556.756913
+	GMM iteration: 12/500, log likelihood. = -1555.489370
+	GMM iteration: 13/500, log likelihood. = -1554.293148
+	GMM iteration: 14/500, log likelihood. = -1553.153920
+	GMM iteration: 15/500, log likelihood. = -1552.063457
+	GMM iteration: 16/500, log likelihood. = -1551.011950
+	GMM iteration: 17/500, log likelihood. = -1549.987321
+	GMM iteration: 18/500, log likelihood. = -1548.977446
+	GMM iteration: 19/500, log likelihood. = -1547.972329
+	GMM iteration: 20/500, log likelihood. = -1546.965074
+	GMM iteration: 21/500, log likelihood. = -1545.951882
+	GMM iteration: 22/500, log likelihood. = -1544.931599
+	GMM iteration: 23/500, log likelihood. = -1543.905188
+	GMM iteration: 24/500, log likelihood. = -1542.875195
+	GMM iteration: 25/500, log likelihood. = -1541.845209
+	GMM iteration: 26/500, log likelihood. = -1540.819262
+	GMM iteration: 27/500, log likelihood. = -1539.801197
+	GMM iteration: 28/500, log likelihood. = -1538.794076
+	GMM iteration: 29/500, log likelihood. = -1537.799699
+	GMM iteration: 30/500, log likelihood. = -1536.818336
+	GMM iteration: 31/500, log likelihood. = -1535.848697
+	GMM iteration: 32/500, log likelihood. = -1534.888174
+	GMM iteration: 33/500, log likelihood. = -1533.933307
+	GMM iteration: 34/500, log likelihood. = -1532.980454
+	GMM iteration: 35/500, log likelihood. = -1532.026612
+	GMM iteration: 36/500, log likelihood. = -1531.070341
+	GMM iteration: 37/500, log likelihood. = -1530.112708
+	GMM iteration: 38/500, log likelihood. = -1529.158107
+	GMM iteration: 39/500, log likelihood. = -1528.214728
+	GMM iteration: 40/500, log likelihood. = -1527.294391
+	GMM iteration: 41/500, log likelihood. = -1526.411525
+	GMM iteration: 42/500, log likelihood. = -1525.581324
+	GMM iteration: 43/500, log likelihood. = -1524.817425
+	GMM iteration: 44/500, log likelihood. = -1524.129798
+	GMM iteration: 45/500, log likelihood. = -1523.523476
+	GMM iteration: 46/500, log likelihood. = -1522.998444
+	GMM iteration: 47/500, log likelihood. = -1522.550511
+	GMM iteration: 48/500, log likelihood. = -1522.172692
+	GMM iteration: 49/500, log likelihood. = -1521.856607
+	GMM iteration: 50/500, log likelihood. = -1521.593591
+	GMM iteration: 51/500, log likelihood. = -1521.375425
+	GMM iteration: 52/500, log likelihood. = -1521.194720
+	GMM iteration: 53/500, log likelihood. = -1521.045070
+	GMM iteration: 54/500, log likelihood. = -1520.921047
+	GMM iteration: 55/500, log likelihood. = -1520.818122
+	GMM iteration: 56/500, log likelihood. = -1520.732551
+	GMM iteration: 57/500, log likelihood. = -1520.661258
+	GMM iteration: 58/500, log likelihood. = -1520.601725
+	GMM iteration: 59/500, log likelihood. = -1520.551894
+	GMM iteration: 60/500, log likelihood. = -1520.510082
+	GMM iteration: 61/500, log likelihood. = -1520.474911
+	GMM iteration: 62/500, log likelihood. = -1520.445255
+	GMM iteration: 63/500, log likelihood. = -1520.420189
+	GMM iteration: 64/500, log likelihood. = -1520.398951
+	GMM iteration: 65/500, log likelihood. = -1520.380916
+	GMM iteration: 66/500, log likelihood. = -1520.365567
+	GMM iteration: 67/500, log likelihood. = -1520.352475
+	GMM iteration: 68/500, log likelihood. = -1520.341286
+	GMM iteration: 69/500, log likelihood. = -1520.331703
+	GMM iteration: 70/500, log likelihood. = -1520.323480
+	GMM iteration: 71/500, log likelihood. = -1520.316412
+	GMM iteration: 72/500, log likelihood. = -1520.310326
+	GMM iteration: 73/500, log likelihood. = -1520.305076
+	GMM iteration: 74/500, log likelihood. = -1520.300540
+	GMM iteration: 75/500, log likelihood. = -1520.296616
+	GMM iteration: 76/500, log likelihood. = -1520.293217
+	GMM iteration: 77/500, log likelihood. = -1520.290267
+	GMM iteration: 78/500, log likelihood. = -1520.287705
+	GMM iteration: 79/500, log likelihood. = -1520.285476
+	GMM iteration: 80/500, log likelihood. = -1520.283536
+	GMM iteration: 81/500, log likelihood. = -1520.281845
+	GMM iteration: 82/500, log likelihood. = -1520.280369
+	GMM iteration: 83/500, log likelihood. = -1520.279081
+	GMM iteration: 84/500, log likelihood. = -1520.277954
+	GMM iteration: 85/500, log likelihood. = -1520.276969
+	GMM iteration: 86/500, log likelihood. = -1520.276107
+	GMM iteration: 87/500, log likelihood. = -1520.275351
+	GMM iteration: 88/500, log likelihood. = -1520.274688
+	GMM iteration: 89/500, log likelihood. = -1520.274107
+	GMM iteration: 90/500, log likelihood. = -1520.273597
+	GMM iteration: 91/500, log likelihood. = -1520.273149
+	GMM iteration: 92/500, log likelihood. = -1520.272755
+	GMM iteration: 93/500, log likelihood. = -1520.272409
+	GMM iteration: 94/500, log likelihood. = -1520.272105
+	GMM iteration: 95/500, log likelihood. = -1520.271837
+	GMM iteration: 96/500, log likelihood. = -1520.271601
+	GMM iteration: 97/500, log likelihood. = -1520.271393
+	GMM iteration: 98/500, log likelihood. = -1520.271210
+	GMM iteration: 99/500, log likelihood. = -1520.271049
+	GMM iteration: 100/500, log likelihood. = -1520.270907
+	GMM iteration: 101/500, log likelihood. = -1520.270782
+	GMM iteration: 102/500, log likelihood. = -1520.270671
+	GMM iteration: 103/500, log likelihood. = -1520.270574
+	GMM iteration: 104/500, log likelihood. = -1520.270488
+	GMM iteration: 105/500, log likelihood. = -1520.270412
+	GMM iteration: 106/500, log likelihood. = -1520.270345
+	GMM iteration: 107/500, log likelihood. = -1520.270286
+	GMM iteration: 108/500, log likelihood. = -1520.270233
+	GMM iteration: 109/500, log likelihood. = -1520.270187
+	GMM iteration: 110/500, log likelihood. = -1520.270147
+	GMM iteration: 111/500, log likelihood. = -1520.270111
+	GMM iteration: 112/500, log likelihood. = -1520.270079
+	GMM iteration: 113/500, log likelihood. = -1520.270051
+	GMM iteration: 114/500, log likelihood. = -1520.270026
+	GMM iteration: 115/500, log likelihood. = -1520.270004
+	GMM iteration: 116/500, log likelihood. = -1520.269984
+	GMM iteration: 117/500, log likelihood. = -1520.269967
+	GMM iteration: 118/500, log likelihood. = -1520.269952
+	GMM iteration: 119/500, log likelihood. = -1520.269939
+	GMM iteration: 120/500, log likelihood. = -1520.269927
+	GMM iteration: 121/500, log likelihood. = -1520.269916
+	GMM iteration: 122/500, log likelihood. = -1520.269907
+	GMM iteration: 123/500, log likelihood. = -1520.269899
+	GMM iteration: 124/500, log likelihood. = -1520.269892
+	GMM iteration: 125/500, log likelihood. = -1520.269885
+	GMM iteration: 126/500, log likelihood. = -1520.269880
+	GMM iteration: 127/500, log likelihood. = -1520.269875
+	GMM iteration: 128/500, log likelihood. = -1520.269870
+	GMM iteration: 129/500, log likelihood. = -1520.269866
+	GMM iteration: 130/500, log likelihood. = -1520.269863
+	GMM iteration: 131/500, log likelihood. = -1520.269860
+	GMM iteration: 132/500, log likelihood. = -1520.269857
+	GMM iteration: 133/500, log likelihood. = -1520.269855
+	GMM iteration: 134/500, log likelihood. = -1520.269852
+	GMM iteration: 135/500, log likelihood. = -1520.269851
+	GMM iteration: 136/500, log likelihood. = -1520.269849
+	GMM iteration: 137/500, log likelihood. = -1520.269847
+	GMM iteration: 138/500, log likelihood. = -1520.269846
+	GMM iteration: 139/500, log likelihood. = -1520.269845
+	GMM iteration: 140/500, log likelihood. = -1520.269844
+	GMM iteration: 141/500, log likelihood. = -1520.269843
+	GMM iteration: 142/500, log likelihood. = -1520.269842
+	GMM iteration: 143/500, log likelihood. = -1520.269842
+	GMM iteration: 144/500, log likelihood. = -1520.269841
+	GMM iteration: 145/500, log likelihood. = -1520.269840
+	GMM iteration: 146/500, log likelihood. = -1520.269840
+	GMM iteration: 147/500, log likelihood. = -1520.269839
+	GMM iteration: 148/500, log likelihood. = -1520.269839
+	GMM iteration: 149/500, log likelihood. = -1520.269839
+	GMM iteration: 150/500, log likelihood. = -1520.269838
+	GMM iteration: 151/500, log likelihood. = -1520.269838
+	GMM iteration: 152/500, log likelihood. = -1520.269838
+	GMM iteration: 153/500, log likelihood. = -1520.269838
+	GMM iteration: 154/500, log likelihood. = -1520.269838
+	GMM iteration: 155/500, log likelihood. = -1520.269837
+	GMM iteration: 156/500, log likelihood. = -1520.269837
+	GMM iteration: 157/500, log likelihood. = -1520.269837
+	GMM iteration: 158/500, log likelihood. = -1520.269837
+	GMM iteration: 159/500, log likelihood. = -1520.269837
+	GMM iteration: 160/500, log likelihood. = -1520.269837
+	GMM iteration: 161/500, log likelihood. = -1520.269837
+	GMM iteration: 162/500, log likelihood. = -1520.269837
+	GMM iteration: 163/500, log likelihood. = -1520.269837
+	GMM iteration: 164/500, log likelihood. = -1520.269837
+	GMM iteration: 165/500, log likelihood. = -1520.269836
+	GMM iteration: 166/500, log likelihood. = -1520.269836
+	GMM iteration: 167/500, log likelihood. = -1520.269836
+	GMM iteration: 168/500, log likelihood. = -1520.269836
+	GMM iteration: 169/500, log likelihood. = -1520.269836
+	GMM iteration: 170/500, log likelihood. = -1520.269836
+	GMM iteration: 171/500, log likelihood. = -1520.269836
+	GMM iteration: 172/500, log likelihood. = -1520.269836
+	GMM iteration: 173/500, log likelihood. = -1520.269836
+	GMM iteration: 174/500, log likelihood. = -1520.269836
+	GMM iteration: 175/500, log likelihood. = -1520.269836
+	GMM iteration: 176/500, log likelihood. = -1520.269836
+	GMM iteration: 177/500, log likelihood. = -1520.269836
+	GMM iteration: 178/500, log likelihood. = -1520.269836
+	GMM iteration: 179/500, log likelihood. = -1520.269836
+	GMM iteration: 180/500, log likelihood. = -1520.269836
+	GMM iteration: 181/500, log likelihood. = -1520.269836
+	GMM iteration: 182/500, log likelihood. = -1520.269836
+	GMM iteration: 183/500, log likelihood. = -1520.269836
+	GMM iteration: 184/500, log likelihood. = -1520.269836
+	GMM iteration: 185/500, log likelihood. = -1520.269836
+	GMM iteration: 186/500, log likelihood. = -1520.269836
+	GMM iteration: 187/500, log likelihood. = -1520.269836
+	GMM iteration: 188/500, log likelihood. = -1520.269836
+	GMM iteration: 189/500, log likelihood. = -1520.269836
+	GMM iteration: 190/500, log likelihood. = -1520.269836
+	GMM iteration: 191/500, log likelihood. = -1520.269836
+	GMM iteration: 192/500, log likelihood. = -1520.269836
+	GMM iteration: 193/500, log likelihood. = -1520.269836
+	GMM iteration: 194/500, log likelihood. = -1520.269836
+	GMM iteration: 195/500, log likelihood. = -1520.269836
+	GMM iteration: 196/500, log likelihood. = -1520.269836
+	GMM iteration: 197/500, log likelihood. = -1520.269836
+	GMM iteration: 198/500, log likelihood. = -1520.269836
+	GMM iteration: 199/500, log likelihood. = -1520.269836
+	GMM iteration: 200/500, log likelihood. = -1520.269836
+	GMM iteration: 201/500, log likelihood. = -1520.269836
+	GMM iteration: 202/500, log likelihood. = -1520.269836
+	GMM iteration: 203/500, log likelihood. = -1520.269836
+	GMM iteration: 204/500, log likelihood. = -1520.269836
+	GMM iteration: 205/500, log likelihood. = -1520.269836
+	GMM iteration: 206/500, log likelihood. = -1520.269836
+	GMM iteration: 207/500, log likelihood. = -1520.269836
+	GMM iteration: 208/500, log likelihood. = -1520.269836
+	GMM iteration: 209/500, log likelihood. = -1520.269836
+	GMM iteration: 210/500, log likelihood. = -1520.269836
+	GMM iteration: 211/500, log likelihood. = -1520.269836
+	GMM iteration: 212/500, log likelihood. = -1520.269836
+	GMM iteration: 213/500, log likelihood. = -1520.269836
+	GMM iteration: 214/500, log likelihood. = -1520.269836
+	GMM iteration: 215/500, log likelihood. = -1520.269836
+	GMM iteration: 216/500, log likelihood. = -1520.269836
+	GMM iteration: 217/500, log likelihood. = -1520.269836
+	GMM iteration: 218/500, log likelihood. = -1520.269836
+	GMM iteration: 219/500, log likelihood. = -1520.269836
+	GMM iteration: 220/500, log likelihood. = -1520.269836
+	GMM iteration: 221/500, log likelihood. = -1520.269836
+	GMM iteration: 222/500, log likelihood. = -1520.269836
+	GMM iteration: 223/500, log likelihood. = -1520.269836
+	GMM iteration: 224/500, log likelihood. = -1520.269836
+	GMM iteration: 225/500, log likelihood. = -1520.269836
+	GMM iteration: 226/500, log likelihood. = -1520.269836
+	GMM iteration: 227/500, log likelihood. = -1520.269836
+	GMM iteration: 228/500, log likelihood. = -1520.269836
+	GMM iteration: 229/500, log likelihood. = -1520.269836
+	GMM iteration: 230/500, log likelihood. = -1520.269836
+	GMM iteration: 231/500, log likelihood. = -1520.269836
+	GMM iteration: 232/500, log likelihood. = -1520.269836
+	GMM iteration: 233/500, log likelihood. = -1520.269836
+	GMM iteration: 234/500, log likelihood. = -1520.269836
+	GMM iteration: 235/500, log likelihood. = -1520.269836
+	GMM iteration: 236/500, log likelihood. = -1520.269836
+	GMM iteration: 237/500, log likelihood. = -1520.269836
+	GMM iteration: 238/500, log likelihood. = -1520.269836
+	GMM iteration: 239/500, log likelihood. = -1520.269836
+	GMM iteration: 240/500, log likelihood. = -1520.269836
+	GMM iteration: 241/500, log likelihood. = -1520.269836
+	GMM iteration: 242/500, log likelihood. = -1520.269836
+	GMM iteration: 243/500, log likelihood. = -1520.269836
+	GMM total iteration count = 244, log likelihood. = -1520.269836
+</pre><img vspace="5" hspace="5" src="gmmTrainDemo2dCovType01_help_01.png" alt=""> <img vspace="5" hspace="5" src="gmmTrainDemo2dCovType01_help_02.png" alt=""> <img vspace="5" hspace="5" src="gmmTrainDemo2dCovType01_help_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% gmmTrainDemo2dCovType01
+% Animation of GMM training with covType=1 (isotropic) for 2D data
+%% Syntax
+% * 		gmmTrainDemo2dCovType01
+%% Description
+%
+% <html>
+% <p>gmmTrainDemo2dCovType01 demonstrates animation of GMM training with
+% <p>covType=1 (isotropic) for 2D data.
+% </html>
+%% Example
+%%
+%
+gmmTrainDemo2dCovType01
+
+##### SOURCE END #####
+--><hr><a href="index.html">Top page</a>&nbsp;&nbsp;&nbsp;Next: <a href="gmmTrainDemo1d_help.html">gmmTrainDemo1d.m</a>&nbsp;&nbsp;&nbsp;Prev:<a href="gmmTrainDemo2dCovType02_help.html">gmmTrainDemo2dCovType02.m</a>
+<script>
+function keyFunction(){
+if (event.keyCode==37) document.location="gmmTrainDemo1d_help.html";
+if (event.keyCode==39) document.location="gmmTrainDemo2dCovType02_help.html";
+if (event.keyCode==69) document.location="matlab: edit gmmTrainDemo2dCovType01.m";
+}
+document.onkeydown=keyFunction;
+</script>
+</body></html>

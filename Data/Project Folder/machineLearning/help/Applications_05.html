@@ -1,0 +1,4244 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Music Genre Classification via Acoustic Features</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="Applications_05.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Music Genre Classification via Acoustic Features</h1><!--introduction--><p>In this application example, we shall explore the use of several classification schemes for genre classification of audio music. Here we should only use the basic acoustic feature called MFCC (mel-scale frequency cepstral coefficient), which is the most commonly used feature for speech and speaker recognition.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Download the dataset</a></li><li><a href="#2">Feature Extraction</a></li><li><a href="#6">Classification by QC</a></li><li><a href="#8">Classification by SVM</a></li></ul></div><h2>Download the dataset<a name="1"></a></h2><p>The audio music dataset used here is "GTZAN Genre Collection", which is prepared by Prof. George Tzanetakis at the University of Victoria. This dataset was used for the well known paper in genre classification "Musical genre classification of audio signals" by G. Tzanetakis and P. Cook in IEEE Transactions on Audio and Speech Processing, 2002. The dataset consists of 1000 audio tracks each 30 seconds long. It contains 10 genres, each represented by 100 tracks. These genres are:</p><div><ul><li>Blue</li><li>Classic</li><li>Country</li><li>Disco</li><li>Hiphop</li><li>Jazz</li><li>Metal</li><li>Pop</li><li>Raegae</li><li>Rock</li></ul></div><p>You can download the dataset at <a href="http://marsyas.info/download/data_sets">Marsyas' home</a>.</p><h2>Feature Extraction<a name="2"></a></h2><p>After downloading the dataset, you can read all files and compute MFCC as follows:</p><pre class="codeinput">musicCorpusDir=<span class="string">'/dataSet/musicGenreClassification/GTZAN'</span>;		<span class="comment">% Replace this one with the path of the dataset</span>
+opt=fileList(<span class="string">'defaultOpt'</span>); opt.extName=<span class="string">'au'</span>; opt.mode=<span class="string">'recursive'</span>;
+musicData=fileList(musicCorpusDir, opt);
+fileNum=length(musicData);
+outputName=unique({musicData.parentDir});
+tic
+<span class="keyword">for</span> i=1:fileNum
+	auFile=musicData(i).path;
+	[y, fs, nbits]=auread(auFile);
+	mfccOpt=mfccOptSet(fs);
+	mfccOpt.frameSize=1024;
+	mfccOpt.overlap=512;
+	musicData(i).mfcc=wave2mfcc(y, fs, mfccOpt);
+	musicData(i).output=find(strcmp(outputName, musicData(i).parentDir));
+<span class="keyword">end</span>
+toc
+</pre><pre class="codeoutput">Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Warning: AUREAD will be removed in a future release. Use AUDIOREAD
+instead. 
+Elapsed time is 1043.021417 seconds.
+</pre><p>It will take a while to read all 1000 music files and convert them to MFCC. Note that each frame is converted into an MFCC vector of 13 elements. Thus each song is represented by an MFCC matrix of 13 by n, where n is the number of frames. For simplicity, we shall use a fixed-length feature vector to represent a song. This is achieved by taking the mean, standard deviation, min., and max. of each dimenrion of the MFCC matrix of a song, as shown next:</p><pre class="codeinput"><span class="keyword">for</span> i=1:fileNum
+	fea=[];
+	fea(end+1,:)=mean(musicData(i).mfcc, 2);		<span class="comment">% Mean</span>
+	fea(end+1,:)=var(musicData(i).mfcc, 1, 2);		<span class="comment">% Standard deviation</span>
+	fea(end+1,:)=min(musicData(i).mfcc, [], 2);		<span class="comment">% Min</span>
+	fea(end+1,:)=max(musicData(i).mfcc, [], 2);		<span class="comment">% Max</span>
+	musicData(i).fea=fea(:);
+<span class="keyword">end</span>
+</pre><p>We then create the standard dataset structure for use with the Machine Learning Toolbox:</p><pre class="codeinput">DS.input=[musicData.fea];
+DS.output=[musicData.output];
+DS.outputName=outputName;
+save <span class="string">gtzanDataset</span> <span class="string">DS</span>				<span class="comment">% Save the data for future use</span>
+DS.input=inputNormalize(DS.input);	<span class="comment">% Input normalization</span>
+</pre><p>As a result, each song is now represented by a feature vector of 13*4 = 52 elements. We shall use these 52-element feature vector for genre classification.</p><h2>Classification by QC<a name="6"></a></h2><p>We shall try several classifiers on GTZAN dataset to see the performance based on the leave-one-out test. The first classifier is QC (quadratic classifier) which is well known for its simplicity:</p><pre class="codeinput">tic
+cvPrm.nFolds=inf;		<span class="comment">% "inf" for leave-one-out test</span>
+cvPrm.classifier=<span class="string">'qc'</span>;
+[tRrMean, vRrMean, tRr, vRr, computedClass]=crossValidate(DS, cvPrm, 1);
+toc
+</pre><pre class="codeoutput">Fold = 1/1000
+Fold = 2/1000
+Fold = 3/1000
+Fold = 4/1000
+Fold = 5/1000
+Fold = 6/1000
+Fold = 7/1000
+Fold = 8/1000
+Fold = 9/1000
+Fold = 10/1000
+Fold = 11/1000
+Fold = 12/1000
+Fold = 13/1000
+Fold = 14/1000
+Fold = 15/1000
+Fold = 16/1000
+Fold = 17/1000
+Fold = 18/1000
+Fold = 19/1000
+Fold = 20/1000
+Fold = 21/1000
+Fold = 22/1000
+Fold = 23/1000
+Fold = 24/1000
+Fold = 25/1000
+Fold = 26/1000
+Fold = 27/1000
+Fold = 28/1000
+Fold = 29/1000
+Fold = 30/1000
+Fold = 31/1000
+Fold = 32/1000
+Fold = 33/1000
+Fold = 34/1000
+Fold = 35/1000
+Fold = 36/1000
+Fold = 37/1000
+Fold = 38/1000
+Fold = 39/1000
+Fold = 40/1000
+Fold = 41/1000
+Fold = 42/1000
+Fold = 43/1000
+Fold = 44/1000
+Fold = 45/1000
+Fold = 46/1000
+Fold = 47/1000
+Fold = 48/1000
+Fold = 49/1000
+Fold = 50/1000
+Fold = 51/1000
+Fold = 52/1000
+Fold = 53/1000
+Fold = 54/1000
+Fold = 55/1000
+Fold = 56/1000
+Fold = 57/1000
+Fold = 58/1000
+Fold = 59/1000
+Fold = 60/1000
+Fold = 61/1000
+Fold = 62/1000
+Fold = 63/1000
+Fold = 64/1000
+Fold = 65/1000
+Fold = 66/1000
+Fold = 67/1000
+Fold = 68/1000
+Fold = 69/1000
+Fold = 70/1000
+Fold = 71/1000
+Fold = 72/1000
+Fold = 73/1000
+Fold = 74/1000
+Fold = 75/1000
+Fold = 76/1000
+Fold = 77/1000
+Fold = 78/1000
+Fold = 79/1000
+Fold = 80/1000
+Fold = 81/1000
+Fold = 82/1000
+Fold = 83/1000
+Fold = 84/1000
+Fold = 85/1000
+Fold = 86/1000
+Fold = 87/1000
+Fold = 88/1000
+Fold = 89/1000
+Fold = 90/1000
+Fold = 91/1000
+Fold = 92/1000
+Fold = 93/1000
+Fold = 94/1000
+Fold = 95/1000
+Fold = 96/1000
+Fold = 97/1000
+Fold = 98/1000
+Fold = 99/1000
+Fold = 100/1000
+Fold = 101/1000
+Fold = 102/1000
+Fold = 103/1000
+Fold = 104/1000
+Fold = 105/1000
+Fold = 106/1000
+Fold = 107/1000
+Fold = 108/1000
+Fold = 109/1000
+Fold = 110/1000
+Fold = 111/1000
+Fold = 112/1000
+Fold = 113/1000
+Fold = 114/1000
+Fold = 115/1000
+Fold = 116/1000
+Fold = 117/1000
+Fold = 118/1000
+Fold = 119/1000
+Fold = 120/1000
+Fold = 121/1000
+Fold = 122/1000
+Fold = 123/1000
+Fold = 124/1000
+Fold = 125/1000
+Fold = 126/1000
+Fold = 127/1000
+Fold = 128/1000
+Fold = 129/1000
+Fold = 130/1000
+Fold = 131/1000
+Fold = 132/1000
+Fold = 133/1000
+Fold = 134/1000
+Fold = 135/1000
+Fold = 136/1000
+Fold = 137/1000
+Fold = 138/1000
+Fold = 139/1000
+Fold = 140/1000
+Fold = 141/1000
+Fold = 142/1000
+Fold = 143/1000
+Fold = 144/1000
+Fold = 145/1000
+Fold = 146/1000
+Fold = 147/1000
+Fold = 148/1000
+Fold = 149/1000
+Fold = 150/1000
+Fold = 151/1000
+Fold = 152/1000
+Fold = 153/1000
+Fold = 154/1000
+Fold = 155/1000
+Fold = 156/1000
+Fold = 157/1000
+Fold = 158/1000
+Fold = 159/1000
+Fold = 160/1000
+Fold = 161/1000
+Fold = 162/1000
+Fold = 163/1000
+Fold = 164/1000
+Fold = 165/1000
+Fold = 166/1000
+Fold = 167/1000
+Fold = 168/1000
+Fold = 169/1000
+Fold = 170/1000
+Fold = 171/1000
+Fold = 172/1000
+Fold = 173/1000
+Fold = 174/1000
+Fold = 175/1000
+Fold = 176/1000
+Fold = 177/1000
+Fold = 178/1000
+Fold = 179/1000
+Fold = 180/1000
+Fold = 181/1000
+Fold = 182/1000
+Fold = 183/1000
+Fold = 184/1000
+Fold = 185/1000
+Fold = 186/1000
+Fold = 187/1000
+Fold = 188/1000
+Fold = 189/1000
+Fold = 190/1000
+Fold = 191/1000
+Fold = 192/1000
+Fold = 193/1000
+Fold = 194/1000
+Fold = 195/1000
+Fold = 196/1000
+Fold = 197/1000
+Fold = 198/1000
+Fold = 199/1000
+Fold = 200/1000
+Fold = 201/1000
+Fold = 202/1000
+Fold = 203/1000
+Fold = 204/1000
+Fold = 205/1000
+Fold = 206/1000
+Fold = 207/1000
+Fold = 208/1000
+Fold = 209/1000
+Fold = 210/1000
+Fold = 211/1000
+Fold = 212/1000
+Fold = 213/1000
+Fold = 214/1000
+Fold = 215/1000
+Fold = 216/1000
+Fold = 217/1000
+Fold = 218/1000
+Fold = 219/1000
+Fold = 220/1000
+Fold = 221/1000
+Fold = 222/1000
+Fold = 223/1000
+Fold = 224/1000
+Fold = 225/1000
+Fold = 226/1000
+Fold = 227/1000
+Fold = 228/1000
+Fold = 229/1000
+Fold = 230/1000
+Fold = 231/1000
+Fold = 232/1000
+Fold = 233/1000
+Fold = 234/1000
+Fold = 235/1000
+Fold = 236/1000
+Fold = 237/1000
+Fold = 238/1000
+Fold = 239/1000
+Fold = 240/1000
+Fold = 241/1000
+Fold = 242/1000
+Fold = 243/1000
+Fold = 244/1000
+Fold = 245/1000
+Fold = 246/1000
+Fold = 247/1000
+Fold = 248/1000
+Fold = 249/1000
+Fold = 250/1000
+Fold = 251/1000
+Fold = 252/1000
+Fold = 253/1000
+Fold = 254/1000
+Fold = 255/1000
+Fold = 256/1000
+Fold = 257/1000
+Fold = 258/1000
+Fold = 259/1000
+Fold = 260/1000
+Fold = 261/1000
+Fold = 262/1000
+Fold = 263/1000
+Fold = 264/1000
+Fold = 265/1000
+Fold = 266/1000
+Fold = 267/1000
+Fold = 268/1000
+Fold = 269/1000
+Fold = 270/1000
+Fold = 271/1000
+Fold = 272/1000
+Fold = 273/1000
+Fold = 274/1000
+Fold = 275/1000
+Fold = 276/1000
+Fold = 277/1000
+Fold = 278/1000
+Fold = 279/1000
+Fold = 280/1000
+Fold = 281/1000
+Fold = 282/1000
+Fold = 283/1000
+Fold = 284/1000
+Fold = 285/1000
+Fold = 286/1000
+Fold = 287/1000
+Fold = 288/1000
+Fold = 289/1000
+Fold = 290/1000
+Fold = 291/1000
+Fold = 292/1000
+Fold = 293/1000
+Fold = 294/1000
+Fold = 295/1000
+Fold = 296/1000
+Fold = 297/1000
+Fold = 298/1000
+Fold = 299/1000
+Fold = 300/1000
+Fold = 301/1000
+Fold = 302/1000
+Fold = 303/1000
+Fold = 304/1000
+Fold = 305/1000
+Fold = 306/1000
+Fold = 307/1000
+Fold = 308/1000
+Fold = 309/1000
+Fold = 310/1000
+Fold = 311/1000
+Fold = 312/1000
+Fold = 313/1000
+Fold = 314/1000
+Fold = 315/1000
+Fold = 316/1000
+Fold = 317/1000
+Fold = 318/1000
+Fold = 319/1000
+Fold = 320/1000
+Fold = 321/1000
+Fold = 322/1000
+Fold = 323/1000
+Fold = 324/1000
+Fold = 325/1000
+Fold = 326/1000
+Fold = 327/1000
+Fold = 328/1000
+Fold = 329/1000
+Fold = 330/1000
+Fold = 331/1000
+Fold = 332/1000
+Fold = 333/1000
+Fold = 334/1000
+Fold = 335/1000
+Fold = 336/1000
+Fold = 337/1000
+Fold = 338/1000
+Fold = 339/1000
+Fold = 340/1000
+Fold = 341/1000
+Fold = 342/1000
+Fold = 343/1000
+Fold = 344/1000
+Fold = 345/1000
+Fold = 346/1000
+Fold = 347/1000
+Fold = 348/1000
+Fold = 349/1000
+Fold = 350/1000
+Fold = 351/1000
+Fold = 352/1000
+Fold = 353/1000
+Fold = 354/1000
+Fold = 355/1000
+Fold = 356/1000
+Fold = 357/1000
+Fold = 358/1000
+Fold = 359/1000
+Fold = 360/1000
+Fold = 361/1000
+Fold = 362/1000
+Fold = 363/1000
+Fold = 364/1000
+Fold = 365/1000
+Fold = 366/1000
+Fold = 367/1000
+Fold = 368/1000
+Fold = 369/1000
+Fold = 370/1000
+Fold = 371/1000
+Fold = 372/1000
+Fold = 373/1000
+Fold = 374/1000
+Fold = 375/1000
+Fold = 376/1000
+Fold = 377/1000
+Fold = 378/1000
+Fold = 379/1000
+Fold = 380/1000
+Fold = 381/1000
+Fold = 382/1000
+Fold = 383/1000
+Fold = 384/1000
+Fold = 385/1000
+Fold = 386/1000
+Fold = 387/1000
+Fold = 388/1000
+Fold = 389/1000
+Fold = 390/1000
+Fold = 391/1000
+Fold = 392/1000
+Fold = 393/1000
+Fold = 394/1000
+Fold = 395/1000
+Fold = 396/1000
+Fold = 397/1000
+Fold = 398/1000
+Fold = 399/1000
+Fold = 400/1000
+Fold = 401/1000
+Fold = 402/1000
+Fold = 403/1000
+Fold = 404/1000
+Fold = 405/1000
+Fold = 406/1000
+Fold = 407/1000
+Fold = 408/1000
+Fold = 409/1000
+Fold = 410/1000
+Fold = 411/1000
+Fold = 412/1000
+Fold = 413/1000
+Fold = 414/1000
+Fold = 415/1000
+Fold = 416/1000
+Fold = 417/1000
+Fold = 418/1000
+Fold = 419/1000
+Fold = 420/1000
+Fold = 421/1000
+Fold = 422/1000
+Fold = 423/1000
+Fold = 424/1000
+Fold = 425/1000
+Fold = 426/1000
+Fold = 427/1000
+Fold = 428/1000
+Fold = 429/1000
+Fold = 430/1000
+Fold = 431/1000
+Fold = 432/1000
+Fold = 433/1000
+Fold = 434/1000
+Fold = 435/1000
+Fold = 436/1000
+Fold = 437/1000
+Fold = 438/1000
+Fold = 439/1000
+Fold = 440/1000
+Fold = 441/1000
+Fold = 442/1000
+Fold = 443/1000
+Fold = 444/1000
+Fold = 445/1000
+Fold = 446/1000
+Fold = 447/1000
+Fold = 448/1000
+Fold = 449/1000
+Fold = 450/1000
+Fold = 451/1000
+Fold = 452/1000
+Fold = 453/1000
+Fold = 454/1000
+Fold = 455/1000
+Fold = 456/1000
+Fold = 457/1000
+Fold = 458/1000
+Fold = 459/1000
+Fold = 460/1000
+Fold = 461/1000
+Fold = 462/1000
+Fold = 463/1000
+Fold = 464/1000
+Fold = 465/1000
+Fold = 466/1000
+Fold = 467/1000
+Fold = 468/1000
+Fold = 469/1000
+Fold = 470/1000
+Fold = 471/1000
+Fold = 472/1000
+Fold = 473/1000
+Fold = 474/1000
+Fold = 475/1000
+Fold = 476/1000
+Fold = 477/1000
+Fold = 478/1000
+Fold = 479/1000
+Fold = 480/1000
+Fold = 481/1000
+Fold = 482/1000
+Fold = 483/1000
+Fold = 484/1000
+Fold = 485/1000
+Fold = 486/1000
+Fold = 487/1000
+Fold = 488/1000
+Fold = 489/1000
+Fold = 490/1000
+Fold = 491/1000
+Fold = 492/1000
+Fold = 493/1000
+Fold = 494/1000
+Fold = 495/1000
+Fold = 496/1000
+Fold = 497/1000
+Fold = 498/1000
+Fold = 499/1000
+Fold = 500/1000
+Fold = 501/1000
+Fold = 502/1000
+Fold = 503/1000
+Fold = 504/1000
+Fold = 505/1000
+Fold = 506/1000
+Fold = 507/1000
+Fold = 508/1000
+Fold = 509/1000
+Fold = 510/1000
+Fold = 511/1000
+Fold = 512/1000
+Fold = 513/1000
+Fold = 514/1000
+Fold = 515/1000
+Fold = 516/1000
+Fold = 517/1000
+Fold = 518/1000
+Fold = 519/1000
+Fold = 520/1000
+Fold = 521/1000
+Fold = 522/1000
+Fold = 523/1000
+Fold = 524/1000
+Fold = 525/1000
+Fold = 526/1000
+Fold = 527/1000
+Fold = 528/1000
+Fold = 529/1000
+Fold = 530/1000
+Fold = 531/1000
+Fold = 532/1000
+Fold = 533/1000
+Fold = 534/1000
+Fold = 535/1000
+Fold = 536/1000
+Fold = 537/1000
+Fold = 538/1000
+Fold = 539/1000
+Fold = 540/1000
+Fold = 541/1000
+Fold = 542/1000
+Fold = 543/1000
+Fold = 544/1000
+Fold = 545/1000
+Fold = 546/1000
+Fold = 547/1000
+Fold = 548/1000
+Fold = 549/1000
+Fold = 550/1000
+Fold = 551/1000
+Fold = 552/1000
+Fold = 553/1000
+Fold = 554/1000
+Fold = 555/1000
+Fold = 556/1000
+Fold = 557/1000
+Fold = 558/1000
+Fold = 559/1000
+Fold = 560/1000
+Fold = 561/1000
+Fold = 562/1000
+Fold = 563/1000
+Fold = 564/1000
+Fold = 565/1000
+Fold = 566/1000
+Fold = 567/1000
+Fold = 568/1000
+Fold = 569/1000
+Fold = 570/1000
+Fold = 571/1000
+Fold = 572/1000
+Fold = 573/1000
+Fold = 574/1000
+Fold = 575/1000
+Fold = 576/1000
+Fold = 577/1000
+Fold = 578/1000
+Fold = 579/1000
+Fold = 580/1000
+Fold = 581/1000
+Fold = 582/1000
+Fold = 583/1000
+Fold = 584/1000
+Fold = 585/1000
+Fold = 586/1000
+Fold = 587/1000
+Fold = 588/1000
+Fold = 589/1000
+Fold = 590/1000
+Fold = 591/1000
+Fold = 592/1000
+Fold = 593/1000
+Fold = 594/1000
+Fold = 595/1000
+Fold = 596/1000
+Fold = 597/1000
+Fold = 598/1000
+Fold = 599/1000
+Fold = 600/1000
+Fold = 601/1000
+Fold = 602/1000
+Fold = 603/1000
+Fold = 604/1000
+Fold = 605/1000
+Fold = 606/1000
+Fold = 607/1000
+Fold = 608/1000
+Fold = 609/1000
+Fold = 610/1000
+Fold = 611/1000
+Fold = 612/1000
+Fold = 613/1000
+Fold = 614/1000
+Fold = 615/1000
+Fold = 616/1000
+Fold = 617/1000
+Fold = 618/1000
+Fold = 619/1000
+Fold = 620/1000
+Fold = 621/1000
+Fold = 622/1000
+Fold = 623/1000
+Fold = 624/1000
+Fold = 625/1000
+Fold = 626/1000
+Fold = 627/1000
+Fold = 628/1000
+Fold = 629/1000
+Fold = 630/1000
+Fold = 631/1000
+Fold = 632/1000
+Fold = 633/1000
+Fold = 634/1000
+Fold = 635/1000
+Fold = 636/1000
+Fold = 637/1000
+Fold = 638/1000
+Fold = 639/1000
+Fold = 640/1000
+Fold = 641/1000
+Fold = 642/1000
+Fold = 643/1000
+Fold = 644/1000
+Fold = 645/1000
+Fold = 646/1000
+Fold = 647/1000
+Fold = 648/1000
+Fold = 649/1000
+Fold = 650/1000
+Fold = 651/1000
+Fold = 652/1000
+Fold = 653/1000
+Fold = 654/1000
+Fold = 655/1000
+Fold = 656/1000
+Fold = 657/1000
+Fold = 658/1000
+Fold = 659/1000
+Fold = 660/1000
+Fold = 661/1000
+Fold = 662/1000
+Fold = 663/1000
+Fold = 664/1000
+Fold = 665/1000
+Fold = 666/1000
+Fold = 667/1000
+Fold = 668/1000
+Fold = 669/1000
+Fold = 670/1000
+Fold = 671/1000
+Fold = 672/1000
+Fold = 673/1000
+Fold = 674/1000
+Fold = 675/1000
+Fold = 676/1000
+Fold = 677/1000
+Fold = 678/1000
+Fold = 679/1000
+Fold = 680/1000
+Fold = 681/1000
+Fold = 682/1000
+Fold = 683/1000
+Fold = 684/1000
+Fold = 685/1000
+Fold = 686/1000
+Fold = 687/1000
+Fold = 688/1000
+Fold = 689/1000
+Fold = 690/1000
+Fold = 691/1000
+Fold = 692/1000
+Fold = 693/1000
+Fold = 694/1000
+Fold = 695/1000
+Fold = 696/1000
+Fold = 697/1000
+Fold = 698/1000
+Fold = 699/1000
+Fold = 700/1000
+Fold = 701/1000
+Fold = 702/1000
+Fold = 703/1000
+Fold = 704/1000
+Fold = 705/1000
+Fold = 706/1000
+Fold = 707/1000
+Fold = 708/1000
+Fold = 709/1000
+Fold = 710/1000
+Fold = 711/1000
+Fold = 712/1000
+Fold = 713/1000
+Fold = 714/1000
+Fold = 715/1000
+Fold = 716/1000
+Fold = 717/1000
+Fold = 718/1000
+Fold = 719/1000
+Fold = 720/1000
+Fold = 721/1000
+Fold = 722/1000
+Fold = 723/1000
+Fold = 724/1000
+Fold = 725/1000
+Fold = 726/1000
+Fold = 727/1000
+Fold = 728/1000
+Fold = 729/1000
+Fold = 730/1000
+Fold = 731/1000
+Fold = 732/1000
+Fold = 733/1000
+Fold = 734/1000
+Fold = 735/1000
+Fold = 736/1000
+Fold = 737/1000
+Fold = 738/1000
+Fold = 739/1000
+Fold = 740/1000
+Fold = 741/1000
+Fold = 742/1000
+Fold = 743/1000
+Fold = 744/1000
+Fold = 745/1000
+Fold = 746/1000
+Fold = 747/1000
+Fold = 748/1000
+Fold = 749/1000
+Fold = 750/1000
+Fold = 751/1000
+Fold = 752/1000
+Fold = 753/1000
+Fold = 754/1000
+Fold = 755/1000
+Fold = 756/1000
+Fold = 757/1000
+Fold = 758/1000
+Fold = 759/1000
+Fold = 760/1000
+Fold = 761/1000
+Fold = 762/1000
+Fold = 763/1000
+Fold = 764/1000
+Fold = 765/1000
+Fold = 766/1000
+Fold = 767/1000
+Fold = 768/1000
+Fold = 769/1000
+Fold = 770/1000
+Fold = 771/1000
+Fold = 772/1000
+Fold = 773/1000
+Fold = 774/1000
+Fold = 775/1000
+Fold = 776/1000
+Fold = 777/1000
+Fold = 778/1000
+Fold = 779/1000
+Fold = 780/1000
+Fold = 781/1000
+Fold = 782/1000
+Fold = 783/1000
+Fold = 784/1000
+Fold = 785/1000
+Fold = 786/1000
+Fold = 787/1000
+Fold = 788/1000
+Fold = 789/1000
+Fold = 790/1000
+Fold = 791/1000
+Fold = 792/1000
+Fold = 793/1000
+Fold = 794/1000
+Fold = 795/1000
+Fold = 796/1000
+Fold = 797/1000
+Fold = 798/1000
+Fold = 799/1000
+Fold = 800/1000
+Fold = 801/1000
+Fold = 802/1000
+Fold = 803/1000
+Fold = 804/1000
+Fold = 805/1000
+Fold = 806/1000
+Fold = 807/1000
+Fold = 808/1000
+Fold = 809/1000
+Fold = 810/1000
+Fold = 811/1000
+Fold = 812/1000
+Fold = 813/1000
+Fold = 814/1000
+Fold = 815/1000
+Fold = 816/1000
+Fold = 817/1000
+Fold = 818/1000
+Fold = 819/1000
+Fold = 820/1000
+Fold = 821/1000
+Fold = 822/1000
+Fold = 823/1000
+Fold = 824/1000
+Fold = 825/1000
+Fold = 826/1000
+Fold = 827/1000
+Fold = 828/1000
+Fold = 829/1000
+Fold = 830/1000
+Fold = 831/1000
+Fold = 832/1000
+Fold = 833/1000
+Fold = 834/1000
+Fold = 835/1000
+Fold = 836/1000
+Fold = 837/1000
+Fold = 838/1000
+Fold = 839/1000
+Fold = 840/1000
+Fold = 841/1000
+Fold = 842/1000
+Fold = 843/1000
+Fold = 844/1000
+Fold = 845/1000
+Fold = 846/1000
+Fold = 847/1000
+Fold = 848/1000
+Fold = 849/1000
+Fold = 850/1000
+Fold = 851/1000
+Fold = 852/1000
+Fold = 853/1000
+Fold = 854/1000
+Fold = 855/1000
+Fold = 856/1000
+Fold = 857/1000
+Fold = 858/1000
+Fold = 859/1000
+Fold = 860/1000
+Fold = 861/1000
+Fold = 862/1000
+Fold = 863/1000
+Fold = 864/1000
+Fold = 865/1000
+Fold = 866/1000
+Fold = 867/1000
+Fold = 868/1000
+Fold = 869/1000
+Fold = 870/1000
+Fold = 871/1000
+Fold = 872/1000
+Fold = 873/1000
+Fold = 874/1000
+Fold = 875/1000
+Fold = 876/1000
+Fold = 877/1000
+Fold = 878/1000
+Fold = 879/1000
+Fold = 880/1000
+Fold = 881/1000
+Fold = 882/1000
+Fold = 883/1000
+Fold = 884/1000
+Fold = 885/1000
+Fold = 886/1000
+Fold = 887/1000
+Fold = 888/1000
+Fold = 889/1000
+Fold = 890/1000
+Fold = 891/1000
+Fold = 892/1000
+Fold = 893/1000
+Fold = 894/1000
+Fold = 895/1000
+Fold = 896/1000
+Fold = 897/1000
+Fold = 898/1000
+Fold = 899/1000
+Fold = 900/1000
+Fold = 901/1000
+Fold = 902/1000
+Fold = 903/1000
+Fold = 904/1000
+Fold = 905/1000
+Fold = 906/1000
+Fold = 907/1000
+Fold = 908/1000
+Fold = 909/1000
+Fold = 910/1000
+Fold = 911/1000
+Fold = 912/1000
+Fold = 913/1000
+Fold = 914/1000
+Fold = 915/1000
+Fold = 916/1000
+Fold = 917/1000
+Fold = 918/1000
+Fold = 919/1000
+Fold = 920/1000
+Fold = 921/1000
+Fold = 922/1000
+Fold = 923/1000
+Fold = 924/1000
+Fold = 925/1000
+Fold = 926/1000
+Fold = 927/1000
+Fold = 928/1000
+Fold = 929/1000
+Fold = 930/1000
+Fold = 931/1000
+Fold = 932/1000
+Fold = 933/1000
+Fold = 934/1000
+Fold = 935/1000
+Fold = 936/1000
+Fold = 937/1000
+Fold = 938/1000
+Fold = 939/1000
+Fold = 940/1000
+Fold = 941/1000
+Fold = 942/1000
+Fold = 943/1000
+Fold = 944/1000
+Fold = 945/1000
+Fold = 946/1000
+Fold = 947/1000
+Fold = 948/1000
+Fold = 949/1000
+Fold = 950/1000
+Fold = 951/1000
+Fold = 952/1000
+Fold = 953/1000
+Fold = 954/1000
+Fold = 955/1000
+Fold = 956/1000
+Fold = 957/1000
+Fold = 958/1000
+Fold = 959/1000
+Fold = 960/1000
+Fold = 961/1000
+Fold = 962/1000
+Fold = 963/1000
+Fold = 964/1000
+Fold = 965/1000
+Fold = 966/1000
+Fold = 967/1000
+Fold = 968/1000
+Fold = 969/1000
+Fold = 970/1000
+Fold = 971/1000
+Fold = 972/1000
+Fold = 973/1000
+Fold = 974/1000
+Fold = 975/1000
+Fold = 976/1000
+Fold = 977/1000
+Fold = 978/1000
+Fold = 979/1000
+Fold = 980/1000
+Fold = 981/1000
+Fold = 982/1000
+Fold = 983/1000
+Fold = 984/1000
+Fold = 985/1000
+Fold = 986/1000
+Fold = 987/1000
+Fold = 988/1000
+Fold = 989/1000
+Fold = 990/1000
+Fold = 991/1000
+Fold = 992/1000
+Fold = 993/1000
+Fold = 994/1000
+Fold = 995/1000
+Fold = 996/1000
+Fold = 997/1000
+Fold = 998/1000
+Fold = 999/1000
+Fold = 1000/1000
+Training RR=99.51%, Validating RR=55.40%, classifier=qc, no. of folds=1000
+Elapsed time is 7.947609 seconds.
+</pre><img vspace="5" hspace="5" src="Applications_05_01.png" alt=""> <p>As indicated in the plot, the training RR (recognition rate) is very high while the validating RR is around 55%. This implies we have overfitted the training data since QC indeed contains many fitting parameters for a feature vector with 52 elements.</p><h2>Classification by SVM<a name="8"></a></h2><p>To avoid overfitting, we employ the SVM classifier which is known to have better generalization capability.</p><pre class="codeinput">tic
+cvPrm.nFolds=inf;		<span class="comment">% "inf" for leave-one-out test</span>
+cvPrm.classifier=<span class="string">'svmc'</span>;
+[tRrMean, vRrMean, tRr, vRr, computedClass]=crossValidate(DS, cvPrm, 1);
+toc
+</pre><pre class="codeoutput">Fold = 1/1000
+Fold = 2/1000
+Fold = 3/1000
+Fold = 4/1000
+Fold = 5/1000
+Fold = 6/1000
+Fold = 7/1000
+Fold = 8/1000
+Fold = 9/1000
+Fold = 10/1000
+Fold = 11/1000
+Fold = 12/1000
+Fold = 13/1000
+Fold = 14/1000
+Fold = 15/1000
+Fold = 16/1000
+Fold = 17/1000
+Fold = 18/1000
+Fold = 19/1000
+Fold = 20/1000
+Fold = 21/1000
+Fold = 22/1000
+Fold = 23/1000
+Fold = 24/1000
+Fold = 25/1000
+Fold = 26/1000
+Fold = 27/1000
+Fold = 28/1000
+Fold = 29/1000
+Fold = 30/1000
+Fold = 31/1000
+Fold = 32/1000
+Fold = 33/1000
+Fold = 34/1000
+Fold = 35/1000
+Fold = 36/1000
+Fold = 37/1000
+Fold = 38/1000
+Fold = 39/1000
+Fold = 40/1000
+Fold = 41/1000
+Fold = 42/1000
+Fold = 43/1000
+Fold = 44/1000
+Fold = 45/1000
+Fold = 46/1000
+Fold = 47/1000
+Fold = 48/1000
+Fold = 49/1000
+Fold = 50/1000
+Fold = 51/1000
+Fold = 52/1000
+Fold = 53/1000
+Fold = 54/1000
+Fold = 55/1000
+Fold = 56/1000
+Fold = 57/1000
+Fold = 58/1000
+Fold = 59/1000
+Fold = 60/1000
+Fold = 61/1000
+Fold = 62/1000
+Fold = 63/1000
+Fold = 64/1000
+Fold = 65/1000
+Fold = 66/1000
+Fold = 67/1000
+Fold = 68/1000
+Fold = 69/1000
+Fold = 70/1000
+Fold = 71/1000
+Fold = 72/1000
+Fold = 73/1000
+Fold = 74/1000
+Fold = 75/1000
+Fold = 76/1000
+Fold = 77/1000
+Fold = 78/1000
+Fold = 79/1000
+Fold = 80/1000
+Fold = 81/1000
+Fold = 82/1000
+Fold = 83/1000
+Fold = 84/1000
+Fold = 85/1000
+Fold = 86/1000
+Fold = 87/1000
+Fold = 88/1000
+Fold = 89/1000
+Fold = 90/1000
+Fold = 91/1000
+Fold = 92/1000
+Fold = 93/1000
+Fold = 94/1000
+Fold = 95/1000
+Fold = 96/1000
+Fold = 97/1000
+Fold = 98/1000
+Fold = 99/1000
+Fold = 100/1000
+Fold = 101/1000
+Fold = 102/1000
+Fold = 103/1000
+Fold = 104/1000
+Fold = 105/1000
+Fold = 106/1000
+Fold = 107/1000
+Fold = 108/1000
+Fold = 109/1000
+Fold = 110/1000
+Fold = 111/1000
+Fold = 112/1000
+Fold = 113/1000
+Fold = 114/1000
+Fold = 115/1000
+Fold = 116/1000
+Fold = 117/1000
+Fold = 118/1000
+Fold = 119/1000
+Fold = 120/1000
+Fold = 121/1000
+Fold = 122/1000
+Fold = 123/1000
+Fold = 124/1000
+Fold = 125/1000
+Fold = 126/1000
+Fold = 127/1000
+Fold = 128/1000
+Fold = 129/1000
+Fold = 130/1000
+Fold = 131/1000
+Fold = 132/1000
+Fold = 133/1000
+Fold = 134/1000
+Fold = 135/1000
+Fold = 136/1000
+Fold = 137/1000
+Fold = 138/1000
+Fold = 139/1000
+Fold = 140/1000
+Fold = 141/1000
+Fold = 142/1000
+Fold = 143/1000
+Fold = 144/1000
+Fold = 145/1000
+Fold = 146/1000
+Fold = 147/1000
+Fold = 148/1000
+Fold = 149/1000
+Fold = 150/1000
+Fold = 151/1000
+Fold = 152/1000
+Fold = 153/1000
+Fold = 154/1000
+Fold = 155/1000
+Fold = 156/1000
+Fold = 157/1000
+Fold = 158/1000
+Fold = 159/1000
+Fold = 160/1000
+Fold = 161/1000
+Fold = 162/1000
+Fold = 163/1000
+Fold = 164/1000
+Fold = 165/1000
+Fold = 166/1000
+Fold = 167/1000
+Fold = 168/1000
+Fold = 169/1000
+Fold = 170/1000
+Fold = 171/1000
+Fold = 172/1000
+Fold = 173/1000
+Fold = 174/1000
+Fold = 175/1000
+Fold = 176/1000
+Fold = 177/1000
+Fold = 178/1000
+Fold = 179/1000
+Fold = 180/1000
+Fold = 181/1000
+Fold = 182/1000
+Fold = 183/1000
+Fold = 184/1000
+Fold = 185/1000
+Fold = 186/1000
+Fold = 187/1000
+Fold = 188/1000
+Fold = 189/1000
+Fold = 190/1000
+Fold = 191/1000
+Fold = 192/1000
+Fold = 193/1000
+Fold = 194/1000
+Fold = 195/1000
+Fold = 196/1000
+Fold = 197/1000
+Fold = 198/1000
+Fold = 199/1000
+Fold = 200/1000
+Fold = 201/1000
+Fold = 202/1000
+Fold = 203/1000
+Fold = 204/1000
+Fold = 205/1000
+Fold = 206/1000
+Fold = 207/1000
+Fold = 208/1000
+Fold = 209/1000
+Fold = 210/1000
+Fold = 211/1000
+Fold = 212/1000
+Fold = 213/1000
+Fold = 214/1000
+Fold = 215/1000
+Fold = 216/1000
+Fold = 217/1000
+Fold = 218/1000
+Fold = 219/1000
+Fold = 220/1000
+Fold = 221/1000
+Fold = 222/1000
+Fold = 223/1000
+Fold = 224/1000
+Fold = 225/1000
+Fold = 226/1000
+Fold = 227/1000
+Fold = 228/1000
+Fold = 229/1000
+Fold = 230/1000
+Fold = 231/1000
+Fold = 232/1000
+Fold = 233/1000
+Fold = 234/1000
+Fold = 235/1000
+Fold = 236/1000
+Fold = 237/1000
+Fold = 238/1000
+Fold = 239/1000
+Fold = 240/1000
+Fold = 241/1000
+Fold = 242/1000
+Fold = 243/1000
+Fold = 244/1000
+Fold = 245/1000
+Fold = 246/1000
+Fold = 247/1000
+Fold = 248/1000
+Fold = 249/1000
+Fold = 250/1000
+Fold = 251/1000
+Fold = 252/1000
+Fold = 253/1000
+Fold = 254/1000
+Fold = 255/1000
+Fold = 256/1000
+Fold = 257/1000
+Fold = 258/1000
+Fold = 259/1000
+Fold = 260/1000
+Fold = 261/1000
+Fold = 262/1000
+Fold = 263/1000
+Fold = 264/1000
+Fold = 265/1000
+Fold = 266/1000
+Fold = 267/1000
+Fold = 268/1000
+Fold = 269/1000
+Fold = 270/1000
+Fold = 271/1000
+Fold = 272/1000
+Fold = 273/1000
+Fold = 274/1000
+Fold = 275/1000
+Fold = 276/1000
+Fold = 277/1000
+Fold = 278/1000
+Fold = 279/1000
+Fold = 280/1000
+Fold = 281/1000
+Fold = 282/1000
+Fold = 283/1000
+Fold = 284/1000
+Fold = 285/1000
+Fold = 286/1000
+Fold = 287/1000
+Fold = 288/1000
+Fold = 289/1000
+Fold = 290/1000
+Fold = 291/1000
+Fold = 292/1000
+Fold = 293/1000
+Fold = 294/1000
+Fold = 295/1000
+Fold = 296/1000
+Fold = 297/1000
+Fold = 298/1000
+Fold = 299/1000
+Fold = 300/1000
+Fold = 301/1000
+Fold = 302/1000
+Fold = 303/1000
+Fold = 304/1000
+Fold = 305/1000
+Fold = 306/1000
+Fold = 307/1000
+Fold = 308/1000
+Fold = 309/1000
+Fold = 310/1000
+Fold = 311/1000
+Fold = 312/1000
+Fold = 313/1000
+Fold = 314/1000
+Fold = 315/1000
+Fold = 316/1000
+Fold = 317/1000
+Fold = 318/1000
+Fold = 319/1000
+Fold = 320/1000
+Fold = 321/1000
+Fold = 322/1000
+Fold = 323/1000
+Fold = 324/1000
+Fold = 325/1000
+Fold = 326/1000
+Fold = 327/1000
+Fold = 328/1000
+Fold = 329/1000
+Fold = 330/1000
+Fold = 331/1000
+Fold = 332/1000
+Fold = 333/1000
+Fold = 334/1000
+Fold = 335/1000
+Fold = 336/1000
+Fold = 337/1000
+Fold = 338/1000
+Fold = 339/1000
+Fold = 340/1000
+Fold = 341/1000
+Fold = 342/1000
+Fold = 343/1000
+Fold = 344/1000
+Fold = 345/1000
+Fold = 346/1000
+Fold = 347/1000
+Fold = 348/1000
+Fold = 349/1000
+Fold = 350/1000
+Fold = 351/1000
+Fold = 352/1000
+Fold = 353/1000
+Fold = 354/1000
+Fold = 355/1000
+Fold = 356/1000
+Fold = 357/1000
+Fold = 358/1000
+Fold = 359/1000
+Fold = 360/1000
+Fold = 361/1000
+Fold = 362/1000
+Fold = 363/1000
+Fold = 364/1000
+Fold = 365/1000
+Fold = 366/1000
+Fold = 367/1000
+Fold = 368/1000
+Fold = 369/1000
+Fold = 370/1000
+Fold = 371/1000
+Fold = 372/1000
+Fold = 373/1000
+Fold = 374/1000
+Fold = 375/1000
+Fold = 376/1000
+Fold = 377/1000
+Fold = 378/1000
+Fold = 379/1000
+Fold = 380/1000
+Fold = 381/1000
+Fold = 382/1000
+Fold = 383/1000
+Fold = 384/1000
+Fold = 385/1000
+Fold = 386/1000
+Fold = 387/1000
+Fold = 388/1000
+Fold = 389/1000
+Fold = 390/1000
+Fold = 391/1000
+Fold = 392/1000
+Fold = 393/1000
+Fold = 394/1000
+Fold = 395/1000
+Fold = 396/1000
+Fold = 397/1000
+Fold = 398/1000
+Fold = 399/1000
+Fold = 400/1000
+Fold = 401/1000
+Fold = 402/1000
+Fold = 403/1000
+Fold = 404/1000
+Fold = 405/1000
+Fold = 406/1000
+Fold = 407/1000
+Fold = 408/1000
+Fold = 409/1000
+Fold = 410/1000
+Fold = 411/1000
+Fold = 412/1000
+Fold = 413/1000
+Fold = 414/1000
+Fold = 415/1000
+Fold = 416/1000
+Fold = 417/1000
+Fold = 418/1000
+Fold = 419/1000
+Fold = 420/1000
+Fold = 421/1000
+Fold = 422/1000
+Fold = 423/1000
+Fold = 424/1000
+Fold = 425/1000
+Fold = 426/1000
+Fold = 427/1000
+Fold = 428/1000
+Fold = 429/1000
+Fold = 430/1000
+Fold = 431/1000
+Fold = 432/1000
+Fold = 433/1000
+Fold = 434/1000
+Fold = 435/1000
+Fold = 436/1000
+Fold = 437/1000
+Fold = 438/1000
+Fold = 439/1000
+Fold = 440/1000
+Fold = 441/1000
+Fold = 442/1000
+Fold = 443/1000
+Fold = 444/1000
+Fold = 445/1000
+Fold = 446/1000
+Fold = 447/1000
+Fold = 448/1000
+Fold = 449/1000
+Fold = 450/1000
+Fold = 451/1000
+Fold = 452/1000
+Fold = 453/1000
+Fold = 454/1000
+Fold = 455/1000
+Fold = 456/1000
+Fold = 457/1000
+Fold = 458/1000
+Fold = 459/1000
+Fold = 460/1000
+Fold = 461/1000
+Fold = 462/1000
+Fold = 463/1000
+Fold = 464/1000
+Fold = 465/1000
+Fold = 466/1000
+Fold = 467/1000
+Fold = 468/1000
+Fold = 469/1000
+Fold = 470/1000
+Fold = 471/1000
+Fold = 472/1000
+Fold = 473/1000
+Fold = 474/1000
+Fold = 475/1000
+Fold = 476/1000
+Fold = 477/1000
+Fold = 478/1000
+Fold = 479/1000
+Fold = 480/1000
+Fold = 481/1000
+Fold = 482/1000
+Fold = 483/1000
+Fold = 484/1000
+Fold = 485/1000
+Fold = 486/1000
+Fold = 487/1000
+Fold = 488/1000
+Fold = 489/1000
+Fold = 490/1000
+Fold = 491/1000
+Fold = 492/1000
+Fold = 493/1000
+Fold = 494/1000
+Fold = 495/1000
+Fold = 496/1000
+Fold = 497/1000
+Fold = 498/1000
+Fold = 499/1000
+Fold = 500/1000
+Fold = 501/1000
+Fold = 502/1000
+Fold = 503/1000
+Fold = 504/1000
+Fold = 505/1000
+Fold = 506/1000
+Fold = 507/1000
+Fold = 508/1000
+Fold = 509/1000
+Fold = 510/1000
+Fold = 511/1000
+Fold = 512/1000
+Fold = 513/1000
+Fold = 514/1000
+Fold = 515/1000
+Fold = 516/1000
+Fold = 517/1000
+Fold = 518/1000
+Fold = 519/1000
+Fold = 520/1000
+Fold = 521/1000
+Fold = 522/1000
+Fold = 523/1000
+Fold = 524/1000
+Fold = 525/1000
+Fold = 526/1000
+Fold = 527/1000
+Fold = 528/1000
+Fold = 529/1000
+Fold = 530/1000
+Fold = 531/1000
+Fold = 532/1000
+Fold = 533/1000
+Fold = 534/1000
+Fold = 535/1000
+Fold = 536/1000
+Fold = 537/1000
+Fold = 538/1000
+Fold = 539/1000
+Fold = 540/1000
+Fold = 541/1000
+Fold = 542/1000
+Fold = 543/1000
+Fold = 544/1000
+Fold = 545/1000
+Fold = 546/1000
+Fold = 547/1000
+Fold = 548/1000
+Fold = 549/1000
+Fold = 550/1000
+Fold = 551/1000
+Fold = 552/1000
+Fold = 553/1000
+Fold = 554/1000
+Fold = 555/1000
+Fold = 556/1000
+Fold = 557/1000
+Fold = 558/1000
+Fold = 559/1000
+Fold = 560/1000
+Fold = 561/1000
+Fold = 562/1000
+Fold = 563/1000
+Fold = 564/1000
+Fold = 565/1000
+Fold = 566/1000
+Fold = 567/1000
+Fold = 568/1000
+Fold = 569/1000
+Fold = 570/1000
+Fold = 571/1000
+Fold = 572/1000
+Fold = 573/1000
+Fold = 574/1000
+Fold = 575/1000
+Fold = 576/1000
+Fold = 577/1000
+Fold = 578/1000
+Fold = 579/1000
+Fold = 580/1000
+Fold = 581/1000
+Fold = 582/1000
+Fold = 583/1000
+Fold = 584/1000
+Fold = 585/1000
+Fold = 586/1000
+Fold = 587/1000
+Fold = 588/1000
+Fold = 589/1000
+Fold = 590/1000
+Fold = 591/1000
+Fold = 592/1000
+Fold = 593/1000
+Fold = 594/1000
+Fold = 595/1000
+Fold = 596/1000
+Fold = 597/1000
+Fold = 598/1000
+Fold = 599/1000
+Fold = 600/1000
+Fold = 601/1000
+Fold = 602/1000
+Fold = 603/1000
+Fold = 604/1000
+Fold = 605/1000
+Fold = 606/1000
+Fold = 607/1000
+Fold = 608/1000
+Fold = 609/1000
+Fold = 610/1000
+Fold = 611/1000
+Fold = 612/1000
+Fold = 613/1000
+Fold = 614/1000
+Fold = 615/1000
+Fold = 616/1000
+Fold = 617/1000
+Fold = 618/1000
+Fold = 619/1000
+Fold = 620/1000
+Fold = 621/1000
+Fold = 622/1000
+Fold = 623/1000
+Fold = 624/1000
+Fold = 625/1000
+Fold = 626/1000
+Fold = 627/1000
+Fold = 628/1000
+Fold = 629/1000
+Fold = 630/1000
+Fold = 631/1000
+Fold = 632/1000
+Fold = 633/1000
+Fold = 634/1000
+Fold = 635/1000
+Fold = 636/1000
+Fold = 637/1000
+Fold = 638/1000
+Fold = 639/1000
+Fold = 640/1000
+Fold = 641/1000
+Fold = 642/1000
+Fold = 643/1000
+Fold = 644/1000
+Fold = 645/1000
+Fold = 646/1000
+Fold = 647/1000
+Fold = 648/1000
+Fold = 649/1000
+Fold = 650/1000
+Fold = 651/1000
+Fold = 652/1000
+Fold = 653/1000
+Fold = 654/1000
+Fold = 655/1000
+Fold = 656/1000
+Fold = 657/1000
+Fold = 658/1000
+Fold = 659/1000
+Fold = 660/1000
+Fold = 661/1000
+Fold = 662/1000
+Fold = 663/1000
+Fold = 664/1000
+Fold = 665/1000
+Fold = 666/1000
+Fold = 667/1000
+Fold = 668/1000
+Fold = 669/1000
+Fold = 670/1000
+Fold = 671/1000
+Fold = 672/1000
+Fold = 673/1000
+Fold = 674/1000
+Fold = 675/1000
+Fold = 676/1000
+Fold = 677/1000
+Fold = 678/1000
+Fold = 679/1000
+Fold = 680/1000
+Fold = 681/1000
+Fold = 682/1000
+Fold = 683/1000
+Fold = 684/1000
+Fold = 685/1000
+Fold = 686/1000
+Fold = 687/1000
+Fold = 688/1000
+Fold = 689/1000
+Fold = 690/1000
+Fold = 691/1000
+Fold = 692/1000
+Fold = 693/1000
+Fold = 694/1000
+Fold = 695/1000
+Fold = 696/1000
+Fold = 697/1000
+Fold = 698/1000
+Fold = 699/1000
+Fold = 700/1000
+Fold = 701/1000
+Fold = 702/1000
+Fold = 703/1000
+Fold = 704/1000
+Fold = 705/1000
+Fold = 706/1000
+Fold = 707/1000
+Fold = 708/1000
+Fold = 709/1000
+Fold = 710/1000
+Fold = 711/1000
+Fold = 712/1000
+Fold = 713/1000
+Fold = 714/1000
+Fold = 715/1000
+Fold = 716/1000
+Fold = 717/1000
+Fold = 718/1000
+Fold = 719/1000
+Fold = 720/1000
+Fold = 721/1000
+Fold = 722/1000
+Fold = 723/1000
+Fold = 724/1000
+Fold = 725/1000
+Fold = 726/1000
+Fold = 727/1000
+Fold = 728/1000
+Fold = 729/1000
+Fold = 730/1000
+Fold = 731/1000
+Fold = 732/1000
+Fold = 733/1000
+Fold = 734/1000
+Fold = 735/1000
+Fold = 736/1000
+Fold = 737/1000
+Fold = 738/1000
+Fold = 739/1000
+Fold = 740/1000
+Fold = 741/1000
+Fold = 742/1000
+Fold = 743/1000
+Fold = 744/1000
+Fold = 745/1000
+Fold = 746/1000
+Fold = 747/1000
+Fold = 748/1000
+Fold = 749/1000
+Fold = 750/1000
+Fold = 751/1000
+Fold = 752/1000
+Fold = 753/1000
+Fold = 754/1000
+Fold = 755/1000
+Fold = 756/1000
+Fold = 757/1000
+Fold = 758/1000
+Fold = 759/1000
+Fold = 760/1000
+Fold = 761/1000
+Fold = 762/1000
+Fold = 763/1000
+Fold = 764/1000
+Fold = 765/1000
+Fold = 766/1000
+Fold = 767/1000
+Fold = 768/1000
+Fold = 769/1000
+Fold = 770/1000
+Fold = 771/1000
+Fold = 772/1000
+Fold = 773/1000
+Fold = 774/1000
+Fold = 775/1000
+Fold = 776/1000
+Fold = 777/1000
+Fold = 778/1000
+Fold = 779/1000
+Fold = 780/1000
+Fold = 781/1000
+Fold = 782/1000
+Fold = 783/1000
+Fold = 784/1000
+Fold = 785/1000
+Fold = 786/1000
+Fold = 787/1000
+Fold = 788/1000
+Fold = 789/1000
+Fold = 790/1000
+Fold = 791/1000
+Fold = 792/1000
+Fold = 793/1000
+Fold = 794/1000
+Fold = 795/1000
+Fold = 796/1000
+Fold = 797/1000
+Fold = 798/1000
+Fold = 799/1000
+Fold = 800/1000
+Fold = 801/1000
+Fold = 802/1000
+Fold = 803/1000
+Fold = 804/1000
+Fold = 805/1000
+Fold = 806/1000
+Fold = 807/1000
+Fold = 808/1000
+Fold = 809/1000
+Fold = 810/1000
+Fold = 811/1000
+Fold = 812/1000
+Fold = 813/1000
+Fold = 814/1000
+Fold = 815/1000
+Fold = 816/1000
+Fold = 817/1000
+Fold = 818/1000
+Fold = 819/1000
+Fold = 820/1000
+Fold = 821/1000
+Fold = 822/1000
+Fold = 823/1000
+Fold = 824/1000
+Fold = 825/1000
+Fold = 826/1000
+Fold = 827/1000
+Fold = 828/1000
+Fold = 829/1000
+Fold = 830/1000
+Fold = 831/1000
+Fold = 832/1000
+Fold = 833/1000
+Fold = 834/1000
+Fold = 835/1000
+Fold = 836/1000
+Fold = 837/1000
+Fold = 838/1000
+Fold = 839/1000
+Fold = 840/1000
+Fold = 841/1000
+Fold = 842/1000
+Fold = 843/1000
+Fold = 844/1000
+Fold = 845/1000
+Fold = 846/1000
+Fold = 847/1000
+Fold = 848/1000
+Fold = 849/1000
+Fold = 850/1000
+Fold = 851/1000
+Fold = 852/1000
+Fold = 853/1000
+Fold = 854/1000
+Fold = 855/1000
+Fold = 856/1000
+Fold = 857/1000
+Fold = 858/1000
+Fold = 859/1000
+Fold = 860/1000
+Fold = 861/1000
+Fold = 862/1000
+Fold = 863/1000
+Fold = 864/1000
+Fold = 865/1000
+Fold = 866/1000
+Fold = 867/1000
+Fold = 868/1000
+Fold = 869/1000
+Fold = 870/1000
+Fold = 871/1000
+Fold = 872/1000
+Fold = 873/1000
+Fold = 874/1000
+Fold = 875/1000
+Fold = 876/1000
+Fold = 877/1000
+Fold = 878/1000
+Fold = 879/1000
+Fold = 880/1000
+Fold = 881/1000
+Fold = 882/1000
+Fold = 883/1000
+Fold = 884/1000
+Fold = 885/1000
+Fold = 886/1000
+Fold = 887/1000
+Fold = 888/1000
+Fold = 889/1000
+Fold = 890/1000
+Fold = 891/1000
+Fold = 892/1000
+Fold = 893/1000
+Fold = 894/1000
+Fold = 895/1000
+Fold = 896/1000
+Fold = 897/1000
+Fold = 898/1000
+Fold = 899/1000
+Fold = 900/1000
+Fold = 901/1000
+Fold = 902/1000
+Fold = 903/1000
+Fold = 904/1000
+Fold = 905/1000
+Fold = 906/1000
+Fold = 907/1000
+Fold = 908/1000
+Fold = 909/1000
+Fold = 910/1000
+Fold = 911/1000
+Fold = 912/1000
+Fold = 913/1000
+Fold = 914/1000
+Fold = 915/1000
+Fold = 916/1000
+Fold = 917/1000
+Fold = 918/1000
+Fold = 919/1000
+Fold = 920/1000
+Fold = 921/1000
+Fold = 922/1000
+Fold = 923/1000
+Fold = 924/1000
+Fold = 925/1000
+Fold = 926/1000
+Fold = 927/1000
+Fold = 928/1000
+Fold = 929/1000
+Fold = 930/1000
+Fold = 931/1000
+Fold = 932/1000
+Fold = 933/1000
+Fold = 934/1000
+Fold = 935/1000
+Fold = 936/1000
+Fold = 937/1000
+Fold = 938/1000
+Fold = 939/1000
+Fold = 940/1000
+Fold = 941/1000
+Fold = 942/1000
+Fold = 943/1000
+Fold = 944/1000
+Fold = 945/1000
+Fold = 946/1000
+Fold = 947/1000
+Fold = 948/1000
+Fold = 949/1000
+Fold = 950/1000
+Fold = 951/1000
+Fold = 952/1000
+Fold = 953/1000
+Fold = 954/1000
+Fold = 955/1000
+Fold = 956/1000
+Fold = 957/1000
+Fold = 958/1000
+Fold = 959/1000
+Fold = 960/1000
+Fold = 961/1000
+Fold = 962/1000
+Fold = 963/1000
+Fold = 964/1000
+Fold = 965/1000
+Fold = 966/1000
+Fold = 967/1000
+Fold = 968/1000
+Fold = 969/1000
+Fold = 970/1000
+Fold = 971/1000
+Fold = 972/1000
+Fold = 973/1000
+Fold = 974/1000
+Fold = 975/1000
+Fold = 976/1000
+Fold = 977/1000
+Fold = 978/1000
+Fold = 979/1000
+Fold = 980/1000
+Fold = 981/1000
+Fold = 982/1000
+Fold = 983/1000
+Fold = 984/1000
+Fold = 985/1000
+Fold = 986/1000
+Fold = 987/1000
+Fold = 988/1000
+Fold = 989/1000
+Fold = 990/1000
+Fold = 991/1000
+Fold = 992/1000
+Fold = 993/1000
+Fold = 994/1000
+Fold = 995/1000
+Fold = 996/1000
+Fold = 997/1000
+Fold = 998/1000
+Fold = 999/1000
+Fold = 1000/1000
+Training RR=95.29%, Validating RR=76.90%, classifier=svmc, no. of folds=1000
+Elapsed time is 305.801802 seconds.
+</pre><img vspace="5" hspace="5" src="Applications_05_02.png" alt=""> <p>The validating RR is now 76.90%, which is much better than QC. We can then plot the confusion matrix of the classifier:</p><pre class="codeinput"><span class="keyword">for</span> i=1:length(computedClass)
+	computed(i)=computedClass{i};
+<span class="keyword">end</span>
+desired=DS.output;
+confMat = confMatGet(desired, computed);
+opt=confMatPlot(<span class="string">'defaultOpt'</span>);
+opt.className=DS.outputName;
+opt.mode=<span class="string">'dataCount'</span>;  subplot(1,2,1); confMatPlot(confMat, opt);	<span class="comment">% Confusion matrix based on data count</span>
+opt.mode=<span class="string">'percentage'</span>; subplot(1,2,2); confMatPlot(confMat, opt);	<span class="comment">% Confusion matrix based on percentage</span>
+</pre><img vspace="5" hspace="5" src="Applications_05_03.png" alt=""> <p>From the above confusion matrix in percentage, we can observe that</p><div><ul><li>"Classical" has the highest RR of 93%</li><li>"Rock" has the lowest RR of 60%</li><li>"Hiphop" is likely to be misclassified as "Raggae" and vice versa.</li><li>"Rock" is likely to be misclassified as "Disco".</li></ul></div><p>To our intuition, these observations (and insight thus obtained) are quite reasonable considering the characteristics of each genre. Better performance can be obtained via the use of other feature vectors, such as visual features extracted from the spectrogram of the audio signals.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Music Genre Classification via Acoustic Features
+% In this application example, we shall explore the use of several
+% classification schemes for genre classification of audio music. Here we
+% should only use the basic acoustic feature called MFCC (mel-scale
+% frequency cepstral coefficient), which is the most commonly used feature for
+% speech and speaker recognition.
+%% Download the dataset
+% The audio music dataset used here is "GTZAN Genre Collection",
+% which is prepared by Prof. George Tzanetakis at the University of
+% Victoria.
+% This dataset was used for the well known paper in genre classification
+% "Musical genre classification of audio signals" by G. Tzanetakis and P.
+% Cook in IEEE Transactions on Audio and Speech Processing, 2002.
+% The dataset consists of 1000 audio tracks each 30 seconds long. It
+% contains 10 genres, each represented by 100 tracks. These genres are:
+%
+% * Blue 
+% * Classic
+% * Country
+% * Disco
+% * Hiphop
+% * Jazz
+% * Metal
+% * Pop
+% * Raegae
+% * Rock
+%
+% You can download the dataset at <http://marsyas.info/download/data_sets Marsyas' home>.
+%% Feature Extraction
+% After downloading the dataset, you can read all files and compute MFCC as follows:
+musicCorpusDir='/dataSet/musicGenreClassification/GTZAN';		% Replace this one with the path of the dataset
+opt=fileList('defaultOpt'); opt.extName='au'; opt.mode='recursive';
+musicData=fileList(musicCorpusDir, opt);
+fileNum=length(musicData);
+outputName=unique({musicData.parentDir});
+tic
+for i=1:fileNum
+	auFile=musicData(i).path;
+	[y, fs, nbits]=auread(auFile);
+	mfccOpt=mfccOptSet(fs);
+	mfccOpt.frameSize=1024;
+	mfccOpt.overlap=512;
+	musicData(i).mfcc=wave2mfcc(y, fs, mfccOpt);
+	musicData(i).output=find(strcmp(outputName, musicData(i).parentDir));
+end
+toc
+%%
+% It will take a while to read all 1000 music files and convert them to MFCC.
+% Note that each frame is converted into an MFCC vector of 13 elements.
+% Thus each song is 
+% represented by an MFCC matrix of 13 by n, where n is the number of
+% frames. For simplicity, we shall use a fixed-length feature vector to
+% represent a song. This is achieved by taking the mean, standard deviation,
+% min., and max. of each dimenrion of the MFCC matrix of a song, as shown next:
+for i=1:fileNum
+	fea=[];
+	fea(end+1,:)=mean(musicData(i).mfcc, 2);		% Mean
+	fea(end+1,:)=var(musicData(i).mfcc, 1, 2);		% Standard deviation
+	fea(end+1,:)=min(musicData(i).mfcc, [], 2);		% Min
+	fea(end+1,:)=max(musicData(i).mfcc, [], 2);		% Max
+	musicData(i).fea=fea(:);
+end
+%%
+% We then create the standard dataset structure for use with the Machine Learning Toolbox:
+DS.input=[musicData.fea];
+DS.output=[musicData.output];
+DS.outputName=outputName;
+save gtzanDataset DS				% Save the data for future use
+DS.input=inputNormalize(DS.input);	% Input normalization
+%%
+% As a result, each song is now represented by a feature vector of 13*4 = 52 elements.
+% We shall use these 52-element feature vector for genre classification.
+%% Classification by QC
+% We shall try several classifiers on GTZAN dataset to see the performance
+% based on the leave-one-out test. The first classifier is QC (quadratic
+% classifier) which is well known for its simplicity:
+tic
+cvPrm.nFolds=inf;		% "inf" for leave-one-out test
+cvPrm.classifier='qc';
+[tRrMean, vRrMean, tRr, vRr, computedClass]=crossValidate(DS, cvPrm, 1);
+toc
+%%
+% As indicated in the plot, the training RR (recognition rate) is very high
+% while the validating RR is around 55%. This implies we have overfitted the
+% training data since QC indeed contains many
+% fitting parameters for a feature vector with 52 elements.
+%% Classification by SVM
+% To avoid overfitting, we employ the SVM classifier
+% which is known to have better generalization capability.
+tic
+cvPrm.nFolds=inf;		% "inf" for leave-one-out test
+cvPrm.classifier='svmc';
+[tRrMean, vRrMean, tRr, vRr, computedClass]=crossValidate(DS, cvPrm, 1);
+toc
+%%
+% The validating RR is now 76.90%, which is much better than QC. We can then
+% plot the confusion matrix of the classifier:
+for i=1:length(computedClass)
+	computed(i)=computedClass{i};
+end
+desired=DS.output;
+confMat = confMatGet(desired, computed);
+opt=confMatPlot('defaultOpt');
+opt.className=DS.outputName;
+opt.mode='dataCount';  subplot(1,2,1); confMatPlot(confMat, opt);	% Confusion matrix based on data count
+opt.mode='percentage'; subplot(1,2,2); confMatPlot(confMat, opt);	% Confusion matrix based on percentage
+%%
+% From the above confusion matrix in percentage, we can observe that
+%
+% * "Classical" has the highest RR of 93%
+% * "Rock" has the lowest RR of 60%
+% * "Hiphop" is likely to be misclassified as "Raggae" and vice versa.
+% * "Rock" is likely to be misclassified as "Disco".
+%
+% To our intuition, these observations (and insight thus obtained) are quite reasonable considering the characteristics of each genre.
+% Better performance can be obtained via the use of other feature vectors, such as visual features extracted from the spectrogram of the audio signals.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

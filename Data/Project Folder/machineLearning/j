@@ -1,0 +1,30 @@
+1c1
+< function [DS2, eigVec, eigValue]=pca(DS, eigVecNum)
+---
+> function [DS2, eigVec, eigValue]=pca(DS,eigValueNum)
+55c55
+< if nargin<2, eigVecNum=min(size(A)); end
+---
+> %if nargin<3, if nargin==2,eigVecNum=min(size(A));end; eigValueNum = 1;end
+59c59
+< if eigVecNum>min(d,n), eigVecNum=min(n,d); end
+---
+> %if eigVecNum>min(d,n), eigVecNum=min(n,d); end
+67a68,75
+> 
+> 	eigSum = round(sum(eigValue) * eigValueNum);
+>     cumEig = zeros(1,size(eigValue));
+> 	for k = 1:size(eigValue)
+> 		cumEig(k) = sum(eigValue(1:k)); 
+> 	end
+> 	eigVecNum = sum(cumEig <= eigSum);
+> 
+75a84,91
+> 
+> 	eigSum = round(sum(eigValue) * eigValueNum);
+>     cumEig = zeros(1,size(eigValue));
+> 	for k = 1:size(eigValue)
+> 		cumEig(k) = sum(eigValue(1:k)); 
+> 	end
+> 	eigVecNum = sum(cumEig <= eigSum);
+> 

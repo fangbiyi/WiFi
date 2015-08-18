@@ -1,0 +1,261 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Face Recognition via Fisherfaces (PCA+LDA Projection)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="Applications_03.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Face Recognition via Fisherfaces (PCA+LDA Projection)</h1><!--introduction--><p>In the previous section, we have explain the use of PCA for face recognition, which reduces the feature dimensions from 10304 (=112*92) to 100. The use of PCA can effectively retain the data variance along the first few dimension. However, it does not consider the classes (or identity) of the dataset.</p><p>On the other hand, we can apply LDA after PCA for projecting the data along the dimensions with better discriminative power. It should be noted that</p><div><ul><li>There no easy way to compute the eigenvectors of LDA using the original 10304 features. As a result, we need to apply PCA first to reduce the dimensions to 100.</li><li>Since the data count is also 100, we cannot use all 100 features for computing the eigenvectors of LDA. (If we use all 100 features, all data points in the same class will be mapped to a single points, leading to a overly optimistic recognition rate of 100%. This is too good to be realistic.)</li></ul></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Visualization</a></li><li><a href="#3">Performance evaluation via LOO test</a></li><li><a href="#6">Demo</a></li><li><a href="#7">References</a></li></ul></div><h2>Visualization<a name="1"></a></h2><p>In the following example, we use the first 60 features after PCA for LDA computation. In order to visualize the data, we select only the first 2 dimensions after LDA for scatter plot:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+load <span class="string">eigenFaceResult.mat</span>	<span class="comment">% Load A2, eigVec, rowDim, colDim, etc</span>
+<span class="comment">% ====== Create DS</span>
+DS.input=A2;
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+<span class="keyword">for</span> i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+<span class="keyword">end</span>
+<span class="comment">% ====== LDA</span>
+maxDim=60;
+DS.input=DS.input(1:maxDim, :);
+DS2=lda(DS);
+DS2.input=DS2.input(1:2, :);
+dsScatterPlot(DS2);
+[recogRate, computed, nearestIndex]=knncLoo(DS2);
+fprintf(<span class="string">'Recog. rate = %.2f%% after 2D proj. of PCA + LDA\n'</span>, 100*recogRate);
+</pre><pre class="codeoutput">Recog. rate = 99.00% after 2D proj. of PCA + LDA
+</pre><img vspace="5" hspace="5" src="Applications_03_01.png" alt=""> <p>Apparently the classes seem to converge much better than PCA alone.</p><h2>Performance evaluation via LOO test<a name="3"></a></h2><p>We can vary the dimensions after LDA (and keep the dimensions after PCA to be 60) to see the effects on the overall recognition rate:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+load <span class="string">eigenFaceResult.mat</span>	<span class="comment">% Load A2, eigVec, rowDim, colDim, etc</span>
+<span class="comment">% ====== Create DS</span>
+DS=faceData2ds(faceData);
+DS.input=A2;
+<span class="comment">% ====== RR w.r.t. no. of eigenvectors</span>
+maxDim=60;
+DS.input=DS.input(1:maxDim, :);
+ldaOpt=ldaPerfViaKnncLoo(<span class="string">'defaultOpt'</span>);
+ldaOpt.maxDim=maxDim;
+ldaOpt.mode=<span class="string">'exact'</span>;
+recogRate=ldaPerfViaKnncLoo(DS, ldaOpt, 1);
+[maxRr, index]=max(recogRate);
+line(index, maxRr*100, <span class="string">'color'</span>, <span class="string">'r'</span>, <span class="string">'marker'</span>, <span class="string">'o'</span>);
+fprintf(<span class="string">'Max RR=%.2f%% at dim=%d\n'</span>, maxRr*100, index);
+</pre><pre class="codeoutput">Max RR=100.00% at dim=6
+</pre><img vspace="5" hspace="5" src="Applications_03_02.png" alt=""> <p>The recognition rate rises to 100% when the dimension is 3. This indicates how LDA is effective in projecting the dataset along the most discriminative directions.</p><pre class="codeinput"><span class="comment">% However, there is caveat here.</span>
+<span class="comment">% Since we have used the whole dataset for PCA and LDA, the recognition rate is, again, a little overly optimistic.</span>
+<span class="comment">% In order to evaluate the performance objectively, we need to resort to LOO (leave one out) scheme for face recognition.</span>
+<span class="comment">% In other words, when we take a face for test, it cannot be used for computing PCA, LDA, etc.</span>
+<span class="comment">% The following example uses such LOO scheme for performance evaluation. (Be warned that it takes hours to run the example.)</span>
+load <span class="string">faceData.mat</span>
+opt.pcaDim=60;		<span class="comment">% Only use this dimension after PCA</span>
+maxUsedDim4lda=20;		<span class="comment">% Max dim. after LDA</span>
+<span class="comment">% ====== Create DS</span>
+fprintf(<span class="string">'Creating DS... ===&gt; '</span>); tic
+DS=faceData2ds(faceData);
+fprintf(<span class="string">'%.2f sec\n'</span>, toc);
+looRecogRate=zeros(1, maxUsedDim4lda);
+time=zeros(1, maxUsedDim4lda);
+<span class="keyword">for</span> i=1:maxUsedDim4lda
+	opt.ldaDim=i;
+	fprintf(<span class="string">'%d/%d: opt.ldaDim=%d, '</span>, opt.ldaDim, maxUsedDim4lda, i);
+	[looRecogRate(i), computedClass, correct, timeVec]=faceRecogPerfLoo(DS, opt);
+	time(i)=sum(timeVec);
+	fprintf(<span class="string">'rr=%.2f%%\n'</span>, looRecogRate(i)*100);
+<span class="keyword">end</span>
+plot(1:maxUsedDim4lda, looRecogRate*100, <span class="string">'.-'</span>);
+[maxRr, index]=max(looRecogRate);
+line(index, maxRr*100, <span class="string">'color'</span>, <span class="string">'r'</span>, <span class="string">'marker'</span>, <span class="string">'o'</span>);
+fprintf(<span class="string">'Max RR=%.2f%% at dim=%d\n'</span>, maxRr*100, index);
+xlabel(<span class="string">'LDA feature dimension'</span>); ylabel(<span class="string">'LOO recog. rate'</span>);
+grid <span class="string">on</span>
+</pre><pre class="codeoutput">Creating DS... ===&gt; 0.00 sec
+1/20: opt.ldaDim=1, rr=99.00%
+2/20: opt.ldaDim=2, rr=99.00%
+3/20: opt.ldaDim=3, rr=99.00%
+4/20: opt.ldaDim=4, rr=99.00%
+5/20: opt.ldaDim=5, rr=99.00%
+6/20: opt.ldaDim=6, rr=99.00%
+7/20: opt.ldaDim=7, rr=99.00%
+8/20: opt.ldaDim=8, rr=99.00%
+9/20: opt.ldaDim=9, rr=99.00%
+10/20: opt.ldaDim=10, rr=99.00%
+11/20: opt.ldaDim=11, rr=99.00%
+12/20: opt.ldaDim=12, rr=99.00%
+13/20: opt.ldaDim=13, rr=99.00%
+14/20: opt.ldaDim=14, rr=99.00%
+15/20: opt.ldaDim=15, rr=99.00%
+16/20: opt.ldaDim=16, rr=99.00%
+17/20: opt.ldaDim=17, rr=99.00%
+18/20: opt.ldaDim=18, rr=99.00%
+19/20: opt.ldaDim=19, rr=99.00%
+20/20: opt.ldaDim=20, rr=99.00%
+Max RR=99.00% at dim=1
+</pre><img vspace="5" hspace="5" src="Applications_03_03.png" alt=""> <p>The example indicates that the objective estimated performance of PCA + LDA for face recognition is 99.00% when the dimension is only 3!</p><h2>Demo<a name="6"></a></h2><p>Example demo for face recognition using PCA is shown next:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+frOpt.method=<span class="string">'pca+lda'</span>;
+frOpt.pcaDim=60;
+frOpt.ldaDim=3;
+frOpt.plot=1;
+faceRecogDemo(faceData, frOpt);
+</pre><pre class="codeoutput">Method=pca+lda
+Time=0.17 sec
+</pre><img vspace="5" hspace="5" src="Applications_03_04.png" alt=""> <h2>References<a name="7"></a></h2><div><ol><li>Peter N. Belhumeur, Joao P. Hespanha, and David J. Kriegman, "Eigenfaces vs. Fisherfaces: Recognition Using Class Specific Linear Projection". IEEE Transactions on Pattern Analysis and Machine Intelligence 19 (7): 711&#8211;720, 1997.</li></ol></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Face Recognition via Fisherfaces (PCA+LDA Projection)
+% In the previous section, we have explain the use of PCA for face recognition, which reduces the feature dimensions from 10304 (=112*92) to 100.
+% The use of PCA can effectively retain the data variance along the first few dimension.
+% However, it does not consider the classes (or identity) of the dataset. 
+%
+% On the other hand, we can apply LDA after PCA for projecting the data along the dimensions with better discriminative power.
+% It should be noted that 
+%
+% * There no easy way to compute the eigenvectors of LDA using the original 10304 features. As a result, we need to apply PCA first to reduce the dimensions to 100. 
+% * Since the data count is also 100, we cannot use all 100 features for computing the eigenvectors of LDA. (If we use all 100 features, all data points in the same class will be mapped to a single points, leading to a overly optimistic recognition rate of 100%. This is too good to be realistic.) 
+%% Visualization
+% In the following example, we use the first 60 features after PCA for LDA computation.
+% In order to visualize the data, we select only the first 2 dimensions after LDA for scatter plot:
+load faceData.mat
+load eigenFaceResult.mat	% Load A2, eigVec, rowDim, colDim, etc
+% ====== Create DS
+DS.input=A2;
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+for i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+end
+% ====== LDA
+maxDim=60;
+DS.input=DS.input(1:maxDim, :);
+DS2=lda(DS);
+DS2.input=DS2.input(1:2, :);
+dsScatterPlot(DS2);
+[recogRate, computed, nearestIndex]=knncLoo(DS2);
+fprintf('Recog. rate = %.2f%% after 2D proj. of PCA + LDA\n', 100*recogRate);
+%%
+% Apparently the classes seem to converge much better than PCA alone. 
+%% Performance evaluation via LOO test
+% We can vary the dimensions after LDA (and keep the dimensions after PCA to be 60) to see the effects on the overall recognition rate: 
+load faceData.mat
+load eigenFaceResult.mat	% Load A2, eigVec, rowDim, colDim, etc
+% ====== Create DS
+DS=faceData2ds(faceData);
+DS.input=A2;
+% ====== RR w.r.t. no. of eigenvectors
+maxDim=60;
+DS.input=DS.input(1:maxDim, :);
+ldaOpt=ldaPerfViaKnncLoo('defaultOpt');
+ldaOpt.maxDim=maxDim;
+ldaOpt.mode='exact';
+recogRate=ldaPerfViaKnncLoo(DS, ldaOpt, 1);
+[maxRr, index]=max(recogRate);
+line(index, maxRr*100, 'color', 'r', 'marker', 'o');
+fprintf('Max RR=%.2f%% at dim=%d\n', maxRr*100, index);
+%%
+% The recognition rate rises to 100% when the dimension is 3.
+% This indicates how LDA is effective in projecting the dataset along the most discriminative directions.
+
+% However, there is caveat here.
+% Since we have used the whole dataset for PCA and LDA, the recognition rate is, again, a little overly optimistic. 
+% In order to evaluate the performance objectively, we need to resort to LOO (leave one out) scheme for face recognition.
+% In other words, when we take a face for test, it cannot be used for computing PCA, LDA, etc.
+% The following example uses such LOO scheme for performance evaluation. (Be warned that it takes hours to run the example.) 
+load faceData.mat
+opt.pcaDim=60;		% Only use this dimension after PCA
+maxUsedDim4lda=20;		% Max dim. after LDA
+% ====== Create DS
+fprintf('Creating DS... ===> '); tic
+DS=faceData2ds(faceData);
+fprintf('%.2f sec\n', toc);
+looRecogRate=zeros(1, maxUsedDim4lda);
+time=zeros(1, maxUsedDim4lda);
+for i=1:maxUsedDim4lda
+	opt.ldaDim=i;
+	fprintf('%d/%d: opt.ldaDim=%d, ', opt.ldaDim, maxUsedDim4lda, i);
+	[looRecogRate(i), computedClass, correct, timeVec]=faceRecogPerfLoo(DS, opt);
+	time(i)=sum(timeVec);
+	fprintf('rr=%.2f%%\n', looRecogRate(i)*100);
+end
+plot(1:maxUsedDim4lda, looRecogRate*100, '.-');
+[maxRr, index]=max(looRecogRate);
+line(index, maxRr*100, 'color', 'r', 'marker', 'o');
+fprintf('Max RR=%.2f%% at dim=%d\n', maxRr*100, index);
+xlabel('LDA feature dimension'); ylabel('LOO recog. rate');
+grid on
+%% 
+% The example indicates that the objective estimated performance of PCA + LDA for face recognition is 99.00% when the dimension is only 3! 
+%% Demo
+% Example demo for face recognition using PCA is shown next:
+load faceData.mat
+frOpt.method='pca+lda';
+frOpt.pcaDim=60;
+frOpt.ldaDim=3;
+frOpt.plot=1;
+faceRecogDemo(faceData, frOpt);
+%% References
+%
+% # Peter N. Belhumeur, Joao P. Hespanha, and David J. Kriegman, "Eigenfaces vs. Fisherfaces: Recognition Using Class Specific Linear Projection". IEEE Transactions on Pattern Analysis and Machine Intelligence 19 (7): 711–720, 1997.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

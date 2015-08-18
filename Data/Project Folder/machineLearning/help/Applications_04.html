@@ -1,0 +1,107 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Speaker-dependent Voice Command Recognition</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="Applications_04.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Speaker-dependent Voice Command Recognition</h1><!--introduction--><p>In this application showcase, we shall use DTW (dynamic time warping) for speaker-dependent voice command recognition. This is the simplest voice command recognition system, in which the user's utterance is compared with those pre-recorded utterances (by the same user) using DTW. The utterance with the shortest DTW distance is identified, and the corresponding action will be triggered as the result of the voice command system.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Basics</a></li><li><a href="#2">Reference</a></li></ul></div><h2>Basics<a name="1"></a></h2><p>There are two stages involved in building such a system:</p><div><ul><li>Registration (or Enrollment): Each user is required to record several utterances (or spoken keywords) as the database</li><li>Recognition: During application, the user should say a keyword to a microphone, and the system can identify the closest commands in the database.</li></ul></div><p>When comparing the user's input to the recordings in the database, we use DTW for elastic comparison since it tolerates variations in speech rate. Each recording should go through endpoint detection to remove leading and trailing silence. The utterance is then chopped into frames, and each frame is converted into a 39-dim feature vector call MFCC (Mel-scale frequency cepstral coefficient). DTW is then employed to compute the distance betweens two sets of MFCCs extracted from two utterances.</p><p>The demo is available within the toolbox folder "demo/sdVoiceCommand". There are two major commands:</p><div><ul><li>goRegister.m: Run this script to do registration. In particular, you need to say "one", "two", "three", "four", "five" sequentially to build the database. If you need to change these commands, modify the value of the variable "sentence". Each utterance will go through endpoint detection and feature extraction. The features together with the recording specs are saved at mfcc4dtwDemo.mat.</li><li>goRecognize.m: Run this script to start testing the system. You can simply speak to the microphone to see the recognition result. Each utterance will go through the same processes of endpoint detection and feature extraction. Then the identified utterance is the one with the shortest DTW distance.</li></ul></div><p>Note that in order to have the best performance, you are advised to use a uni-directional microphone instead of omni-directional one (such as the built-in microphone in a notebook).</p><h2>Reference<a name="2"></a></h2><div><ol><li>H. Sakoe and S. Chiba, "Dynamic Programming Algorithm Optimization for Spoken Word Recognition", IEEE Transactions on Acoustics, Speech and Signal Processing, Vol. 26, No. 1, pp. 43{49, 1978.</li></ol></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Speaker-dependent Voice Command Recognition
+% In this application showcase, we shall use DTW (dynamic time warping) for
+% speaker-dependent voice command recognition. This is the simplest voice
+% command recognition system, in which the user's utterance is compared
+% with those pre-recorded utterances (by the same user) using DTW.
+% The utterance with the shortest DTW distance is identified, and the
+% corresponding action will be triggered as the result of the voice command system. 
+%
+%% Basics
+% There are two stages involved in building such a system:
+%
+% * Registration (or Enrollment): Each user is required to record several utterances (or spoken keywords) as the database
+% * Recognition: During application, the user should say a keyword to a microphone, and the system can identify the closest commands in the database.
+%
+% When comparing the user's input to the recordings in the database, we use
+% DTW for elastic comparison since it tolerates variations in speech rate.
+% Each recording should go through endpoint detection to remove leading and trailing silence.
+% The utterance is then chopped into frames, and each frame is converted
+% into a 39-dim feature vector call MFCC (Mel-scale frequency cepstral coefficient).
+% DTW is then employed to compute the distance betweens two sets of MFCCs
+% extracted from two utterances.
+%
+% The demo is available within the toolbox folder "demo/sdVoiceCommand".
+% There are two major commands:
+%
+% * goRegister.m: Run this script to do registration. In particular, you need to say "one", "two", "three", "four", "five" sequentially to build the database. If you need to change these commands, modify the value of the variable "sentence". Each utterance will go through endpoint detection and feature extraction. The features together with the recording specs are saved at mfcc4dtwDemo.mat. 
+% * goRecognize.m: Run this script to start testing the system. You can simply speak to the microphone to see the recognition result. Each utterance will go through the same processes of endpoint detection and feature extraction. Then the identified utterance is the one with the shortest DTW distance.
+%
+% Note that in order to have the best performance, you are advised to use a uni-directional microphone instead of omni-directional one (such as the built-in microphone in a notebook).
+%% Reference
+%
+% # H. Sakoe and S. Chiba, "Dynamic Programming Algorithm Optimization for Spoken Word Recognition", IEEE Transactions on Acoustics, Speech and Signal Processing, Vol. 26, No. 1, pp. 43{49, 1978.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,149 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Image Data Compression</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="Applications_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Image Data Compression</h1><!--introduction--><p>In this application example, we shall explore the use of vector quantization for image data compression. A true-color image of size mxn is represented by mxn pixels, each consists of 24 bits of RGB colors. On the other hand, each pixel of an mxn index-color image is represented by an p-bit unsigned integer, which serves as an index into a color map of size 2^p by 3. In order to save storage space, we can use vector quantization to convert a true-color image into an index-color image. The original true-color image requires 24*m*n bits of storage. After the conversion, the index-color image requires p*m*n+8*2^p*3 bits of storage. If we use 256 colors to represent an indexed image of 480*640, the compression ratio is (24*480*640)/(8*480*640+8*256*3) = 2.9925.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Processing the original image</a></li><li><a href="#3">Application of vector quantization</a></li><li><a href="#4">Display the results</a></li></ul></div><h2>Processing the original image<a name="1"></a></h2><p>The following code display the original image before compression:</p><pre class="codeinput">X = imread([mltRoot, <span class="string">'/dataSet/annie19980405.jpg'</span>]);
+image(X)
+</pre><img vspace="5" hspace="5" src="Applications_01_01.png" alt=""> <p>Since the original image data is stored as an index-color image, we need to collect all the pixels into a data matrix:</p><pre class="codeinput">[m, n, p]=size(X);
+index=(1:m*n:m*n*p)'*ones(1, m*n)+ones(p,1)*(0:m*n-1);
+data=double(X(index));   <span class="comment">% Each column is a vector of the RGB values of a pixel.</span>
+size(data)
+</pre><pre class="codeoutput">
+ans =
+
+           3      307200
+
+</pre><h2>Application of vector quantization<a name="3"></a></h2><p>We apply different cluster distance functions to obtain the corresponding tree structures, as follows:</p><pre class="codeinput">centerNum=2^5;
+tic
+[center, U, centerHistory] = vecQuantize(data, centerNum);
+toc
+</pre><pre class="codeoutput">No. of centers = 2, loop count = 11, distortion = 1.22929e+09
+No. of centers = 4, loop count = 23, distortion = 3.12334e+08
+No. of centers = 8, loop count = 55, distortion = 1.54567e+08
+No. of centers = 16, loop count = 127, distortion = 7.46661e+07
+No. of centers = 32, loop count = 129, distortion = 3.87941e+07
+Elapsed time is 31.009505 seconds.
+</pre><h2>Display the results<a name="4"></a></h2><p>After we have obtained all the centers along the iteration of vector quantization, we can display them one by one:</p><pre class="codeinput"><span class="keyword">for</span> i=1:length(centerHistory)
+	center=centerHistory{i};
+	centerNum=size(center, 2);
+	fprintf(<span class="string">'i=%d/%d: centerNum=%d\n'</span>, i, length(centerHistory), centerNum);
+	distance=distPairwise(center, data);
+	[minValue, minIndex]=min(distance);
+	X2=reshape(minIndex, m, n);
+	map=center'/255;
+	figure; image(X2); colormap(map); colorbar; axis <span class="string">image</span>;
+	title(sprintf(<span class="string">'Code book size=%g, compression ratio=%f'</span>, centerNum, 8*3*m*n/(log2(centerNum)*m*n+8*centerNum*3)));
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">i=1/5: centerNum=2
+i=2/5: centerNum=4
+i=3/5: centerNum=8
+i=4/5: centerNum=16
+i=5/5: centerNum=32
+</pre><img vspace="5" hspace="5" src="Applications_01_02.png" alt=""> <img vspace="5" hspace="5" src="Applications_01_03.png" alt=""> <img vspace="5" hspace="5" src="Applications_01_04.png" alt=""> <img vspace="5" hspace="5" src="Applications_01_05.png" alt=""> <img vspace="5" hspace="5" src="Applications_01_06.png" alt=""> <p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Image Data Compression
+% In this application example, we shall explore the use of vector quantization for image data compression.
+% A true-color image of size mxn is represented by mxn pixels, each consists of 24 bits of RGB colors.
+% On the other hand, each pixel of an mxn index-color image is represented by an p-bit unsigned integer, which serves as an index into a color map of size 2^p by 3.
+% In order to save storage space, we can use vector quantization to convert a true-color image into an index-color image.
+% The original true-color image requires 24*m*n bits of storage. After the conversion, the index-color image requires p*m*n+8*2^p*3 bits of storage.
+% If we use 256 colors to represent an indexed image of 480*640, the compression ratio is (24*480*640)/(8*480*640+8*256*3) = 2.9925.
+%% Processing the original image
+% The following code display the original image before compression: 
+X = imread([mltRoot, '/dataSet/annie19980405.jpg']);
+image(X)
+%%
+% Since the original image data is stored as an index-color image, we need to collect all the pixels into a data matrix:
+[m, n, p]=size(X);
+index=(1:m*n:m*n*p)'*ones(1, m*n)+ones(p,1)*(0:m*n-1);
+data=double(X(index));   % Each column is a vector of the RGB values of a pixel.
+size(data)
+%% Application of vector quantization
+% We apply different cluster distance functions to obtain the corresponding tree structures, as follows:
+centerNum=2^5;
+tic
+[center, U, centerHistory] = vecQuantize(data, centerNum);
+toc
+%% Display the results
+% After we have obtained all the centers along the iteration of vector
+% quantization, we can display them one by one:
+for i=1:length(centerHistory)
+	center=centerHistory{i};
+	centerNum=size(center, 2);
+	fprintf('i=%d/%d: centerNum=%d\n', i, length(centerHistory), centerNum);
+	distance=distPairwise(center, data);
+	[minValue, minIndex]=min(distance);
+	X2=reshape(minIndex, m, n);
+	map=center'/255;
+	figure; image(X2); colormap(map); colorbar; axis image;
+	title(sprintf('Code book size=%g, compression ratio=%f', centerNum, 8*3*m*n/(log2(centerNum)*m*n+8*centerNum*3)));
+end
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

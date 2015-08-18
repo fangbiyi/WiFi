@@ -1,0 +1,413 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Face Recognition via Eigenfaces (PCA Projection)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="Applications_02.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Face Recognition via Eigenfaces (PCA Projection)</h1><!--introduction--><p>In this application example, we shall investigate the use of PCA (principal component analysis) for face recognition. This method uses PCA to reduce the dimensions of face images while keeping the variations among data as much as possible.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Reading and displaying face images</a></li><li><a href="#4">PCA for face recognition</a></li><li><a href="#9">Performance evaluation via LOO test</a></li><li><a href="#12">Demo</a></li><li><a href="#13">References</a></li></ul></div><h2>Reading and displaying face images<a name="1"></a></h2><p>First of all, we need to read the face dataset that comes with the toolbox. The 10-subjects face dataset is a partial collection of the <a href="<http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html">AT&amp;T face database</a>&gt;, which consists of 40 subjects. (If you want to try the full dataset, download it from the above link.)</p><p>First of all, we need to read the face dataset:</p><pre class="codeinput">imageDir=[mltRoot, <span class="string">'/dataSet/att_faces(partial)'</span>];
+opt=fileList(<span class="string">'defaultOpt'</span>); opt.extName=<span class="string">'pgm'</span>; opt.mode=<span class="string">'recursive'</span>;
+faceData=fileList(imageDir, opt);
+fprintf(<span class="string">'Reading %d face images from %s...'</span>, length(faceData), imageDir);
+tic
+<span class="keyword">for</span> i=1:length(faceData)
+	faceData(i).image=imread(faceData(i).path);
+<span class="keyword">end</span>
+fprintf(<span class="string">' ===&gt; %.2f sec\n'</span>, toc);
+fprintf(<span class="string">'Saving faceData.mat...\n'</span>);
+save <span class="string">faceData</span> <span class="string">faceData</span>
+</pre><pre class="codeoutput">Reading 100 face images from d:\users\jang\matlab\toolbox\machineLearning/dataSet/att_faces(partial)... ===&gt; 0.17 sec
+Saving faceData.mat...
+</pre><p>The face data is then save as a structure array faceData of size 100 in faceData.mat.</p><p>You can display one of the face image as follows:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+subplot(1,2,1);
+imagesc(faceData(1).image); colormap(gray)
+axis <span class="string">image</span>;
+subplot(1,2,2);
+surf(double(faceData(1).image)); colormap(gray)
+axis <span class="string">image</span>; shading <span class="string">interp</span>; view(140, 80);
+</pre><img vspace="5" hspace="5" src="Applications_02_01.png" alt=""> <p>If you want to display face images all the 10 subjects, use "montage":</p><pre class="codeinput">clf
+load <span class="string">faceData.mat</span>
+filePaths={faceData.path};
+montage(filePaths, <span class="string">'Size'</span>, [length(filePaths)/10, 10]);
+</pre><pre class="codeoutput">Warning: Image is too big to fit on screen; displaying at 67% 
+</pre><img vspace="5" hspace="5" src="Applications_02_02.png" alt=""> <h2>PCA for face recognition<a name="4"></a></h2><p>To try PCA on these face images, we need to find the mean face first:</p><pre class="codeinput">clf
+load <span class="string">faceData.mat</span>
+allFaces=double(cat(3, faceData.image));
+meanFace=mean(allFaces, 3);
+imagesc(meanFace); axis <span class="string">image</span>; colormap(gray);
+</pre><img vspace="5" hspace="5" src="Applications_02_03.png" alt=""> <p>Now we are ready to put all face images (after mean subtraction) into a big matrix A and find eigenvalues and eigenvectors of A*A' for PCA analysis. In particular, we can plot the percentage of total variance versus number of eigenvalues to get an idea as how PCA can "squeeze" the variance into the first few eigenvalues, as follows.</p><pre class="codeinput">clf
+load <span class="string">faceData.mat</span>
+[rowDim, colDim]=size(faceData(1).image);
+<span class="comment">% ====== Compute mean face</span>
+meanFace=mean(double(cat(3, faceData.image)), 3);
+<span class="comment">% ====== Put all face into a big matrix</span>
+fprintf(<span class="string">'Put all images into a big matrix... '</span>); tic
+A=[];
+<span class="keyword">for</span> i=1:length(faceData)
+	A(:,i)=double(faceData(i).image(:))-meanFace(:);
+<span class="keyword">end</span>
+fprintf(<span class="string">' ===&gt; %.2f sec\n'</span>, toc);
+<span class="comment">% ====== Perform PCA</span>
+fprintf(<span class="string">'Perform PCA... '</span>); tic
+[A2, eigVec, eigValue]=pca(A);
+fprintf(<span class="string">' ===&gt; %.2f sec\n'</span>, toc);
+<span class="comment">% ====== Plot variance percentage vs. no. of eigenvalues</span>
+cumVar=cumsum(eigValue);
+cumVarPercent=cumVar/cumVar(end)*100;
+plot(cumVarPercent, <span class="string">'.-'</span>);
+xlabel(<span class="string">'No. of eigenvalues'</span>);
+ylabel(<span class="string">'Cumulated variance percentage (%)'</span>);
+title(<span class="string">'Variance percentage vs. no. of eigenvalues'</span>);
+fprintf(<span class="string">'Saving results into eigenFaceResult.mat...\n'</span>);
+save <span class="string">eigenFaceResult</span> <span class="string">A2</span> <span class="string">eigVec</span> <span class="string">cumVarPercent</span> <span class="string">rowDim</span> <span class="string">colDim</span>
+</pre><pre class="codeoutput">Put all images into a big matrix...  ===&gt; 0.01 sec
+Perform PCA...  ===&gt; 0.03 sec
+Saving results into eigenFaceResult.mat...
+</pre><img vspace="5" hspace="5" src="Applications_02_04.png" alt=""> <p>Once we have the eigenvectors of A*A', we can display the first few eigenfaces:</p><pre class="codeinput">load <span class="string">eigenFaceResult.mat</span>	<span class="comment">% load A2, eigVec, rowDim, colDim, etc</span>
+reducedDim=16;			<span class="comment">% Display the first 16 eigenfaces</span>
+eigenfaces = reshape(eigVec, rowDim, colDim, size(A2,2));
+side=ceil(sqrt(reducedDim));
+<span class="keyword">for</span> i=1:reducedDim
+	subplot(side,side,i);
+	imagesc(eigenfaces(:,:,i)); axis <span class="string">image</span>; colormap(gray);
+	set(gca, <span class="string">'xticklabel'</span>, <span class="string">''</span>); set(gca, <span class="string">'yticklabel'</span>, <span class="string">''</span>);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="Applications_02_05.png" alt=""> <p>For purpose of visualization, we can project the original faces into 2D face space:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+load <span class="string">eigenFaceResult.mat</span>	<span class="comment">% Load A2, eigVec, rowDim, colDim, etc</span>
+DS.input=A2(1:2,:);
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+<span class="keyword">for</span> i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+<span class="keyword">end</span>
+clf; dsScatterPlot(DS);
+[recogRate, computed, nearestIndex]=knncLoo(DS);
+fprintf(<span class="string">'Recog. rate = %.2f%%\n'</span>, 100*recogRate);
+</pre><pre class="codeoutput">Recog. rate = 83.00%
+</pre><img vspace="5" hspace="5" src="Applications_02_06.png" alt=""> <p>The leave-one-out recognition rate of KNNC over the projected dataset is only 39.00%. This is a bit on the low side since the overall accounted variance of 2 eigenvalues is only about 30.52%.</p><h2>Performance evaluation via LOO test<a name="9"></a></h2><p>To find the best number of eigenvalues, we can perform an exhaustive search:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+load <span class="string">eigenFaceResult.mat</span>	<span class="comment">% Load A2, eigVec, cumVarPercent, rowDim, colDim</span>
+<span class="comment">% ====== Create DS</span>
+DS.input=A2;
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+<span class="keyword">for</span> i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+<span class="keyword">end</span>
+<span class="comment">% ====== RR w.r.t. no. of eigenvectors</span>
+maxDim=20;
+rr=pcaPerfViaKnncLoo(DS, maxDim, 1);
+plot(1:maxDim, cumVarPercent(1:maxDim), <span class="string">'.-'</span>, 1:maxDim, rr*100, <span class="string">'.-'</span>); grid <span class="string">on</span>
+xlabel(<span class="string">'No. of eigenfaces'</span>);
+ylabel(<span class="string">'LOO recog. rate &amp; cumulated variance percentage'</span>);
+[maxValue, maxIndex]=max(rr);
+line(maxIndex, maxValue*100, <span class="string">'marker'</span>, <span class="string">'o'</span>, <span class="string">'color'</span>, <span class="string">'r'</span>);
+legend(<span class="string">'Cumulated variance percentage'</span>, <span class="string">'LOO recog. rate'</span>, <span class="string">'location'</span>, <span class="string">'southeast'</span>);
+fprintf(<span class="string">'Optimum number of eigenvectors = %d, with recog. rate = %.2f%%\n'</span>, maxIndex, maxValue*100);
+</pre><pre class="codeoutput">		LOO recog. rate of KNNC using 1 dim = 49/100 = 49%
+		LOO recog. rate of KNNC using 2 dim = 84/100 = 84%
+		LOO recog. rate of KNNC using 3 dim = 88/100 = 88%
+		LOO recog. rate of KNNC using 4 dim = 94/100 = 94%
+		LOO recog. rate of KNNC using 5 dim = 97/100 = 97%
+		LOO recog. rate of KNNC using 6 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 7 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 8 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 9 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 10 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 11 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 12 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 13 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 14 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 15 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 16 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 17 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 18 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 19 dim = 99/100 = 99%
+		LOO recog. rate of KNNC using 20 dim = 99/100 = 99%
+Optimum number of eigenvectors = 6, with recog. rate = 99.00%
+</pre><img vspace="5" hspace="5" src="Applications_02_07.png" alt=""> <p>Now it is obvious that the best recognition rate is 99.00%, which occurs when the number of used eigenvectors is 6, with a corresponding variance coverage of 60.72%.</p><p>However, the best recognition rate obtained above is overly optimistic since we used all faces for PCA prjection when performing LOO test. A more objective way to estimate the recognition rate is to preclude the test data from PCA projection, as shown next. (Be warned that it takes a much longer time to run this example.)</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+maxDim=20;		<span class="comment">% Max dim. after PCA</span>
+<span class="comment">% ====== Create DS</span>
+fprintf(<span class="string">'Creating DS... ===&gt; '</span>); tic
+DS=faceData2ds(faceData);
+fprintf(<span class="string">'%.2f sec\n'</span>, toc);
+looRecogRate=zeros(1, maxDim);
+time=zeros(1, maxDim);
+<span class="keyword">for</span> i=1:maxDim
+	opt.pcaDim=i;
+	opt.method=<span class="string">'pca'</span>;
+	fprintf(<span class="string">'%d/%d: opt.pcaDim=%d, '</span>, opt.pcaDim, maxDim, i);
+	[looRecogRate(i), computedClass, correct, timeVec]=faceRecogPerfLoo(DS, opt);
+	time(i)=sum(timeVec);
+	fprintf(<span class="string">'rr=%.2f%%\n'</span>, looRecogRate(i)*100);
+<span class="keyword">end</span>
+plot(1:maxDim, looRecogRate*100, <span class="string">'.-'</span>);
+[maxRr, index]=max(looRecogRate);
+line(index, maxRr*100, <span class="string">'color'</span>, <span class="string">'r'</span>, <span class="string">'marker'</span>, <span class="string">'o'</span>);
+fprintf(<span class="string">'Max RR=%.2f%% at dim=%d\n'</span>, maxRr*100, index);
+xlabel(<span class="string">'PCA feature dimension'</span>); ylabel(<span class="string">'LOO recog. rate'</span>);
+grid <span class="string">on</span>
+</pre><pre class="codeoutput">Creating DS... ===&gt; 0.01 sec
+1/20: opt.pcaDim=1, rr=51.00%
+2/20: opt.pcaDim=2, rr=84.00%
+3/20: opt.pcaDim=3, rr=88.00%
+4/20: opt.pcaDim=4, rr=92.00%
+5/20: opt.pcaDim=5, rr=95.00%
+6/20: opt.pcaDim=6, rr=97.00%
+7/20: opt.pcaDim=7, rr=99.00%
+8/20: opt.pcaDim=8, rr=99.00%
+9/20: opt.pcaDim=9, rr=99.00%
+10/20: opt.pcaDim=10, rr=99.00%
+11/20: opt.pcaDim=11, rr=99.00%
+12/20: opt.pcaDim=12, rr=99.00%
+13/20: opt.pcaDim=13, rr=99.00%
+14/20: opt.pcaDim=14, rr=99.00%
+15/20: opt.pcaDim=15, rr=99.00%
+16/20: opt.pcaDim=16, rr=99.00%
+17/20: opt.pcaDim=17, rr=99.00%
+18/20: opt.pcaDim=18, rr=99.00%
+19/20: opt.pcaDim=19, rr=99.00%
+20/20: opt.pcaDim=20, rr=99.00%
+Max RR=99.00% at dim=7
+</pre><img vspace="5" hspace="5" src="Applications_02_08.png" alt=""> <p>From the above example, the more objective recognition rate is 99.00%, which occurs when the dimension for PCA projection is 7.</p><h2>Demo<a name="12"></a></h2><p>Example demo for face recognition using PCA is shown next:</p><pre class="codeinput">load <span class="string">faceData.mat</span>
+frOpt.method=<span class="string">'pca'</span>;
+frOpt.pcaDim=7;
+frOpt.plot=1;
+faceRecogDemo(faceData, frOpt);
+</pre><pre class="codeoutput">Method=pca
+Time=0.14 sec
+</pre><img vspace="5" hspace="5" src="Applications_02_09.png" alt=""> <h2>References<a name="13"></a></h2><div><ol><li>M. Kirby and L. Sirovich, "Application of the Karhunen-Loeve Procedure for the Characterization of Human Faces". IEEE Transactions on Pattern Analysis and Machine Intelligence 12 (1): 103&#8211;108, 1990.</li><li>M.A. Turk and A.P. Pentland, "Face Recognition Using Eigenfaces", IEEE Conf. on Computer Vision and Pattern Recognition, pp. 586-591, 1991.</li></ol></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Face Recognition via Eigenfaces (PCA Projection)
+% In this application example, we shall investigate the use of PCA (principal component analysis) for face recognition.
+% This method uses PCA to reduce the dimensions of face images while keeping the variations among data as much as possible.
+%% Reading and displaying face images
+% First of all, we need to read the face dataset that comes with the toolbox.
+% The 10-subjects face dataset is a partial collection of the
+% <<http://www.cl.cam.ac.uk/research/dtg/attarchive/facedatabase.html AT&T face database>>,
+% which consists of 40 subjects.
+% (If you want to try the full dataset, download it from the above link.)
+%
+% First of all, we need to read the face dataset:
+imageDir=[mltRoot, '/dataSet/att_faces(partial)'];
+opt=fileList('defaultOpt'); opt.extName='pgm'; opt.mode='recursive';
+faceData=fileList(imageDir, opt);
+fprintf('Reading %d face images from %s...', length(faceData), imageDir);
+tic
+for i=1:length(faceData)
+	faceData(i).image=imread(faceData(i).path);
+end
+fprintf(' ===> %.2f sec\n', toc);
+fprintf('Saving faceData.mat...\n');
+save faceData faceData
+%%
+% The face data is then save as a structure array faceData of size 100 in faceData.mat.
+%
+% You can display one of the face image as follows:
+load faceData.mat
+subplot(1,2,1);
+imagesc(faceData(1).image); colormap(gray)
+axis image;
+subplot(1,2,2);
+surf(double(faceData(1).image)); colormap(gray)
+axis image; shading interp; view(140, 80);
+%%
+% If you want to display face images all the 10 subjects, use "montage":
+clf
+load faceData.mat
+filePaths={faceData.path};
+montage(filePaths, 'Size', [length(filePaths)/10, 10]);
+%% PCA for face recognition
+% To try PCA on these face images, we need to find the mean face first: 
+clf
+load faceData.mat
+allFaces=double(cat(3, faceData.image));
+meanFace=mean(allFaces, 3);
+imagesc(meanFace); axis image; colormap(gray);
+%%
+% Now we are ready to put all face images (after mean subtraction) into a big matrix A and find eigenvalues and eigenvectors of A*A' for PCA analysis.
+% In particular, we can plot the percentage of total variance versus number of eigenvalues to get an idea as how PCA can "squeeze" the variance into the first few eigenvalues, as follows.
+clf
+load faceData.mat
+[rowDim, colDim]=size(faceData(1).image);
+% ====== Compute mean face
+meanFace=mean(double(cat(3, faceData.image)), 3);
+% ====== Put all face into a big matrix
+fprintf('Put all images into a big matrix... '); tic
+A=[];
+for i=1:length(faceData)
+	A(:,i)=double(faceData(i).image(:))-meanFace(:);
+end
+fprintf(' ===> %.2f sec\n', toc);
+% ====== Perform PCA
+fprintf('Perform PCA... '); tic
+[A2, eigVec, eigValue]=pca(A);
+fprintf(' ===> %.2f sec\n', toc);
+% ====== Plot variance percentage vs. no. of eigenvalues
+cumVar=cumsum(eigValue);
+cumVarPercent=cumVar/cumVar(end)*100;
+plot(cumVarPercent, '.-');
+xlabel('No. of eigenvalues');
+ylabel('Cumulated variance percentage (%)');
+title('Variance percentage vs. no. of eigenvalues');
+fprintf('Saving results into eigenFaceResult.mat...\n');
+save eigenFaceResult A2 eigVec cumVarPercent rowDim colDim
+%%
+% Once we have the eigenvectors of A*A', we can display the first few eigenfaces:
+load eigenFaceResult.mat	% load A2, eigVec, rowDim, colDim, etc
+reducedDim=16;			% Display the first 16 eigenfaces
+eigenfaces = reshape(eigVec, rowDim, colDim, size(A2,2));
+side=ceil(sqrt(reducedDim));
+for i=1:reducedDim
+	subplot(side,side,i);
+	imagesc(eigenfaces(:,:,i)); axis image; colormap(gray);
+	set(gca, 'xticklabel', ''); set(gca, 'yticklabel', '');
+end
+%%
+% For purpose of visualization, we can project the original faces into 2D face space:
+load faceData.mat
+load eigenFaceResult.mat	% Load A2, eigVec, rowDim, colDim, etc
+DS.input=A2(1:2,:);
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+for i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+end
+clf; dsScatterPlot(DS);
+[recogRate, computed, nearestIndex]=knncLoo(DS);
+fprintf('Recog. rate = %.2f%%\n', 100*recogRate);
+%%
+% The leave-one-out recognition rate of KNNC over the projected dataset is only 39.00%.
+% This is a bit on the low side since the overall accounted variance of 2 eigenvalues is only about 30.52%.
+%% Performance evaluation via LOO test
+% To find the best number of eigenvalues, we can perform an exhaustive search: 
+load faceData.mat
+load eigenFaceResult.mat	% Load A2, eigVec, cumVarPercent, rowDim, colDim
+% ====== Create DS
+DS.input=A2;
+DS.outputName=unique({faceData.parentDir});
+DS.output=zeros(1, size(DS.input,2));
+for i=1:length(DS.output)
+	DS.output(i)=find(strcmp(DS.outputName, faceData(i).parentDir));
+ 	DS.annotation{i}=faceData(i).path;
+end
+% ====== RR w.r.t. no. of eigenvectors
+maxDim=20;
+rr=pcaPerfViaKnncLoo(DS, maxDim, 1);
+plot(1:maxDim, cumVarPercent(1:maxDim), '.-', 1:maxDim, rr*100, '.-'); grid on
+xlabel('No. of eigenfaces');
+ylabel('LOO recog. rate & cumulated variance percentage');
+[maxValue, maxIndex]=max(rr);
+line(maxIndex, maxValue*100, 'marker', 'o', 'color', 'r');
+legend('Cumulated variance percentage', 'LOO recog. rate', 'location', 'southeast');
+fprintf('Optimum number of eigenvectors = %d, with recog. rate = %.2f%%\n', maxIndex, maxValue*100);
+%%
+% Now it is obvious that the best recognition rate is 99.00%, which occurs when the number of used eigenvectors is 6, 
+% with a corresponding variance coverage of 60.72%.
+%
+% However, the best recognition rate obtained above is overly optimistic since we used all faces for PCA prjection when performing LOO test.
+% A more objective way to estimate the recognition rate is to preclude the test data from PCA projection, as shown next.
+% (Be warned that it takes a much longer time to run this example.)
+load faceData.mat
+maxDim=20;		% Max dim. after PCA
+% ====== Create DS
+fprintf('Creating DS... ===> '); tic
+DS=faceData2ds(faceData);
+fprintf('%.2f sec\n', toc);
+looRecogRate=zeros(1, maxDim);
+time=zeros(1, maxDim);
+for i=1:maxDim
+	opt.pcaDim=i;
+	opt.method='pca';
+	fprintf('%d/%d: opt.pcaDim=%d, ', opt.pcaDim, maxDim, i);
+	[looRecogRate(i), computedClass, correct, timeVec]=faceRecogPerfLoo(DS, opt);
+	time(i)=sum(timeVec);
+	fprintf('rr=%.2f%%\n', looRecogRate(i)*100);
+end
+plot(1:maxDim, looRecogRate*100, '.-');
+[maxRr, index]=max(looRecogRate);
+line(index, maxRr*100, 'color', 'r', 'marker', 'o');
+fprintf('Max RR=%.2f%% at dim=%d\n', maxRr*100, index);
+xlabel('PCA feature dimension'); ylabel('LOO recog. rate');
+grid on
+%%
+% From the above example, the more objective recognition rate is 99.00%, which occurs when the dimension for PCA projection is 7.
+%% Demo
+% Example demo for face recognition using PCA is shown next:
+load faceData.mat
+frOpt.method='pca';
+frOpt.pcaDim=7;
+frOpt.plot=1;
+faceRecogDemo(faceData, frOpt);
+%% References
+%
+% # M. Kirby and L. Sirovich, "Application of the Karhunen-Loeve Procedure for the Characterization of Human Faces". IEEE Transactions on Pattern Analysis and Machine Intelligence 12 (1): 103–108, 1990.
+% # M.A. Turk and A.P. Pentland, "Face Recognition Using Eigenfaces", IEEE Conf. on Computer Vision and Pattern Recognition, pp. 586-591, 1991.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>
