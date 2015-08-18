@@ -1,0 +1,128 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Introduction</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_01Datasets_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Introduction</h1><p>The Machine Learning Toolbox uses several datasets to demonstrate the concepts of data clustering and pattern recognition. For pattern recognition, the following 3 dataset are commonly used:</p><div><ul><li>Iris dataset</li><li>Wine dataset</li><li>Abalone dataset</li></ul></div><p>In fact, these datasets are available from <a href="http://www.ics.uci.edu/~mlearn/MLRepository.html">UCI Machine Learning Repository</a>, which is maintained by Donald Bren School of Information and Computer Science at University of California at Irvine. There are numerous dataset in this website together with their documentations, so researchers on machine learning can use these common datasets for fair evaluation and comparisons. In order to facility the access of the dataset via MATLAB, we usually use a structure variable DS (dataset) for storing all the information of a dataset, as explained next:</p><div><ul><li>DS: the structure variable for storing all information of a dataset</li><li>DS.input: the input part (also known as features) of the dataset</li><li>DS.output: the output part (also known as desired classes or ground truth) of the dataset. Each entry of this vector is an index into a class denoted by DS.outputName.</li><li>DS.dataName: a string representing the name of this dataset</li><li>DS.inputName: a cell string that represents the name of the inputs.</li><li>DS.outputName: a cell string that represents the name of the output classes. Note that each entry in DS.output is actually an index into this cell string. As a result, the range of DS.output should be between 1 and length(DS.outputName) inclusively.</li></ul></div><p>Also we have prepared a function prData.m for returning these three datasets. For instance, if you want to read the commonly used IRIS dataset, please follow next example:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>)
+</pre><pre class="codeoutput">
+DS = 
+
+      dataName: 'iris'
+     inputName: {'sepal length'  'sepal width'  'petal length'  'petal width'}
+    outputName: {'Setosa'  'Versicolour'  'Virginica'}
+         input: [4x150 double]
+        output: [1x150 double]
+
+</pre><p>From the above example, we know that:</p><div><ul><li>DS.dataName is 'iris', representing the name of this dataset.</li><li>DS.inputName is a cell string of length 4, representing the name of the 4 input features.</li><li>DS.input is a matrix of 4x150, indicating the dimensions and number of the feature vector is 4 and 150, respectively.</li><li>DS.output is a vector of 1x150, representing the output classes for these 150 feature vectors. Possible values of DS.output are 1, 2, and 3, indicating the index into the 3 classes whose names are denoted in DS.outputName.</li><li>DS.outputName is a cell string of length 3, representing the name of the classes in this dataset.</li></ul></div><p>Based on the dataset DS, we have prepared funtions for analyzing and visualizing the dataset along different perspectives:</p><div><ul><li>classClassSize(DS): Compute the size of each class</li><li>dsProjPlot1(DS): Plot the classes w.r.t. the projected 1D features</li><li>dsProjPlot2(DS): Plot the classes w.r.t. the projected 2D features</li><li>dsProjPlot3(DS): Plot the classes w.r.t. the projected 3D features</li><li>dsFormatCheck(DS): Check the format of the dataset</li><li>dsNameAdd(DS): Add names to the inputs and outputs of a given dataset</li><li>dsRangePlot(DS): Plot the range of each input of a given dataset</li><li>dsScatterPlot(DS): Scatter plot of a dataset in a 2D space</li><li>dsScatterPlot3(DS): Scatter plot of a dataset in a 3D space</li></ul></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Introduction
+% The Machine Learning Toolbox uses several datasets to demonstrate the concepts of data clustering and pattern recognition.
+% For pattern recognition, the following 3 dataset are commonly used: 
+%
+% * Iris dataset 
+% * Wine dataset 
+% * Abalone dataset 
+%
+% In fact, these datasets are available from <http://www.ics.uci.edu/~mlearn/MLRepository.html UCI Machine Learning Repository>, which is maintained
+% by Donald Bren School of Information and Computer Science at University of California at Irvine.
+% There are numerous dataset in this website together with their documentations, so researchers on machine learning can use these common datasets for fair evaluation and comparisons. 
+% In order to facility the access of the dataset via MATLAB, we usually use a structure variable DS (dataset) for storing all the information of a dataset, as explained next: 
+%
+% * DS: the structure variable for storing all information of a dataset 
+% * DS.input: the input part (also known as features) of the dataset 
+% * DS.output: the output part (also known as desired classes or ground truth) of the dataset. Each entry of this vector is an index into a class denoted by DS.outputName. 
+% * DS.dataName: a string representing the name of this dataset 
+% * DS.inputName: a cell string that represents the name of the inputs. 
+% * DS.outputName: a cell string that represents the name of the output classes. Note that each entry in DS.output is actually an index into this cell string. As a result, the range of DS.output should be between 1 and length(DS.outputName) inclusively. 
+%
+% Also we have prepared a function prData.m for returning these three datasets.
+% For instance, if you want to read the commonly used IRIS dataset, please follow next example: 
+DS = prData('iris')
+%%
+% From the above example, we know that: 
+%
+% * DS.dataName is 'iris', representing the name of this dataset. 
+% * DS.inputName is a cell string of length 4, representing the name of the 4 input features. 
+% * DS.input is a matrix of 4x150, indicating the dimensions and number of the feature vector is 4 and 150, respectively. 
+% * DS.output is a vector of 1x150, representing the output classes for these 150 feature vectors. Possible values of DS.output are 1, 2, and 3, indicating the index into the 3 classes whose names are denoted in DS.outputName. 
+% * DS.outputName is a cell string of length 3, representing the name of the classes in this dataset. 
+%
+% Based on the dataset DS, we have prepared funtions for analyzing and visualizing the dataset along different perspectives:
+%
+% * classClassSize(DS): Compute the size of each class 
+% * dsProjPlot1(DS): Plot the classes w.r.t. the projected 1D features 
+% * dsProjPlot2(DS): Plot the classes w.r.t. the projected 2D features 
+% * dsProjPlot3(DS): Plot the classes w.r.t. the projected 3D features 
+% * dsFormatCheck(DS): Check the format of the dataset
+% * dsNameAdd(DS): Add names to the inputs and outputs of a given dataset
+% * dsRangePlot(DS): Plot the range of each input of a given dataset
+% * dsScatterPlot(DS): Scatter plot of a dataset in a 2D space
+% * dsScatterPlot3(DS): Scatter plot of a dataset in a 3D space
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

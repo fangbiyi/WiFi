@@ -1,0 +1,130 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Linear Classifier (LC)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_03Classification_02.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Linear Classifier (LC)</h1><!--introduction--><p>The linear classifier uses a linear function to map feature vectors into a hyperplane. If the hyperplane is higher than a threshold, then the corresponding feature vectors belong to one class. Otherwise, they belong to the other class. By nature, the linear classifier is suitable for 2-class problems.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example via sequential learning</a></li><li><a href="#2">Batch learning</a></li><li><a href="#3">Use of the least-squares method</a></li></ul></div><h2>A basic example via sequential learning<a name="1"></a></h2><p>We can use lincTrain.m to train a linear classifier by such sequential learning, as shown below.</p><pre class="codeinput">DS=prData(<span class="string">'linSeparable'</span>);
+trainPrm=lincOptSet(<span class="string">'method'</span>, <span class="string">'sequentialLearning'</span>, <span class="string">'maxIter'</span>, 2000, <span class="string">'animation'</span>, <span class="string">'yes'</span>);
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf(<span class="string">'Recog. rate = %.2f%%\n'</span>, 100*recogRate);
+</pre><pre class="codeoutput">Iteration=200/2000
+Iteration=400/2000
+Iteration=600/2000
+Iteration=800/2000
+Iteration=1000/2000
+Iteration=1200/2000
+Iteration=1400/2000
+Iteration=1600/2000
+Iteration=1800/2000
+Iteration=2000/2000
+Recog. rate = 100.00%
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_02_01.png" alt=""> <h2>Batch learning<a name="2"></a></h2><p>It is also possible to have batch learning for linear classifiers. An example is shown next.</p><pre class="codeinput">DS=prData(<span class="string">'linSeparable'</span>);
+trainPrm=lincOptSet(<span class="string">'method'</span>, <span class="string">'batchLearning'</span>, <span class="string">'animation'</span>, <span class="string">'yes'</span>, <span class="string">'printInterval'</span>, 30);
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf(<span class="string">'Recog. rate = %.2f%%\n'</span>, 100*recogRate);
+</pre><pre class="codeoutput">Iteration=30/1000, recog. rate=49%
+Iteration=60/1000, recog. rate=49%
+Iteration=90/1000, recog. rate=49%
+Iteration=120/1000, recog. rate=49%
+Iteration=150/1000, recog. rate=49%
+Iteration=180/1000, recog. rate=47%
+Iteration=210/1000, recog. rate=40%
+Iteration=240/1000, recog. rate=93%
+Recog. rate = 100.00%
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_02_02.png" alt=""> <h2>Use of the least-squares method<a name="3"></a></h2><p>It is also possible to apply the least-squares method for linear classifiers. Since the LS method only minimizes the regression error, usually the corresponding classification accuracy is not as good as the above mentioned sequential or batch learning. However, the LS method is very efficient, so it is possible to apply the LS method once to have the initial parameters promptly, and then apply batch learning to further improve the recognition rate. The following example demonstrates the use of the LS method to minimize the regression error.</p><pre class="codeinput">DS=prData(<span class="string">'linSeparable'</span>);
+trainPrm=lincOptSet(<span class="string">'method'</span>, <span class="string">'minRegressionError'</span>, <span class="string">'animation'</span>, <span class="string">'yes'</span>);
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf(<span class="string">'Recog. rate = %.2f%%\n'</span>, 100*recogRate);
+</pre><pre class="codeoutput">Recog. rate = 96.00%
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_02_03.png" alt=""> <p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Linear Classifier (LC)
+% The linear classifier uses a linear function to map feature vectors into a hyperplane.
+% If the hyperplane is higher than a threshold, then the corresponding feature vectors belong to one class.
+% Otherwise, they belong to the other class. By nature, the linear classifier is suitable for 2-class problems.
+%% A basic example via sequential learning
+% We can use lincTrain.m to train a linear classifier by such sequential learning, as shown below.
+DS=prData('linSeparable');
+trainPrm=lincOptSet('method', 'sequentialLearning', 'maxIter', 2000, 'animation', 'yes');
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf('Recog. rate = %.2f%%\n', 100*recogRate);
+%% Batch learning
+% It is also possible to have batch learning for linear classifiers. An example is shown next. 
+DS=prData('linSeparable');
+trainPrm=lincOptSet('method', 'batchLearning', 'animation', 'yes', 'printInterval', 30);
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf('Recog. rate = %.2f%%\n', 100*recogRate);
+%% Use of the least-squares method
+% It is also possible to apply the least-squares method for linear classifiers. Since the LS method only minimizes the regression error, usually the corresponding classification accuracy is not as good as the above mentioned sequential or batch learning. However, the LS method is very efficient, so it is possible to apply the LS method once to have the initial parameters promptly, and then apply batch learning to further improve the recognition rate. The following example demonstrates the use of the LS method to minimize the regression error.
+DS=prData('linSeparable');
+trainPrm=lincOptSet('method', 'minRegressionError', 'animation', 'yes');
+[coef, recogRate]=lincTrain(DS, trainPrm);
+fprintf('Recog. rate = %.2f%%\n', 100*recogRate);
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

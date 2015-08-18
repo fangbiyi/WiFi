@@ -1,0 +1,158 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>kMeansClustering</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="kMeansClustering_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>kMeansClustering</h1><!--introduction--><p>VQ (vector quantization) of K-means clustering using Forgy's batch-mode method</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Example</a></li><li><a href="#5">See Also</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li>center = kMeansClustering(data, clusterNum)</li><li>[center, assignment, distortion, allCenter] = kMeansClustering(data, clusterNum, plotOpt)</li></ul></div><h2>Description<a name="2"></a></h2><p>
+<p>center = kMeansClustering(data, clusterNum, plotOpt) returns the centers after k-means clustering, where
+	<ul>
+	<li>data (dim x dataNum): data set to be clustered; where each column is a sample data
+	<li>clusterNum: number of clusters (greater than one), or matrix of columns of centers
+	<li>plotOpt: 1 for animation if the dimension is 2
+	<li>center (dim x clusterNum): final cluster centers, where each column is a center
+	</ul>
+<p>[center, assignment, distortion, allCenter] = kMeansClustering(data, clusterNum, plotOpt) also returns assignment and distortion, where
+	<ul>
+	<li>assignment: final assignment matrix, with assignment(i,j)=1 if data instance i belongs to cluster j
+	<li>distortion: values of the objective function during iterations
+	</ul>
+</p><h2>Example<a name="3"></a></h2><pre class="codeinput">DS=dcData(2);
+centerNum=6;
+plotOpt=1;
+[center, assignment, distortion] = kMeansClustering(DS.input, centerNum, plotOpt);
+</pre><pre class="codeoutput">Iteration count = 1/200, distortion = 213.591170
+Iteration count = 2/200, distortion = 103.075632
+Iteration count = 3/200, distortion = 93.313835
+Iteration count = 4/200, distortion = 90.977813
+Iteration count = 5/200, distortion = 90.324017
+Iteration count = 6/200, distortion = 90.042980
+Iteration count = 7/200, distortion = 89.931857
+Iteration count = 8/200, distortion = 89.881969
+Iteration count = 9/200, distortion = 89.842573
+Iteration count = 10/200, distortion = 89.787264
+Iteration count = 11/200, distortion = 89.702380
+Iteration count = 12/200, distortion = 89.580826
+Iteration count = 13/200, distortion = 89.425224
+Iteration count = 14/200, distortion = 89.238788
+Iteration count = 15/200, distortion = 89.132281
+Iteration count = 16/200, distortion = 89.036368
+Iteration count = 17/200, distortion = 88.924723
+Iteration count = 18/200, distortion = 88.787789
+Iteration count = 19/200, distortion = 88.638583
+Iteration count = 20/200, distortion = 88.624424
+Iteration count = 21/200, distortion = 88.612302
+Iteration count = 22/200, distortion = 88.606979
+Iteration count = 23/200, distortion = 88.592142
+Iteration count = 24/200, distortion = 88.581829
+Iteration count = 25/200, distortion = 88.573063
+Iteration count = 26/200, distortion = 88.569138
+Iteration count = 27/200, distortion = 88.567880
+Iteration count = 28/200, distortion = 88.567880
+</pre><img vspace="5" hspace="5" src="kMeansClustering_help_01.png" alt=""> <h2>See Also<a name="5"></a></h2><p><a href="vecQuantize_help.html">vecQuantize</a>, <a href="vqDataPlot_help.html">vqDataPlot</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% kMeansClustering
+% VQ (vector quantization) of K-means clustering using Forgy's batch-mode method
+%% Syntax
+% * 		center = kMeansClustering(data, clusterNum)
+% * 		[center, assignment, distortion, allCenter] = kMeansClustering(data, clusterNum, plotOpt)
+%% Description
+%
+% <html>
+% <p>center = kMeansClustering(data, clusterNum, plotOpt) returns the centers after k-means clustering, where
+% 	<ul>
+% 	<li>data (dim x dataNum): data set to be clustered; where each column is a sample data
+% 	<li>clusterNum: number of clusters (greater than one), or matrix of columns of centers
+% 	<li>plotOpt: 1 for animation if the dimension is 2
+% 	<li>center (dim x clusterNum): final cluster centers, where each column is a center
+% 	</ul>
+% <p>[center, assignment, distortion, allCenter] = kMeansClustering(data, clusterNum, plotOpt) also returns assignment and distortion, where
+% 	<ul>
+% 	<li>assignment: final assignment matrix, with assignment(i,j)=1 if data instance i belongs to cluster j
+% 	<li>distortion: values of the objective function during iterations
+% 	</ul>
+% </html>
+%% Example
+%%
+%
+DS=dcData(2);
+centerNum=6;
+plotOpt=1;
+[center, assignment, distortion] = kMeansClustering(DS.input, centerNum, plotOpt);
+%% See Also
+% <vecQuantize_help.html vecQuantize>,
+% <vqDataPlot_help.html vqDataPlot>.
+
+##### SOURCE END #####
+--><hr><a href="index.html">Top page</a>&nbsp;&nbsp;&nbsp;Next: <a href="interpViaGaussian_help.html">interpViaGaussian.m</a>&nbsp;&nbsp;&nbsp;Prev:<a href="kMeansClusteringOnDist_help.html">kMeansClusteringOnDist.m</a>
+<script>
+function keyFunction(){
+if (event.keyCode==37) document.location="interpViaGaussian_help.html";
+if (event.keyCode==39) document.location="kMeansClusteringOnDist_help.html";
+if (event.keyCode==69) document.location="matlab: edit kMeansClustering.m";
+}
+document.onkeydown=keyFunction;
+</script>
+</body></html>

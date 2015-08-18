@@ -1,0 +1,329 @@
+<?xml version='1.0' encoding="utf-8"?>
+
+<toc version="2.0">
+<!-- First tocitem specifies top level in Help browser Contents pane -->
+<!-- This can be a roadmap page, as shown below, or a content page -->
+    <tocitem target="tb_product_page.html">Machine Learning
+        <!-- Nest tocitems to create hierarchical entries in  Contents-->
+        <!-- To include icons, use the following syntax for tocitems: -->
+        <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->
+        <!-- Title-of-Section </tocitem> -->
+        <!-- where NAME is one of the following (use capital letters): -->
+        <!-- FUNCTION, USER_GUIDE, EXAMPLES, BLOCK, GETTING_STARTED, -->
+        <!-- DEMOS, RELEASE_NOTES --> 
+        <!-- Icon images used for these entries are also stored in -->
+        <!-- matlabroot/toolbox/matlab/icons -->
+        <!-- A Getting Started Guide usually comes first -->
+     <!-- "Getting started" comes first -->
+        <tocitem target="tb_getting_started.html" image="HelpIcon.GETTING_STARTED">
+            Getting Started
+        </tocitem>
+     <!-- User Guide comes next -->
+        <tocitem target="tb_user_guide.html" image="HelpIcon.USER_GUIDE">
+            User Guide
+		<!-- Insert user guide items Here! -->
+		<tocitem target="xxx.html#1">Classification
+			<tocitem target="userGuide_03Classification_01.html">K-Nearest-Neighbor Classifier (KNNC)</tocitem>
+			<tocitem target="userGuide_03Classification_02.html">Linear Classifier (LC)</tocitem>
+			<tocitem target="userGuide_03Classification_03.html">Naive Bayes Classifier (NBC)</tocitem>
+			<tocitem target="userGuide_03Classification_04.html">Quadratic Classifiers (QC)</tocitem>
+			<tocitem target="userGuide_03Classification_05.html">GMM-based Classifiers (GMMC)</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#2">Clustering
+			<tocitem target="userGuide_02Clustering_01.html">Hierarchical Clustering</tocitem>
+			<tocitem target="userGuide_02Clustering_02.html">K-Means Clustering</tocitem>
+			<tocitem target="userGuide_02Clustering_03.html">Vector Quantization</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#3">Datasets
+			<tocitem target="userGuide_01Datasets_01.html">Introduction</tocitem>
+			<tocitem target="userGuide_01Datasets_02.html">Visualization of the Iris Dataset</tocitem>
+			<tocitem target="userGuide_01Datasets_03.html">Visualization of the Wine Dataset</tocitem>
+			<tocitem target="userGuide_01Datasets_04.html">Visualization of the Abalone Dataset</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#4">Dynamic Time Warping
+			<tocitem target="userGuide_07DynamicTimeWarping_01.html">Dynamic Time Warping (DTW)</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#5">Feature Extraction
+			<tocitem target="userGuide_11FeatureExtraction_01.html">Introduction</tocitem>
+			<tocitem target="userGuide_11FeatureExtraction_02.html">Principal Component Analysis (PCA)</tocitem>
+			<tocitem target="userGuide_11FeatureExtraction_03.html">Linear Discriminant Analysis (LDA)</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#6">Feature Selection
+			<tocitem target="userGuide_10FeatureSelection_01.html">Feature Selection for Data Classification</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#7">Performance Evaluation
+			<tocitem target="userGuide_04PerformanceEvaluation_01.html">Performance Evaluation for Data Classification</tocitem>
+		</tocitem>
+		<tocitem target="xxx.html#8">String Comparison
+			<tocitem target="userGuide_13StringComparison_01.html">String Comparison</tocitem>
+		</tocitem>
+
+        </tocitem>
+     <!-- Function reference next -->
+     <!-- First item is page describing function categories, if any -->
+        <tocitem target="tb_functions_by_cat.html" image="HelpIcon.FUNCTION">Function Reference
+		<!-- Insert Function List Here! -->
+		<tocitem target="tb_functions_by_cat.html#2">Audio feature extraction
+			<tocitem target="wave2mfcc_help.html">wave2mfcc</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#3">Audio feature extraction	
+			<tocitem target="mfccOptSet_help.html">mfccOptSet</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#4">Audio signal processing
+			<tocitem target="enframe_help.html">enframe</tocitem>
+			<tocitem target="getTriFilterPrm_help.html">getTriFilterPrm</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#5">Classification analysis
+			<tocitem target="confMatGet_help.html">confMatGet</tocitem>
+			<tocitem target="confMatPlot_help.html">confMatPlot</tocitem>
+			<tocitem target="decisionBoundaryPlot_help.html">decisionBoundaryPlot</tocitem>
+			<tocitem target="detGet_help.html">detGet</tocitem>
+			<tocitem target="detPlot_help.html">detPlot</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#6">Classifier Evaluation
+			<tocitem target="classifierEval_help.html">classifierEval</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#7">Classifier plot
+			<tocitem target="classifierPlot_help.html">classifierPlot</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#8">Classifier training
+			<tocitem target="classifierTrain_help.html">classifierTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#9">Coordinate transform
+			<tocitem target="polarTransform_help.html">polarTransform</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#10">Data count reduction
+			<tocitem target="dsCondense_help.html">dsCondense</tocitem>
+			<tocitem target="dsCondenseDemo_help.html">dsCondenseDemo</tocitem>
+			<tocitem target="dsEdit_help.html">dsEdit</tocitem>
+			<tocitem target="dsEditDemo_help.html">dsEditDemo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#11">Data dimension reduction
+			<tocitem target="flda_help.html">flda</tocitem>
+			<tocitem target="lda_help.html">lda</tocitem>
+			<tocitem target="ldaPerfViaKnncLoo_help.html">ldaPerfViaKnncLoo</tocitem>
+			<tocitem target="pca_help.html">pca</tocitem>
+			<tocitem target="pcaPerfViaKnncLoo_help.html">pcaPerfViaKnncLoo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#12">Dataset generation
+			<tocitem target="dcData_help.html">dcData</tocitem>
+			<tocitem target="prData_help.html">prData</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#13">Dataset manipulation
+			<tocitem target="dsClassMerge_help.html">dsClassMerge</tocitem>
+			<tocitem target="dsClassSize_help.html">dsClassSize</tocitem>
+			<tocitem target="dsFeaDelete_help.html">dsFeaDelete</tocitem>
+			<tocitem target="dsFormatCheck_help.html">dsFormatCheck</tocitem>
+			<tocitem target="dsNameAdd_help.html">dsNameAdd</tocitem>
+			<tocitem target="inputNormalize_help.html">inputNormalize</tocitem>
+			<tocitem target="inputNormalize_b_help.html">inputNormalize_b</tocitem>
+			<tocitem target="inputPass_help.html">inputPass</tocitem>
+			<tocitem target="inputWhiten_help.html">inputWhiten</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#14">Dataset visualization
+			<tocitem target="dsBoxPlot_help.html">dsBoxPlot</tocitem>
+			<tocitem target="dsDistPlot_help.html">dsDistPlot</tocitem>
+			<tocitem target="dsFeaVecPlot_help.html">dsFeaVecPlot</tocitem>
+			<tocitem target="dsFeaVsIndexPlot_help.html">dsFeaVsIndexPlot</tocitem>
+			<tocitem target="dsProjPlot1_help.html">dsProjPlot1</tocitem>
+			<tocitem target="dsProjPlot2_help.html">dsProjPlot2</tocitem>
+			<tocitem target="dsProjPlot3_help.html">dsProjPlot3</tocitem>
+			<tocitem target="dsRangePlot_help.html">dsRangePlot</tocitem>
+			<tocitem target="dsScatterPlot_help.html">dsScatterPlot</tocitem>
+			<tocitem target="dsScatterPlot3_help.html">dsScatterPlot3</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#15">Demos
+			<tocitem target="gradientDescentDemo_help.html">gradientDescentDemo</tocitem>
+			<tocitem target="taylorExpansionDemo_help.html">taylorExpansionDemo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#16">Distance and similarity
+			<tocitem target="distLinScaling_help.html">distLinScaling</tocitem>
+			<tocitem target="distLpNorm_help.html">distLpNorm</tocitem>
+			<tocitem target="distLpNormPairwise_help.html">distLpNormPairwise</tocitem>
+			<tocitem target="distPairwise_help.html">distPairwise</tocitem>
+			<tocitem target="distPairwiseM_help.html">distPairwiseM</tocitem>
+			<tocitem target="distSqrPairwise_help.html">distSqrPairwise</tocitem>
+			<tocitem target="distSqrPairwiseM_help.html">distSqrPairwiseM</tocitem>
+			<tocitem target="simCos_help.html">simCos</tocitem>
+			<tocitem target="simSequence_help.html">simSequence</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#17">Dynamic time warping
+			<tocitem target="dtw_help.html">dtw</tocitem>
+			<tocitem target="dtw1_help.html">dtw1</tocitem>
+			<tocitem target="dtw1m_help.html">dtw1m</tocitem>
+			<tocitem target="dtw2_help.html">dtw2</tocitem>
+			<tocitem target="dtw2m_help.html">dtw2m</tocitem>
+			<tocitem target="dtw3_help.html">dtw3</tocitem>
+			<tocitem target="dtw3m_help.html">dtw3m</tocitem>
+			<tocitem target="dtw3withRestM_help.html">dtw3withRestM</tocitem>
+			<tocitem target="dtw4durationAlignment_help.html">dtw4durationAlignment</tocitem>
+			<tocitem target="dtwBridgePlot_help.html">dtwBridgePlot</tocitem>
+			<tocitem target="dtwFixedPoint_help.html">dtwFixedPoint</tocitem>
+			<tocitem target="dtwOptSet_help.html">dtwOptSet</tocitem>
+			<tocitem target="dtwPathPlot_help.html">dtwPathPlot</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#18">Face recognition
+			<tocitem target="faceData2ds_help.html">faceData2ds</tocitem>
+			<tocitem target="faceRecog_help.html">faceRecog</tocitem>
+			<tocitem target="faceRecogDemo_help.html">faceRecogDemo</tocitem>
+			<tocitem target="faceRecogPerfLoo_help.html">faceRecogPerfLoo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#19">GMM
+			<tocitem target="gmmEval_help.html">gmmEval</tocitem>
+			<tocitem target="gmmGaussianNumEstimate_help.html">gmmGaussianNumEstimate</tocitem>
+			<tocitem target="gmmGrow_help.html">gmmGrow</tocitem>
+			<tocitem target="gmmGrowDemo_help.html">gmmGrowDemo</tocitem>
+			<tocitem target="gmmInitPrmSet_help.html">gmmInitPrmSet</tocitem>
+			<tocitem target="gmmRead_help.html">gmmRead</tocitem>
+			<tocitem target="gmmTrain_help.html">gmmTrain</tocitem>
+			<tocitem target="gmmTrainDemo1d_help.html">gmmTrainDemo1d</tocitem>
+			<tocitem target="gmmTrainDemo2dCovType01_help.html">gmmTrainDemo2dCovType01</tocitem>
+			<tocitem target="gmmTrainDemo2dCovType02_help.html">gmmTrainDemo2dCovType02</tocitem>
+			<tocitem target="gmmTrainDemo2dCovType03_help.html">gmmTrainDemo2dCovType03</tocitem>
+			<tocitem target="gmmWrite_help.html">gmmWrite</tocitem>
+			<tocitem target="gmmcPlot_help.html">gmmcPlot</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#20">GMM classifier
+			<tocitem target="gmmcEval_help.html">gmmcEval</tocitem>
+			<tocitem target="gmmcGaussianNumEstimate_help.html">gmmcGaussianNumEstimate</tocitem>
+			<tocitem target="gmmcTrain_help.html">gmmcTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#21">Gaussian PDF
+			<tocitem target="gaussian_help.html">gaussian</tocitem>
+			<tocitem target="gaussianLog_help.html">gaussianLog</tocitem>
+			<tocitem target="gaussianLogM_help.html">gaussianLogM</tocitem>
+			<tocitem target="gaussianM_help.html">gaussianM</tocitem>
+			<tocitem target="gaussianMle_help.html">gaussianMle</tocitem>
+			<tocitem target="gaussianSimilarity_help.html">gaussianSimilarity</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#22">HMM
+			<tocitem target="dpOverMap_help.html">dpOverMap</tocitem>
+			<tocitem target="dpOverMapM_help.html">dpOverMapM</tocitem>
+			<tocitem target="hmmEval_help.html">hmmEval</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#23">Hierarchical clustering
+			<tocitem target="hierClustering_help.html">hierClustering</tocitem>
+			<tocitem target="hierClusteringAnim_help.html">hierClusteringAnim</tocitem>
+			<tocitem target="hierClusteringPlot_help.html">hierClusteringPlot</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#24">Image feature extraction
+			<tocitem target="auFeaMfcc_help.html">auFeaMfcc</tocitem>
+			<tocitem target="imFeaLbp_help.html">imFeaLbp</tocitem>
+			<tocitem target="imFeaLgbp_help.html">imFeaLgbp</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#25">Input selection
+			<tocitem target="inputSelectExhaustive_help.html">inputSelectExhaustive</tocitem>
+			<tocitem target="inputSelectPlot_help.html">inputSelectPlot</tocitem>
+			<tocitem target="inputSelectSequential_help.html">inputSelectSequential</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#26">Interpolation and regression
+			<tocitem target="interpViaDistance_help.html">interpViaDistance</tocitem>
+			<tocitem target="interpViaGaussian_help.html">interpViaGaussian</tocitem>
+			<tocitem target="polyFitPiecewise_help.html">polyFitPiecewise</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#27">K-nearest-neighbor classifier
+			<tocitem target="classFuzzify_help.html">classFuzzify</tocitem>
+			<tocitem target="knncEval_help.html">knncEval</tocitem>
+			<tocitem target="knncFuzzy_help.html">knncFuzzy</tocitem>
+			<tocitem target="knncLoo_help.html">knncLoo</tocitem>
+			<tocitem target="knncLooWrtK_help.html">knncLooWrtK</tocitem>
+			<tocitem target="knncPlot_help.html">knncPlot</tocitem>
+			<tocitem target="knncTrain_help.html">knncTrain</tocitem>
+			<tocitem target="knncTrain_b_help.html">knncTrain_b</tocitem>
+			<tocitem target="knncWrtK_help.html">knncWrtK</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#28">Least squares
+			<tocitem target="planeFitViaTls_help.html">planeFitViaTls</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#29">Linear classifier
+			<tocitem target="lincEval_help.html">lincEval</tocitem>
+			<tocitem target="lincOptSet_help.html">lincOptSet</tocitem>
+			<tocitem target="lincTrain_help.html">lincTrain</tocitem>
+			<tocitem target="perceptronDemo_help.html">perceptronDemo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#30">Multimedia data processing
+			<tocitem target="mmDataCollect_help.html">mmDataCollect</tocitem>
+			<tocitem target="mmDataList_help.html">mmDataList</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#31">Naive Bayes classifier
+			<tocitem target="nbcEval_help.html">nbcEval</tocitem>
+			<tocitem target="nbcPlot_help.html">nbcPlot</tocitem>
+			<tocitem target="nbcTrain_help.html">nbcTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#32">Nearest Neighbor Search
+			<tocitem target="bbTreeGen_help.html">bbTreeGen</tocitem>
+			<tocitem target="bbTreeSearch_help.html">bbTreeSearch</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#33">Performance evaluation
+			<tocitem target="crossValidate_help.html">crossValidate</tocitem>
+			<tocitem target="cvDataGen_help.html">cvDataGen</tocitem>
+			<tocitem target="perfCv_help.html">perfCv</tocitem>
+			<tocitem target="perfCv4classifier_help.html">perfCv4classifier</tocitem>
+			<tocitem target="perfLoo_help.html">perfLoo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#34">Quadratic classifier
+			<tocitem target="qcEval_help.html">qcEval</tocitem>
+			<tocitem target="qcPlot_help.html">qcPlot</tocitem>
+			<tocitem target="qcTrain_help.html">qcTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#35">Sparse-representation classifier
+			<tocitem target="srcEval_help.html">srcEval</tocitem>
+			<tocitem target="srcTrain_help.html">srcTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#36">String match
+			<tocitem target="dpPathPlot4strMatch_help.html">dpPathPlot4strMatch</tocitem>
+			<tocitem target="editDistance_help.html">editDistance</tocitem>
+			<tocitem target="lcs_help.html">lcs</tocitem>
+			<tocitem target="xcorr4text_help.html">xcorr4text</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#37">String processing
+			<tocitem target="perfLoo4audio_help.html">perfLoo4audio</tocitem>
+			<tocitem target="strCentroid_help.html">strCentroid</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#38">Support vector machine
+			<tocitem target="svmcEval_help.html">svmcEval</tocitem>
+			<tocitem target="svmcTrain_help.html">svmcTrain</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#39">Utility
+			<tocitem target="fileList_help.html">fileList</tocitem>
+			<tocitem target="getColor_help.html">getColor</tocitem>
+			<tocitem target="mixLogSum_help.html">mixLogSum</tocitem>
+			<tocitem target="mltDoc_help.html">mltDoc</tocitem>
+			<tocitem target="mltRoot_help.html">mltRoot</tocitem>
+			<tocitem target="mltSetup_help.html">mltSetup</tocitem>
+			<tocitem target="peaksFunc_help.html">peaksFunc</tocitem>
+			<tocitem target="toolboxInfo_help.html">toolboxInfo</tocitem>
+		</tocitem>
+		<tocitem target="tb_functions_by_cat.html#40">Vector quantization
+			<tocitem target="clusterValidate_help.html">clusterValidate</tocitem>
+			<tocitem target="kMeansClustering_help.html">kMeansClustering</tocitem>
+			<tocitem target="kMeansClusteringOnDist_help.html">kMeansClusteringOnDist</tocitem>
+			<tocitem target="vecQuantize_help.html">vecQuantize</tocitem>
+			<tocitem target="vqCenterInit_help.html">vqCenterInit</tocitem>
+			<tocitem target="vqCenterObjInit_help.html">vqCenterObjInit</tocitem>
+			<tocitem target="vqDataPlot_help.html">vqDataPlot</tocitem>
+		</tocitem>
+
+        </tocitem>
+        <tocitem target="tb_release_notes.html" image="HelpIcon.RELEASE_NOTES">Release Notes
+        </tocitem>
+        <!-- Optional List of Examples, with hyperlinks to examples in other files -->
+        <!-- Optional Function Reference by category comes next -->
+        <tocreference target="helpfuncbycat.xml" image="HelpIcon.FUNCTION">
+        </tocreference>
+        
+        <!-- Demos -->
+        <tocitem target="xxx.html" image="HelpIcon.DEMO">Applications
+        <!-- Insert Demo List Here! -->
+		<tocitem target="Applications_01.html">Image Data Compression</tocitem>
+		<tocitem target="Applications_02.html">Face Recognition via Eigenfaces (PCA Projection)</tocitem>
+		<tocitem target="Applications_03.html">Face Recognition via Fisherfaces (PCA+LDA Projection)</tocitem>
+		<tocitem target="Applications_04.html">Speaker-dependent Voice Command Recognition</tocitem>
+		<tocitem target="Applications_05.html">Music Genre Classification via Acoustic Features</tocitem>
+
+        </tocitem>
+        <tocitem target="http://mirlab.org/jang/books/dcpr" image="$toolbox/matlab/icons/webicon.gif">
+        Tutorial on the Methods of Machine Learning Toolbox
+        </tocitem>
+    </tocitem>
+</toc>

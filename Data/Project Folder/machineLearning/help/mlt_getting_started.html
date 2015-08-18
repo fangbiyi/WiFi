@@ -1,0 +1,278 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Machine Learning Toolbox: Getting Started</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-17"><meta name="DC.source" content="mlt_getting_started.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Machine Learning Toolbox: Getting Started</h1><!--introduction--><p>In this section, we shall walk you through a basic example of data classification.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Dataset Format</a></li><li><a href="#3">Data Visualization</a></li><li><a href="#8">Classifier Design</a></li><li><a href="#13">Decision Boundaries and scatter plot</a></li><li><a href="#15">PDF Plots</a></li><li><a href="#17">Performance Evaluation</a></li></ul></div><h2>Dataset Format<a name="1"></a></h2><p>Before you try out the classification methods provided in this toolbox, you need to collect the dataset for train the classifier first, and then evaluate its performance. The most well-known dataset is the Iris dataset, which is available from <a href="http://archive.ics.uci.edu/ml/">UCI Machine Learning Repository</a>. We can imported the dataset into MATLAB as follows:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>)
+</pre><pre class="codeoutput">
+DS = 
+
+      dataName: 'iris'
+     inputName: {'sepal length'  'sepal width'  'petal length'  'petal width'}
+    outputName: {'Setosa'  'Versicolour'  'Virginica'}
+         input: [4x150 double]
+        output: [1x150 double]
+
+</pre><p>Here the dataset is stored in a structure variable "DS" with the following fields:</p><div><ul><li>DS: the structure variable for storing all information of a dataset</li><li>DS.input: the input part (also known as features or attributes) of the dataset</li><li>DS.output: the output part (also known as desired classes or ground truth) of the dataset. Each entry of this vector is an index into a class denoted by DS.outputName.</li><li>DS.dataName: a string representing the name of this dataset</li><li>DS.inputName: a cell string that represents the names of the inputs.</li><li>DS.outputName: a cell string that represents the names of the output classes. Note that each entry in DS.output is actually an index into this cell string. As a result, the range of DS.output should be between 1 and length(DS.outputName) inclusively.</li></ul></div><p>From the varialbe DS, you should know that the dataset has 4 inputs (sepal length, sepal width, petal length, petal width) of 3 classes (Setosa, Versicolour, Virginica).</p><h2>Data Visualization<a name="3"></a></h2><p>The toolbox provides extensive functions to visualize the dataset. First of all, we can display the data count of each class:</p><pre class="codeinput">[classSize, classLabel]=dsClassSize(DS, 1);
+</pre><pre class="codeoutput">4 features
+150 instances
+3 classes
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_01.png" alt=""> <p>Here the data count for each class is 50.</p><p>We can plot the classes w.r.t. the features:</p><pre class="codeinput">dsProjPlot1(DS);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_02.png" alt=""> <p>From the above plots, it is obvious that we can use features 3 or 4 to separate the first class (Setosa) easily. However, there is no single feature that can separate classes 2 (Versicolour) and 3 (Virginica).</p><p>We can also project the data instances onto two feature dimensions:</p><pre class="codeinput">dsProjPlot2(DS);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_03.png" alt=""> <p>The scatter plots show the data distribution after projecting onto 2 features. Again, the data instances of class 1 are well separated from those of the other two classes.</p><p>We can even go one step further to plot the projection onto 3 feature dimensions:</p><pre class="codeinput">dsProjPlot3(DS);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_04.png" alt=""> <p>The scatter plots show the data distribution after projecting onto 3 features. Since our visual preception is based 2D, the "feel" of the distribution may depend on your viewing angles. Fortunately you can click and drag each plot to change the viewing angle.</p><p>In fact, you can use LDA (linear discriminant analysis) to find the best projection for classification. The command is "lda".</p><h2>Classifier Design<a name="8"></a></h2><p>Once we have the dataset, we can design a classifier and evaluate its performance. For simplicity, we shall design a naive Bayes classifier (NBC) for the Iris dataset. For easy visualization, we shall only use inputs 3 and 4 of the dataset for classification.</p><p>As a common practice in pattern recognition, we need to partition the dataset into a training set and a test set. Usually we use the training set for designing a classifier, and the test set for evaluate the performance of the classifier. We can use the command cvDataGen to create these two sets:</p><pre class="codeinput">DS.input=DS.input(3:4, :);			<span class="comment">% Only take dimensions 3 and 4 for 2d visualization</span>
+cvData=cvDataGen(DS, 2, <span class="string">'full'</span>);	<span class="comment">% 'full' to generate the datasets directly (not indice only)</span>
+TS=cvData(1).TS;
+VS=cvData(1).VS;
+</pre><p>Note that cvDataGen is commonly used for generating datasets for m-fold cross-validation as a more precise estimate of the recognition rate. But here we are only m=2 to obtain the training and test sets.</p><p>Now we can use TS for designing a classifier, and VS for performance evaluation. Here we use the naive Bayes classifier in this guided tour. We use the command nbcTrain to train the classifier:</p><pre class="codeinput">[nbcPrm, logLike, recogRate, hitIndex]=nbcTrain(TS);
+fprintf(<span class="string">'Recog. rate = %f%%\n'</span>, recogRate*100);
+</pre><pre class="codeoutput">Recog. rate = 96.000000%
+</pre><p>In other words, nbcTrain can be used to train a classifier, and the returned outputs are</p><div><ul><li>nbcPrm: parameters for the classifier</li><li>logLike: log likelihood of each data instance</li><li>recogRate: recognition rate of the dataset</li><li>hitIndex: indices of correctly classified data instances</li></ul></div><p>Here the recognition rate is 96.00%, which is satisfactory to some extent. However, it should be noted that this is the so-called inside-test accuracy, which is usually overly optimistic. Moreover, the overall recognition rate does not describe how the misclassifications occur. To get a breakdown list of each class' performance, you need to display the confusion matrix:</p><pre class="codeinput">computed=nbcEval(TS, nbcPrm);
+confMat=confMatGet(TS.output, computed);
+subplot(1,1,1);
+opt=confMatPlot(<span class="string">'defaultOpt'</span>);
+opt.className=TS.outputName;
+opt.mode=<span class="string">'dataCount'</span>;
+confMatPlot(confMat, opt);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_05.png" alt=""> <p>In the above matrix plot, each row is a true class while each column is a predicted class. From this matrix, it is obvious that there are 6 misclassifications, with 2 instances of Versicolour being misclassified as Virginica, and 1 instances of Virginica being misclassified as Versicolour.</p><p>If we want to see the recognition rates along each class, we can plot the confusion matrix in terms of percentages:</p><pre class="codeinput">opt.mode=<span class="string">'percentage'</span>;
+confMatPlot(confMat, opt);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_06.png" alt=""> <p>Here it becomes obvious that the recognition rates (the diagonal elements of the matrix) for these 3 classes are 100%, 92%, and 96%, respectively.</p><h2>Decision Boundaries and scatter plot<a name="13"></a></h2><p>Since we are only using two inputs of the dataset, it is possible to plot the decision boundaries of these 3 classes in a 2D space. In other words, you can simply another extra parameter to nbcTrain and it will plot the decision boundaries together with the data instances used for training the classifier:</p><pre class="codeinput">TS.hitIndex=hitIndex;		<span class="comment">% Attach hitIndex to DS for plotting</span>
+nbcPlot(TS, nbcPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_07.png" alt=""> <p>Note that the second input argument to nbcTrain is used to specify the parameters for training the NBC. Here we used an empty matrix to indicate that default parameters are adopted for training. The third nonzero input argument requests the command to perform more visualization, including</p><div><ul><li>Display the scatter plot</li><li>Draw the decision boundaries of these 3 classes</li><li>Put a cross on the misclassified instances</li></ul></div><h2>PDF Plots<a name="15"></a></h2><p>In NBC training, we assume that the PDF (probability density function) for each class is obtained as the product of the PDFs over all input dimensions. To plot the PDF of each class along each dimension, you can use the command nbcPlot:</p><pre class="codeinput">nbcPlot(TS, nbcPrm, <span class="string">'1dPdf'</span>);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_08.png" alt=""> <p>As mentioned earlier, the class PDF is obtained as the product of the PDFs over all input dimensions. Again, we can use nbcPlot to display the 2D class PDF:</p><pre class="codeinput">nbcPlot(TS, nbcPrm, <span class="string">'2dPdf'</span>);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_09.png" alt=""> <h2>Performance Evaluation<a name="17"></a></h2><p>Up to this point, we have only analized the classifier based on the training set TS. If we want to have an objective evaluation of the performance, we need to use VS, which is an "unseen" dataset for the classifier. The recognition rate based on VS is:</p><pre class="codeinput">[computedClass, logProb, recogRate, hitIndex]=nbcEval(VS, nbcPrm);
+fprintf(<span class="string">'Recog. rate = %f%%\n'</span>, recogRate*100);
+</pre><pre class="codeoutput">Recog. rate = 96.000000%
+</pre><p>In this case, the outside-test recognition rate is also 96%. We can also plot the decision boundaries:</p><pre class="codeinput">VS.hitIndex=find(VS.output==computedClass);
+nbcPlot(VS, nbcPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_10.png" alt=""> <p>The confusion matrix (in both data counts and percentage) can be shown next:</p><pre class="codeinput">computed=nbcEval(VS, nbcPrm);
+confMat=confMatGet(VS.output, computed);
+opt=confMatPlot(<span class="string">'defaultOpt'</span>);
+opt.className=VS.outputName;
+opt.mode=<span class="string">'both'</span>;
+confMatPlot(confMat, opt);
+</pre><img vspace="5" hspace="5" src="mlt_getting_started_11.png" alt=""> <p>In this case, the outside-test RR is the same as the outside-test RR. In general, the outside-test RR is lower than the inside-test RR since the classifier has "seen" the training set already.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Machine Learning Toolbox: Getting Started
+% In this section, we shall walk you through a basic example of data classification.
+%% Dataset Format
+% Before you try out the classification methods provided in this toolbox,
+% you need to collect the dataset for train the classifier first, and then evaluate its
+% performance. The most well-known dataset is the Iris dataset, which is available
+% from <http://archive.ics.uci.edu/ml/ UCI Machine Learning Repository>.
+% We can imported the dataset into MATLAB as follows:
+DS = prData('iris')
+%%
+% Here the dataset is stored in a structure variable "DS" with the following fields: 
+%
+% * DS: the structure variable for storing all information of a dataset 
+% * DS.input: the input part (also known as features or attributes) of the dataset 
+% * DS.output: the output part (also known as desired classes or ground truth) of the dataset. Each entry of this vector is an index into a class denoted by DS.outputName. 
+% * DS.dataName: a string representing the name of this dataset 
+% * DS.inputName: a cell string that represents the names of the inputs. 
+% * DS.outputName: a cell string that represents the names of the output classes. Note that each entry in DS.output is actually an index into this cell string. As a result, the range of DS.output should be between 1 and length(DS.outputName) inclusively. 
+%
+% From the varialbe DS, you should know that the dataset has 4 inputs (sepal length, sepal width, petal length, petal width) of 3
+% classes (Setosa, Versicolour, Virginica).
+%% Data Visualization
+% The toolbox provides extensive functions to visualize the dataset. First of all,
+% we can display the data count of each class:
+[classSize, classLabel]=dsClassSize(DS, 1);
+%%
+% Here the data count for each class is 50.
+%
+% We can plot the classes w.r.t. the features: 
+dsProjPlot1(DS);
+%%
+% From the above plots, it is obvious that we can use features 3 or 4 to separate 
+% the first class (Setosa) easily. However, there is no single feature that can
+% separate classes 2 (Versicolour) and 3 (Virginica).
+%
+% We can also project the data instances onto two feature dimensions:
+dsProjPlot2(DS);
+%%
+% The scatter plots show the data distribution after projecting onto 2 features. Again,
+% the data instances of class 1 are well separated from those of the other
+% two classes.
+%
+% We can even go one step further to plot the projection onto 3 feature dimensions:
+dsProjPlot3(DS);
+%%
+% The scatter plots show the data distribution after projecting onto 3
+% features. Since our visual preception is based 2D, the "feel" of the distribution
+% may depend on your viewing angles. Fortunately you can click and drag
+% each plot to change the viewing angle.
+%
+% In fact, you can use LDA (linear discriminant analysis) to find the best
+% projection for classification. The command is "lda".
+%% Classifier Design
+% Once we have the dataset, we can design a classifier and evaluate its
+% performance. For simplicity, we shall design a naive Bayes classifier
+% (NBC) for the Iris dataset. For easy visualization, we shall only use
+% inputs 3 and 4 of the dataset for classification.
+% 
+% As a common practice in pattern recognition, we need to partition
+% the dataset into a training set and a test set. Usually we use the
+% training set for designing a classifier, and the test set for evaluate the
+% performance of the classifier. We can use the command cvDataGen to create
+% these two sets:
+DS.input=DS.input(3:4, :);			% Only take dimensions 3 and 4 for 2d visualization
+cvData=cvDataGen(DS, 2, 'full');	% 'full' to generate the datasets directly (not indice only)
+TS=cvData(1).TS;
+VS=cvData(1).VS;
+%%
+% Note that cvDataGen is commonly used for generating datasets for m-fold
+% cross-validation as a more precise estimate of the recognition rate. But
+% here we are only m=2 to obtain the training and test sets.
+%
+% Now we can use TS for designing a classifier, and VS for performance
+% evaluation. Here we use the naive Bayes classifier in this guided tour.
+% We use the command nbcTrain to train the classifier:
+[nbcPrm, logLike, recogRate, hitIndex]=nbcTrain(TS);
+fprintf('Recog. rate = %f%%\n', recogRate*100);
+%%
+% In other words, nbcTrain can be used to train a classifier, and the returned outputs are
+%
+% * nbcPrm: parameters for the classifier
+% * logLike: log likelihood of each data instance
+% * recogRate: recognition rate of the dataset
+% * hitIndex: indices of correctly classified data instances
+%
+% Here the recognition rate is 96.00%, which is satisfactory to some
+% extent. However, it should be noted that this is the so-called
+% inside-test accuracy, which is usually overly optimistic. Moreover,
+% the overall recognition rate does not describe how the 
+% misclassifications occur. To get a breakdown list of each class'
+% performance, you need to display the confusion matrix:
+computed=nbcEval(TS, nbcPrm);
+confMat=confMatGet(TS.output, computed);
+subplot(1,1,1);
+opt=confMatPlot('defaultOpt');
+opt.className=TS.outputName;
+opt.mode='dataCount';
+confMatPlot(confMat, opt);
+%%
+% In the above matrix plot, each row is a true class while each column is a
+% predicted class. From this matrix, it is obvious that there are 6
+% misclassifications, with 2 instances of Versicolour being misclassified
+% as Virginica, and 1 instances of Virginica being misclassified as
+% Versicolour.
+%
+% If we want to see the recognition rates along each class, we can plot the
+% confusion matrix in terms of percentages:
+opt.mode='percentage';
+confMatPlot(confMat, opt);
+%%
+% Here it becomes obvious that the recognition rates
+% (the diagonal elements of the matrix) for these 3 classes are
+% 100%, 92%, and 96%, respectively.
+%% Decision Boundaries and scatter plot
+% Since we are only using two inputs of the dataset, it is possible to
+% plot the decision boundaries of these 3 classes in a 2D space. In other
+% words, you can simply another extra parameter to nbcTrain and it will
+% plot the decision boundaries together with the data instances used for
+% training the classifier:
+TS.hitIndex=hitIndex;		% Attach hitIndex to DS for plotting
+nbcPlot(TS, nbcPrm, 'decBoundary');
+%%
+% Note that the second input argument to nbcTrain is used to specify the
+% parameters for training the NBC. Here we used an empty matrix to indicate
+% that default parameters are adopted for training. The third nonzero input
+% argument requests the command to perform more visualization, including
+%
+% * Display the scatter plot
+% * Draw the decision boundaries of these 3 classes
+% * Put a cross on the misclassified instances
+%% PDF Plots
+% In NBC training, we assume that the PDF
+% (probability density function) for each class
+% is obtained as the product of the PDFs over all input
+% dimensions. To plot the PDF of each class along each dimension, you can use the command nbcPlot:
+nbcPlot(TS, nbcPrm, '1dPdf');
+%%
+% As mentioned earlier, the class PDF is obtained as the product of the PDFs over
+% all input dimensions. Again, we can use nbcPlot to display the 2D class
+% PDF:
+nbcPlot(TS, nbcPrm, '2dPdf');
+%% Performance Evaluation
+% Up to this point, we have only analized the classifier based on the
+% training set TS. If we want to have an objective evaluation of the
+% performance, we need to use VS, which is an "unseen" dataset for the
+% classifier. The recognition rate based on VS is:
+[computedClass, logProb, recogRate, hitIndex]=nbcEval(VS, nbcPrm);
+fprintf('Recog. rate = %f%%\n', recogRate*100);
+%%
+% In this case, the outside-test recognition rate is also 96%. We can also
+% plot the decision boundaries:
+VS.hitIndex=find(VS.output==computedClass);
+nbcPlot(VS, nbcPrm, 'decBoundary');
+%%
+% The confusion matrix (in both data counts and percentage) can be shown next:
+computed=nbcEval(VS, nbcPrm);
+confMat=confMatGet(VS.output, computed);
+opt=confMatPlot('defaultOpt');
+opt.className=VS.outputName;
+opt.mode='both';
+confMatPlot(confMat, opt);
+%%
+% In this case, the outside-test RR is the same as the outside-test RR. In
+% general, the outside-test RR is lower than the inside-test RR since the
+% classifier has "seen" the training set already.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

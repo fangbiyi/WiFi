@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>K-Means Clustering</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_02Clustering_02.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>K-Means Clustering</h1><!--introduction--><p>K-means clustering (k-means for short), also known as Forgy's algorithm, is one of the most well-known methods for data clustering. The goal of k-means is to find k points of a dataset that can best represent the dataset in a certain mathematical sense (to be detailed later). These k points are also known as cluster centers, prototypes, centroids, or codewords, and so on. After obtaining these cluster centers, we can use them for numerous tasks, including:</p><div><ul><li>Data compression: We can use these cluster centers to represent the original dataset. Since the number of centers is much less than the size of the original dataset, the goal of data compression can be achieved.</li><li>Data classification: We can use these cluster centers for data classification such that the computation load is lessened and the influence from noisy data is reduced.</li></ul></div><p>K-means is also a method of partitional clustering in which we need to specify the number of clusters before starting the clustering process. Suppose that the number of clusters is m, then we can define an objective function as the sum of square distances between a data point and its nearest cluster centers. We can follow a procedure to minimize the objective function iteratively by finding a new set of cluster centers that can lower the value of the objective function at each iteration.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example</a></li><li><a href="#2">Visualization of clustering process</a></li><li><a href="#4">Plot the result</a></li></ul></div><h2>A basic example<a name="1"></a></h2><p>The following example demonstrates the use of k-means on a two-dimensional dataset:</p><pre class="codeinput">DS=dcData(2);
+centerNum=8;
+center=kMeansClustering(DS.input, centerNum)
+</pre><pre class="codeoutput">
+center =
+
+  Columns 1 through 7
+
+   -0.1792    0.1055    0.6745   -0.6775    0.5615    0.3556   -0.4588
+   -0.6990    0.6695   -0.1383    0.1361    0.4403   -0.5808    0.5612
+
+  Column 8
+
+   -0.6072
+   -0.3904
+
+</pre><h2>Visualization of clustering process<a name="2"></a></h2><p>If you would like to visualize the clustering process, try the next example:</p><pre class="codeinput">DS=dcData(2);
+centerNum=8;
+center=kMeansClustering(DS.input, centerNum, 1);
+</pre><pre class="codeoutput">Iteration count = 1/200, distortion = 140.440285
+Iteration count = 2/200, distortion = 68.750535
+Iteration count = 3/200, distortion = 66.234388
+Iteration count = 4/200, distortion = 65.860381
+Iteration count = 5/200, distortion = 65.764995
+Iteration count = 6/200, distortion = 65.723120
+Iteration count = 7/200, distortion = 65.714912
+Iteration count = 8/200, distortion = 65.708982
+Iteration count = 9/200, distortion = 65.706945
+Iteration count = 10/200, distortion = 65.706945
+</pre><img vspace="5" hspace="5" src="userGuide_02Clustering_02_01.png" alt=""> <p>MATLAB will display the animation as the clustering goes.</p><h2>Plot the result<a name="4"></a></h2><p>We can use vqDataPlot to present the result after clustering, as follows.</p><pre class="codeinput"><span class="comment">% ====== Get the data set</span>
+DS = dcData(5);
+subplot(2,2,1);
+plot(DS.input(1,:), DS.input(2,:), <span class="string">'.'</span>);
+axis <span class="string">tight</span>, axis <span class="string">image</span>
+<span class="comment">% ====== Run kmeans</span>
+centerNum=4;
+[center, U, distortion, allCenters] = kMeansClustering(DS.input, centerNum);
+<span class="comment">% ====== Plot the result</span>
+subplot(2,2,2);
+vqDataPlot(DS.input, center);
+subplot(2,1,2);
+plot(distortion, <span class="string">'o-'</span>);
+xlabel(<span class="string">'No. of iterations'</span>); ylabel(<span class="string">'Distortion'</span>); grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="userGuide_02Clustering_02_02.png" alt=""> <p>The upper left plot in the above example shows the scatter plot of the dataset. The upper right plot shows the clustering results. The lower plot demonstrates how the objective function (distortion) decreases with each iteration.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% K-Means Clustering
+% K-means clustering (k-means for short), also known as Forgy's algorithm, is one of the most well-known methods for data clustering. The goal of k-means is to find k points of a dataset that can best represent the dataset in a certain mathematical sense (to be detailed later). These k points are also known as cluster centers, prototypes, centroids, or codewords, and so on. After obtaining these cluster centers, we can use them for numerous tasks, including: 
+%
+% * Data compression: We can use these cluster centers to represent the original dataset. Since the number of centers is much less than the size of the original dataset, the goal of data compression can be achieved. 
+% * Data classification: We can use these cluster centers for data classification such that the computation load is lessened and the influence from noisy data is reduced. 
+%
+% K-means is also a method of partitional clustering in which we need to specify the number of clusters before starting the clustering process. Suppose that the number of clusters is m, then we can define an objective function as the sum of square distances between a data point and its nearest cluster centers. We can follow a procedure to minimize the objective function iteratively by finding a new set of cluster centers that can lower the value of the objective function at each iteration.
+%% A basic example
+% The following example demonstrates the use of k-means on a two-dimensional dataset: 
+DS=dcData(2);
+centerNum=8;
+center=kMeansClustering(DS.input, centerNum)
+%% Visualization of clustering process
+% If you would like to visualize the clustering process, try the next example:
+DS=dcData(2);
+centerNum=8;
+center=kMeansClustering(DS.input, centerNum, 1);
+%%
+% MATLAB will display the animation as the clustering goes.
+%% Plot the result
+% We can use vqDataPlot to present the result after clustering, as follows.
+
+% ====== Get the data set
+DS = dcData(5);
+subplot(2,2,1);
+plot(DS.input(1,:), DS.input(2,:), '.');
+axis tight, axis image
+% ====== Run kmeans
+centerNum=4;
+[center, U, distortion, allCenters] = kMeansClustering(DS.input, centerNum);
+% ====== Plot the result
+subplot(2,2,2);
+vqDataPlot(DS.input, center);
+subplot(2,1,2);
+plot(distortion, 'o-');
+xlabel('No. of iterations'); ylabel('Distortion'); grid on
+%%
+% The upper left plot in the above example shows the scatter plot of the dataset. The upper right plot shows the clustering results. The lower plot demonstrates how the objective function (distortion) decreases with each iteration.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

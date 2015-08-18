@@ -1,0 +1,292 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Functions by Category</title><meta name="generator" content="MATLAB 7.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-11-17"><meta name="DC.source" content="mlt_functions_by_cat.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+
+  </style></head><body><div class="content"><h1>Functions by Category</h1><!--introduction--><p>Machine Learning Toolbox Version 1.2, 28-Oct-2012</p><p>Requires MATLAB&reg; 7.14.0.739 (R2012a)</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Audio feature extraction</a></li><li><a href="#2">Audio signal processing</a></li><li><a href="#3">Classification analysis</a></li><li><a href="#4">Classifier Evaluation</a></li><li><a href="#5">Classifier plot</a></li><li><a href="#6">Classifier training</a></li><li><a href="#7">Coordinate transform</a></li><li><a href="#8">Data count reduction</a></li><li><a href="#9">Data dimension reduction</a></li><li><a href="#10">Dataset generation</a></li><li><a href="#11">Dataset manipulation</a></li><li><a href="#12">Dataset visualization</a></li><li><a href="#13">Demos</a></li><li><a href="#14">Distance and similarity</a></li><li><a href="#15">Dynamic time warping</a></li><li><a href="#16">Face recognition</a></li><li><a href="#17">GMM</a></li><li><a href="#18">GMM classifier</a></li><li><a href="#19">Gaussian PDF</a></li><li><a href="#20">HMM</a></li><li><a href="#21">Hierarchical clustering</a></li><li><a href="#22">Image feature extraction</a></li><li><a href="#23">Input selection</a></li><li><a href="#24">Interpolation and regression</a></li><li><a href="#25">K-nearest-neighbor classifier</a></li><li><a href="#26">Linear classifier</a></li><li><a href="#27">Naive Bayes classifier</a></li><li><a href="#28">Nearest Neighbor Search</a></li><li><a href="#29">Performance evaluation</a></li><li><a href="#30">Quadratic classifier</a></li><li><a href="#31">Sparse-representation classifier</a></li><li><a href="#32">String match</a></li><li><a href="#33">Support vector machine</a></li><li><a href="#34">Utility</a></li><li><a href="#35">Vector quantization</a></li></ul></div><h2>Audio feature extraction<a name="1"></a></h2><div><ul><li><a href="mfccOptSet_help.html"><tt>mfccOptSet</tt></a> - Set options for MFCC extraction from audio signals</li><li><a href="wave2mfcc_help.html"><tt>wave2mfcc</tt></a> - MFCC (mel-scale frequency cepstral cofficient) extraction from audio signals</li></ul></div><h2>Audio signal processing<a name="2"></a></h2><div><ul><li><a href="enframe_help.html"><tt>enframe</tt></a> - Perform frame blocking on given signals</li><li><a href="getTriFilterPrm_help.html"><tt>getTriFilterPrm</tt></a> - Get parameters of triangular filter bank</li></ul></div><h2>Classification analysis<a name="3"></a></h2><div><ul><li><a href="confMatGet_help.html"><tt>confMatGet</tt></a> - Get confusion matrix from recognition results</li><li><a href="confMatPlot_help.html"><tt>confMatPlot</tt></a> - Display the confusion matrix</li><li><a href="decisionBoundaryPlot_help.html"><tt>decisionBoundaryPlot</tt></a> - Plot of the decision boundary of a classifier</li><li><a href="detGet_help.html"><tt>detGet</tt></a> - DET (Detection Error Tradeoff) data generation</li><li><a href="detPlot_help.html"><tt>detPlot</tt></a> - DET (Detection Error Tradeoff) plot for classification analysis of a single feature.</li></ul></div><h2>Classifier Evaluation<a name="4"></a></h2><div><ul><li><a href="classifierEval_help.html"><tt>classifierEval</tt></a> - Evaluation of a given classifier</li></ul></div><h2>Classifier plot<a name="5"></a></h2><div><ul><li><a href="classifierPlot_help.html"><tt>classifierPlot</tt></a> - Plot the results of a given classifier after training</li></ul></div><h2>Classifier training<a name="6"></a></h2><div><ul><li><a href="classifierTrain_help.html"><tt>classifierTrain</tt></a> - Training a given classifier</li></ul></div><h2>Coordinate transform<a name="7"></a></h2><div><ul><li><a href="polarTransform_help.html"><tt>polarTransform</tt></a> - Polar transformation of an image</li></ul></div><h2>Data count reduction<a name="8"></a></h2><div><ul><li><a href="dsCondense_help.html"><tt>dsCondense</tt></a> - Data condensing</li><li><a href="dsCondenseDemo_help.html"><tt>dsCondenseDemo</tt></a> - Demo of the condensing technique for data count reduction</li><li><a href="dsEdit_help.html"><tt>dsEdit</tt></a> - Data editing</li><li><a href="dsEditDemo_help.html"><tt>dsEditDemo</tt></a> - Demo of the editing technique for data count reduction</li></ul></div><h2>Data dimension reduction<a name="9"></a></h2><div><ul><li><a href="flda_help.html"><tt>flda</tt></a> - fuzzy LDA (linear discriminant analysis)</li><li><a href="lda_help.html"><tt>lda</tt></a> - Linear discriminant analysis</li><li><a href="ldaPerfViaKnncLoo_help.html"><tt>ldaPerfViaKnncLoo</tt></a> - LDA recognition rate via KNNC and LOO performance index</li><li><a href="pca_help.html"><tt>pca</tt></a> - Principal component analysis (PCA)</li><li><a href="pcaPerfViaKnncLoo_help.html"><tt>pcaPerfViaKnncLoo</tt></a> - PCA analysis using KNNC and LOO</li></ul></div><h2>Dataset generation<a name="10"></a></h2><div><ul><li><a href="dcData_help.html"><tt>dcData</tt></a> - Dataset generation for data clustering (no class label)</li><li><a href="prData_help.html"><tt>prData</tt></a> - Various test datasets for pattern recognition</li></ul></div><h2>Dataset manipulation<a name="11"></a></h2><div><ul><li><a href="dsClassMerge_help.html"><tt>dsClassMerge</tt></a> - Merge classes in a dataset</li><li><a href="dsClassSize_help.html"><tt>dsClassSize</tt></a> - Data count for each class for a data set</li><li><a href="dsFeaDelete_help.html"><tt>dsFeaDelete</tt></a> - Delete same-value features from a given dataset</li><li><a href="dsFormatCheck_help.html"><tt>dsFormatCheck</tt></a> - Check the format of the given dataset</li><li><a href="dsNameAdd_help.html"><tt>dsNameAdd</tt></a> - Add names to a dataset if they are missing</li><li><a href="inputNormalize_help.html"><tt>inputNormalize</tt></a> - Input (feature) normalization to have zero mean and unity variance for each feature</li><li><a href="inputPass_help.html"><tt>inputPass</tt></a> - Pass the input to the output directly</li><li><a href="inputWhiten_help.html"><tt>inputWhiten</tt></a> - Whitening transformation based on eigen decomposition</li></ul></div><h2>Dataset visualization<a name="12"></a></h2><div><ul><li><a href="dsFeatureVsIndexPlot_help.html"><tt>dsFeatureVsIndexPlot</tt></a> - Plot of feature vs. data index</li><li><a href="dsProjPlot1_help.html"><tt>dsProjPlot1</tt></a> - Plot of output classes vs. each feature</li><li><a href="dsProjPlot2_help.html"><tt>dsProjPlot2</tt></a> - Plot of all possible 2D projection of the given dataset</li><li><a href="dsProjPlot3_help.html"><tt>dsProjPlot3</tt></a> - Plot of all possible 3D projection of the given dataset</li><li><a href="dsRangePlot_help.html"><tt>dsRangePlot</tt></a> - Plot the range of features in a data set</li><li><a href="dsScatterPlot_help.html"><tt>dsScatterPlot</tt></a> - Scatter plot of the first 2 dimensions of the given dataset</li><li><a href="dsScatterPlot3_help.html"><tt>dsScatterPlot3</tt></a> - Scatter plot of the first 3 dimensions of the given dataset</li></ul></div><h2>Demos<a name="13"></a></h2><div><ul><li><a href="gradientDescentDemo_help.html"><tt>gradientDescentDemo</tt></a> - Interactive demo of Gradient descent paths on "peaks" surface</li><li><a href="taylorExpansionDemo_help.html"><tt>taylorExpansionDemo</tt></a> - Interactive demo of Taylor expansion of a curve</li></ul></div><h2>Distance and similarity<a name="14"></a></h2><div><ul><li><a href="distLinScaling_help.html"><tt>distLinScaling</tt></a> - Distance via linear scaling</li><li><a href="distLpNorm_help.html"><tt>distLpNorm</tt></a> - Lp norm of a vector</li><li><a href="distLpNormPairwise_help.html"><tt>distLpNormPairwise</tt></a> - Pairwise Lp-norm distance between two set of vectors</li><li><a href="distPairwise_help.html"><tt>distPairwise</tt></a> - Pairwise Euclidean distance between two set of vectors</li><li><a href="distPairwiseM_help.html"><tt>distPairwiseM</tt></a> - Pairwise Euclidean distance between two set of vectors</li><li><a href="distSqrPairwise_help.html"><tt>distSqrPairwise</tt></a> - Pairwise squared Euclidean distance between two set of vectors</li><li><a href="distSqrPairwiseM_help.html"><tt>distSqrPairwiseM</tt></a> - Pairwise Euclidean distance between two set of vectors</li><li><a href="simCos_help.html"><tt>simCos</tt></a> - Cosine of the angles betweeen two set of vectors</li><li><a href="simSequence_help.html"><tt>simSequence</tt></a> - Similarity between 2 sequences (e.g., for beat tracking)</li></ul></div><h2>Dynamic time warping<a name="15"></a></h2><div><ul><li><a href="dtw_help.html"><tt>dtw</tt></a> - DTW (dynamic time warping)</li><li><a href="dtw1_help.html"><tt>dtw1</tt></a> - DTW (dynamic time warping) with local paths of 27, 45, and 63 degrees</li><li><a href="dtw1m_help.html"><tt>dtw1m</tt></a> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 27, 45, and 63 degrees</li><li><a href="dtw2_help.html"><tt>dtw2</tt></a> - DTW (dynamic time warping) with local paths of 0, 45, and 90 degrees</li><li><a href="dtw2m_help.html"><tt>dtw2m</tt></a> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 0, 45, and 90 degrees</li><li><a href="dtw3_help.html"><tt>dtw3</tt></a> - DTW (dynamic time warping) with local paths of 0 and 45 degrees</li><li><a href="dtw3m_help.html"><tt>dtw3m</tt></a> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 0 and 45 degrees</li><li><a href="dtw4durationAlignment_help.html"><tt>dtw4durationAlignment</tt></a> - Pure m-file implementation of DTW (dynamic time warping) for duration alignment</li><li><a href="dtwBridgePlot_help.html"><tt>dtwBridgePlot</tt></a> - Bridge Plot of point-to-point mapping of DTW</li><li><a href="dtwFixedPoint_help.html"><tt>dtwFixedPoint</tt></a> - Use of Picard iteration to find the optimal pitch shift for DTW</li><li><a href="dtwOptSet_help.html"><tt>dtwOptSet</tt></a> - Set the parameters for DTW</li><li><a href="dtwPathPlot_help.html"><tt>dtwPathPlot</tt></a> - Plot the resultant path of DTW of two vectors</li></ul></div><h2>Face recognition<a name="16"></a></h2><div><ul><li><a href="faceData2ds_help.html"><tt>faceData2ds</tt></a> - Convert face data to a dataset of the standard format</li><li><a href="faceRecog_help.html"><tt>faceRecog</tt></a> - Face recognition via eigenfaces or fisherfaces</li><li><a href="faceRecogDemo_help.html"><tt>faceRecogDemo</tt></a> - Demo of face recognition using fisherfaces</li><li><a href="faceRecogPerfLoo_help.html"><tt>faceRecogPerfLoo</tt></a> -</li></ul></div><h2>GMM<a name="17"></a></h2><div><ul><li><a href="gmmEval_help.html"><tt>gmmEval</tt></a> - Evaluation of a GMM (Gaussian mixture model)</li><li><a href="gmmGaussianNumEstimate_help.html"><tt>gmmGaussianNumEstimate</tt></a> - Estimate the best number of Gaussians via cross validation</li><li><a href="gmmGrow_help.html"><tt>gmmGrow</tt></a> - Increase no. of gaussian components within a GMM</li><li><a href="gmmGrowDemo_help.html"><tt>gmmGrowDemo</tt></a> - Example of using gmmGrow.m for growing a GMM</li><li><a href="gmmInitPrmSet_help.html"><tt>gmmInitPrmSet</tt></a> - Set initial parameters for GMM</li><li><a href="gmmOptSet_help.html"><tt>gmmOptSet</tt></a> - Set the options of a GMM (Gaussian mixture model) for configuration and training</li><li><a href="gmmRead_help.html"><tt>gmmRead</tt></a> - Read GMM parameters from a file</li><li><a href="gmmTrain_help.html"><tt>gmmTrain</tt></a> - GMM training for parameter identification</li><li><a href="gmmTrainDemo1d_help.html"><tt>gmmTrainDemo1d</tt></a> - Example of using GMM (gaussian mixture model) for 1-D data</li><li><a href="gmmTrainDemo2dCovType01_help.html"><tt>gmmTrainDemo2dCovType01</tt></a> - Animation of GMM training with covType=1 (isotropic) for 2D data</li><li><a href="gmmTrainDemo2dCovType02_help.html"><tt>gmmTrainDemo2dCovType02</tt></a> - Animation of GMM training with covType=2 (diagonal cov. matrix) for 2D data</li><li><a href="gmmTrainDemo2dCovType03_help.html"><tt>gmmTrainDemo2dCovType03</tt></a> - Animation of GMM training with covType=3 (full cov. matrix) for 2D data</li><li><a href="gmmTrainOptSet_help.html"><tt>gmmTrainOptSet</tt></a> - Set training options for GMM</li><li><a href="gmmWrite_help.html"><tt>gmmWrite</tt></a> - Write the parameters of a GMM to a file</li><li><a href="gmmcPlot_help.html"><tt>gmmcPlot</tt></a> - Plot the results of GMMC (Gaussian-mixture-model classifier)</li></ul></div><h2>GMM classifier<a name="18"></a></h2><div><ul><li><a href="gmmcEval_help.html"><tt>gmmcEval</tt></a> - Evaluation of a GMM classifier with a given vector of priors</li><li><a href="gmmcGaussianNumEstimate_help.html"><tt>gmmcGaussianNumEstimate</tt></a> - GMM training and test, w.r.t. varying number of mixtures</li><li><a href="gmmcOptSet_help.html"><tt>gmmcOptSet</tt></a> - Set the specs of GMMC (Gaussian-mixture-model classifier) for further training</li><li><a href="gmmcTrain_help.html"><tt>gmmcTrain</tt></a> - Train a GMM classifier</li></ul></div><h2>Gaussian PDF<a name="19"></a></h2><div><ul><li><a href="gaussian_help.html"><tt>gaussian</tt></a> - Multi-dimensional Gaussian propability density function</li><li><a href="gaussianLog_help.html"><tt>gaussianLog</tt></a> - Multi-dimensional log Gaussian propability density function</li><li><a href="gaussianLogM_help.html"><tt>gaussianLogM</tt></a> - Multi-dimensional log Gaussian propability density function</li><li><a href="gaussianM_help.html"><tt>gaussianM</tt></a> - Multi-dimensional Gaussian propability density function</li><li><a href="gaussianMle_help.html"><tt>gaussianMle</tt></a> - MLE (maximum likelihood estimator) for Gaussian PDF</li><li><a href="gaussianSimilarity_help.html"><tt>gaussianSimilarity</tt></a> - Evaluation of a data set to see if it is close to a 1D Gaussian distribution</li></ul></div><h2>HMM<a name="20"></a></h2><div><ul><li><a href="dpOverMap_help.html"><tt>dpOverMap</tt></a> - DP over matrix of state probability.</li><li><a href="dpOverMapM_help.html"><tt>dpOverMapM</tt></a> - An m-file implementation of DP over matrix of state probability.</li><li><a href="hmmEval_help.html"><tt>hmmEval</tt></a> - HMM evaluation</li></ul></div><h2>Hierarchical clustering<a name="21"></a></h2><div><ul><li><a href="hierClustering_help.html"><tt>hierClustering</tt></a> - Agglomerative hierarchical clustering</li><li><a href="hierClusteringAnim_help.html"><tt>hierClusteringAnim</tt></a> - Display the cluster formation of agglomerative hierarchical clustering</li><li><a href="hierClusteringPlot_help.html"><tt>hierClusteringPlot</tt></a> - Plot of the result from agglomerative hierarchical clustering, also known as dendrogram</li></ul></div><h2>Image feature extraction<a name="22"></a></h2><div><ul><li><a href="imFeaLbp_help.html"><tt>imFeaLbp</tt></a> - Local binary pattern for images</li></ul></div><h2>Input selection<a name="23"></a></h2><div><ul><li><a href="inputSelectExhaustive_help.html"><tt>inputSelectExhaustive</tt></a> - Input selection via exhaustive search</li><li><a href="inputSelectPlot_help.html"><tt>inputSelectPlot</tt></a> - Plot for input selection</li><li><a href="inputSelectSequential_help.html"><tt>inputSelectSequential</tt></a> - Input selection via sequential forward selection</li></ul></div><h2>Interpolation and regression<a name="24"></a></h2><div><ul><li><a href="interpViaDistance_help.html"><tt>interpViaDistance</tt></a> - Interpolation via weighting of reciprocal distance</li><li><a href="interpViaGaussian_help.html"><tt>interpViaGaussian</tt></a> - Interpolation via normalized gaussian basis function</li><li><a href="polyFitPiecewise_help.html"><tt>polyFitPiecewise</tt></a> - Piecewise polynomial fit (with 2 polynomials)</li></ul></div><h2>K-nearest-neighbor classifier<a name="25"></a></h2><div><ul><li><a href="classFuzzify_help.html"><tt>classFuzzify</tt></a> - Initialize fuzzy membership grades for a dataset</li><li><a href="knncEval_help.html"><tt>knncEval</tt></a> - K-nearest neighbor classifier (KNNC)</li><li><a href="knncFuzzy_help.html"><tt>knncFuzzy</tt></a> - Fuzzy k-nearest neighbor classifier</li><li><a href="knncLoo_help.html"><tt>knncLoo</tt></a> - Leave-one-out recognition rate of KNNC</li><li><a href="knncLooWrtK_help.html"><tt>knncLooWrtK</tt></a> - Try various values of K in leave-one-out KNN classifier.</li><li><a href="knncPlot_help.html"><tt>knncPlot</tt></a> - Plot the results of KNNC (k-nearest-neighbor classifier) after training</li><li><a href="knncTrain_help.html"><tt>knncTrain</tt></a> - Training of KNNC (K-nearest neighbor classifier)</li><li><a href="knncWrtK_help.html"><tt>knncWrtK</tt></a> - Try various values of K in KNN classifier</li></ul></div><h2>Linear classifier<a name="26"></a></h2><div><ul><li><a href="lincEval_help.html"><tt>lincEval</tt></a> - Evaluation of linear classifier</li><li><a href="lincOptSet_help.html"><tt>lincOptSet</tt></a> - Set the training options for linear classifiers</li><li><a href="lincTrain_help.html"><tt>lincTrain</tt></a> - Linear classifier (Perceptron) training</li><li><a href="perceptronDemo_help.html"><tt>perceptronDemo</tt></a> - Demo of interactive perceptron training</li></ul></div><h2>Naive Bayes classifier<a name="27"></a></h2><div><ul><li><a href="nbcEval_help.html"><tt>nbcEval</tt></a> - Evaluation for the NBC (naive bayes classifier)</li><li><a href="nbcPlot_help.html"><tt>nbcPlot</tt></a> - Plot the results of NBC (naive Bayes classifier)</li><li><a href="nbcTrain_help.html"><tt>nbcTrain</tt></a> - Training the naive Bayes classifier</li></ul></div><h2>Nearest Neighbor Search<a name="28"></a></h2><div><ul><li><a href="bbTreeGen_help.html"><tt>bbTreeGen</tt></a> - BB (branch-and-Bound) tree generation for nearest neighbor search</li><li><a href="bbTreeSearch_help.html"><tt>bbTreeSearch</tt></a> - BB (branch-and-bound) tree search for 1 nearest neighbor</li></ul></div><h2>Performance evaluation<a name="29"></a></h2><div><ul><li><a href="crossValidate_help.html"><tt>crossValidate</tt></a> - Cross validation for classifier performance evaluation</li><li><a href="cvDataGen_help.html"><tt>cvDataGen</tt></a> - Generate m-fold cross validation (CV) data for performance evaluation</li><li><a href="perfAll_help.html"><tt>perfAll</tt></a> - Performance evaluation for various combinations of classifiers and input normalization schemes</li><li><a href="perfCv_help.html"><tt>perfCv</tt></a> - Leave-one-out recognition rate of given dataset and classifier</li><li><a href="perfLoo_help.html"><tt>perfLoo</tt></a> - Leave-one-out recognition rate of given dataset and classifier</li></ul></div><h2>Quadratic classifier<a name="30"></a></h2><div><ul><li><a href="qcEval_help.html"><tt>qcEval</tt></a> - Evaluation for the QC (quadratic classifier)</li><li><a href="qcOptSet_help.html"><tt>qcOptSet</tt></a> - Set the parameters for training a quadratic classifier</li><li><a href="qcPlot_help.html"><tt>qcPlot</tt></a> - Plot the results of QC (quadratic classifier)</li><li><a href="qcTrain_help.html"><tt>qcTrain</tt></a> - Training the quadratic classifier (QC)</li></ul></div><h2>Sparse-representation classifier<a name="31"></a></h2><div><ul><li><a href="srcEval_help.html"><tt>srcEval</tt></a> - Evaluation of SRC (sparse-representation classifier)</li><li><a href="srcTrain_help.html"><tt>srcTrain</tt></a> - Training the SRC (sparse-representation classifier)</li></ul></div><h2>String match<a name="32"></a></h2><div><ul><li><a href="dpPathPlot4strMatch_help.html"><tt>dpPathPlot4strMatch</tt></a> - Plot the path of dynamic programming for string match.</li><li><a href="editDistance_help.html"><tt>editDistance</tt></a> - Edit distance (ED) via dynamic programming</li><li><a href="lcs_help.html"><tt>lcs</tt></a> - Longest (maximum) common subsequence</li><li><a href="xcorr4text_help.html"><tt>xcorr4text</tt></a> - Cross correlation of two text strings</li></ul></div><h2>Support vector machine<a name="33"></a></h2><div><ul><li><a href="svmcEval_help.html"><tt>svmcEval</tt></a> - Evaluation of SVM (support vector machine) classifier</li><li><a href="svmcTrain_help.html"><tt>svmcTrain</tt></a> - Training SVM (support vector machine) classifier</li></ul></div><h2>Utility<a name="34"></a></h2><div><ul><li><a href="fileList_help.html"><tt>fileList</tt></a> - File list of given directories with a given extension name</li><li><a href="getColor_help.html"><tt>getColor</tt></a> - Get a color from a palette</li><li><a href="mixLogSum_help.html"><tt>mixLogSum</tt></a> - Compute the mixture log sum</li><li><a href="mltDoc_help.html"><tt>mltDoc</tt></a> - Online document of the given MLT command</li><li><a href="mltRoot_help.html"><tt>mltRoot</tt></a> - Root of MLT (Machine Learning Toolbox)</li><li><a href="mltSetup_help.html"><tt>mltSetup</tt></a> - Set up MLT toolbox</li><li><a href="peaksFunc_help.html"><tt>peaksFunc</tt></a> - Peaks function's value, gradient and Hessian.</li><li><a href="toolboxInfo_help.html"><tt>toolboxInfo</tt></a> - Toolbox information</li></ul></div><h2>Vector quantization<a name="35"></a></h2><div><ul><li><a href="clusterValidate_help.html"><tt>clusterValidate</tt></a> - Cluster validation</li><li><a href="kMeansClustering_help.html"><tt>kMeansClustering</tt></a> - VQ (vector quantization) of K-means clustering using Forgy's batch-mode method</li><li><a href="kMeansClusteringOnDist_help.html"><tt>kMeansClusteringOnDist</tt></a> - K-means clustering on the distance matrix only</li><li><a href="vecQuantize_help.html"><tt>vecQuantize</tt></a> - Vector quantization using LBG method of center splitting</li><li><a href="vqCenterInit_help.html"><tt>vqCenterInit</tt></a> - Find initial centers for VQ of k-means</li><li><a href="vqCenterObjInit_help.html"><tt>vqCenterObjInit</tt></a> - Find the initial centers (objects) for K-means clustering with the distance matrix only</li><li><a href="vqDataPlot_help.html"><tt>vqDataPlot</tt></a> - Plot the data and the result of vector quantization</li></ul></div><p class="footer"><br>
+      Published with MATLAB&reg; 7.14<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Functions by Category
+% Machine Learning Toolbox
+% Version 1.2, 28-Oct-2012
+%
+% Requires MATLAB(R) 7.14.0.739 (R2012a)
+%
+%% Audio feature extraction
+% * <mfccOptSet_help.html |mfccOptSet|> - Set options for MFCC extraction from audio signals
+% * <wave2mfcc_help.html |wave2mfcc|> - MFCC (mel-scale frequency cepstral cofficient) extraction from audio signals
+%
+%% Audio signal processing
+% * <enframe_help.html |enframe|> - Perform frame blocking on given signals
+% * <getTriFilterPrm_help.html |getTriFilterPrm|> - Get parameters of triangular filter bank
+%
+%% Classification analysis
+% * <confMatGet_help.html |confMatGet|> - Get confusion matrix from recognition results
+% * <confMatPlot_help.html |confMatPlot|> - Display the confusion matrix
+% * <decisionBoundaryPlot_help.html |decisionBoundaryPlot|> - Plot of the decision boundary of a classifier
+% * <detGet_help.html |detGet|> - DET (Detection Error Tradeoff) data generation
+% * <detPlot_help.html |detPlot|> - DET (Detection Error Tradeoff) plot for classification analysis of a single feature.
+%
+%% Classifier Evaluation
+% * <classifierEval_help.html |classifierEval|> - Evaluation of a given classifier
+%
+%% Classifier plot
+% * <classifierPlot_help.html |classifierPlot|> - Plot the results of a given classifier after training
+%
+%% Classifier training
+% * <classifierTrain_help.html |classifierTrain|> - Training a given classifier
+%
+%% Coordinate transform
+% * <polarTransform_help.html |polarTransform|> - Polar transformation of an image
+%
+%% Data count reduction
+% * <dsCondense_help.html |dsCondense|> - Data condensing
+% * <dsCondenseDemo_help.html |dsCondenseDemo|> - Demo of the condensing technique for data count reduction
+% * <dsEdit_help.html |dsEdit|> - Data editing
+% * <dsEditDemo_help.html |dsEditDemo|> - Demo of the editing technique for data count reduction
+%
+%% Data dimension reduction
+% * <flda_help.html |flda|> - fuzzy LDA (linear discriminant analysis)
+% * <lda_help.html |lda|> - Linear discriminant analysis
+% * <ldaPerfViaKnncLoo_help.html |ldaPerfViaKnncLoo|> - LDA recognition rate via KNNC and LOO performance index
+% * <pca_help.html |pca|> - Principal component analysis (PCA)
+% * <pcaPerfViaKnncLoo_help.html |pcaPerfViaKnncLoo|> - PCA analysis using KNNC and LOO
+%
+%% Dataset generation
+% * <dcData_help.html |dcData|> - Dataset generation for data clustering (no class label)
+% * <prData_help.html |prData|> - Various test datasets for pattern recognition
+%
+%% Dataset manipulation
+% * <dsClassMerge_help.html |dsClassMerge|> - Merge classes in a dataset
+% * <dsClassSize_help.html |dsClassSize|> - Data count for each class for a data set
+% * <dsFeaDelete_help.html |dsFeaDelete|> - Delete same-value features from a given dataset
+% * <dsFormatCheck_help.html |dsFormatCheck|> - Check the format of the given dataset
+% * <dsNameAdd_help.html |dsNameAdd|> - Add names to a dataset if they are missing
+% * <inputNormalize_help.html |inputNormalize|> - Input (feature) normalization to have zero mean and unity variance for each feature
+% * <inputPass_help.html |inputPass|> - Pass the input to the output directly
+% * <inputWhiten_help.html |inputWhiten|> - Whitening transformation based on eigen decomposition
+%
+%% Dataset visualization
+% * <dsFeatureVsIndexPlot_help.html |dsFeatureVsIndexPlot|> - Plot of feature vs. data index
+% * <dsProjPlot1_help.html |dsProjPlot1|> - Plot of output classes vs. each feature
+% * <dsProjPlot2_help.html |dsProjPlot2|> - Plot of all possible 2D projection of the given dataset
+% * <dsProjPlot3_help.html |dsProjPlot3|> - Plot of all possible 3D projection of the given dataset
+% * <dsRangePlot_help.html |dsRangePlot|> - Plot the range of features in a data set
+% * <dsScatterPlot_help.html |dsScatterPlot|> - Scatter plot of the first 2 dimensions of the given dataset
+% * <dsScatterPlot3_help.html |dsScatterPlot3|> - Scatter plot of the first 3 dimensions of the given dataset
+%
+%% Demos
+% * <gradientDescentDemo_help.html |gradientDescentDemo|> - Interactive demo of Gradient descent paths on "peaks" surface
+% * <taylorExpansionDemo_help.html |taylorExpansionDemo|> - Interactive demo of Taylor expansion of a curve
+%
+%% Distance and similarity
+% * <distLinScaling_help.html |distLinScaling|> - Distance via linear scaling
+% * <distLpNorm_help.html |distLpNorm|> - Lp norm of a vector
+% * <distLpNormPairwise_help.html |distLpNormPairwise|> - Pairwise Lp-norm distance between two set of vectors
+% * <distPairwise_help.html |distPairwise|> - Pairwise Euclidean distance between two set of vectors
+% * <distPairwiseM_help.html |distPairwiseM|> - Pairwise Euclidean distance between two set of vectors
+% * <distSqrPairwise_help.html |distSqrPairwise|> - Pairwise squared Euclidean distance between two set of vectors
+% * <distSqrPairwiseM_help.html |distSqrPairwiseM|> - Pairwise Euclidean distance between two set of vectors
+% * <simCos_help.html |simCos|> - Cosine of the angles betweeen two set of vectors
+% * <simSequence_help.html |simSequence|> - Similarity between 2 sequences (e.g., for beat tracking)
+%
+%% Dynamic time warping
+% * <dtw_help.html |dtw|> - DTW (dynamic time warping)
+% * <dtw1_help.html |dtw1|> - DTW (dynamic time warping) with local paths of 27, 45, and 63 degrees
+% * <dtw1m_help.html |dtw1m|> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 27, 45, and 63 degrees
+% * <dtw2_help.html |dtw2|> - DTW (dynamic time warping) with local paths of 0, 45, and 90 degrees
+% * <dtw2m_help.html |dtw2m|> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 0, 45, and 90 degrees
+% * <dtw3_help.html |dtw3|> - DTW (dynamic time warping) with local paths of 0 and 45 degrees
+% * <dtw3m_help.html |dtw3m|> - Pure m-file implementation of DTW (dynamic time warping) with local paths of 0 and 45 degrees
+% * <dtw4durationAlignment_help.html |dtw4durationAlignment|> - Pure m-file implementation of DTW (dynamic time warping) for duration alignment
+% * <dtwBridgePlot_help.html |dtwBridgePlot|> - Bridge Plot of point-to-point mapping of DTW
+% * <dtwFixedPoint_help.html |dtwFixedPoint|> - Use of Picard iteration to find the optimal pitch shift for DTW
+% * <dtwOptSet_help.html |dtwOptSet|> - Set the parameters for DTW
+% * <dtwPathPlot_help.html |dtwPathPlot|> - Plot the resultant path of DTW of two vectors
+%
+%% Face recognition
+% * <faceData2ds_help.html |faceData2ds|> - Convert face data to a dataset of the standard format
+% * <faceRecog_help.html |faceRecog|> - Face recognition via eigenfaces or fisherfaces
+% * <faceRecogDemo_help.html |faceRecogDemo|> - Demo of face recognition using fisherfaces
+% * <faceRecogPerfLoo_help.html |faceRecogPerfLoo|> - 
+%
+%% GMM
+% * <gmmEval_help.html |gmmEval|> - Evaluation of a GMM (Gaussian mixture model)
+% * <gmmGaussianNumEstimate_help.html |gmmGaussianNumEstimate|> - Estimate the best number of Gaussians via cross validation
+% * <gmmGrow_help.html |gmmGrow|> - Increase no. of gaussian components within a GMM
+% * <gmmGrowDemo_help.html |gmmGrowDemo|> - Example of using gmmGrow.m for growing a GMM
+% * <gmmInitPrmSet_help.html |gmmInitPrmSet|> - Set initial parameters for GMM
+% * <gmmOptSet_help.html |gmmOptSet|> - Set the options of a GMM (Gaussian mixture model) for configuration and training
+% * <gmmRead_help.html |gmmRead|> - Read GMM parameters from a file
+% * <gmmTrain_help.html |gmmTrain|> - GMM training for parameter identification
+% * <gmmTrainDemo1d_help.html |gmmTrainDemo1d|> - Example of using GMM (gaussian mixture model) for 1-D data
+% * <gmmTrainDemo2dCovType01_help.html |gmmTrainDemo2dCovType01|> - Animation of GMM training with covType=1 (isotropic) for 2D data
+% * <gmmTrainDemo2dCovType02_help.html |gmmTrainDemo2dCovType02|> - Animation of GMM training with covType=2 (diagonal cov. matrix) for 2D data
+% * <gmmTrainDemo2dCovType03_help.html |gmmTrainDemo2dCovType03|> - Animation of GMM training with covType=3 (full cov. matrix) for 2D data
+% * <gmmTrainOptSet_help.html |gmmTrainOptSet|> - Set training options for GMM
+% * <gmmWrite_help.html |gmmWrite|> - Write the parameters of a GMM to a file
+% * <gmmcPlot_help.html |gmmcPlot|> - Plot the results of GMMC (Gaussian-mixture-model classifier)
+%
+%% GMM classifier
+% * <gmmcEval_help.html |gmmcEval|> - Evaluation of a GMM classifier with a given vector of priors
+% * <gmmcGaussianNumEstimate_help.html |gmmcGaussianNumEstimate|> - GMM training and test, w.r.t. varying number of mixtures
+% * <gmmcOptSet_help.html |gmmcOptSet|> - Set the specs of GMMC (Gaussian-mixture-model classifier) for further training
+% * <gmmcTrain_help.html |gmmcTrain|> - Train a GMM classifier
+%
+%% Gaussian PDF
+% * <gaussian_help.html |gaussian|> - Multi-dimensional Gaussian propability density function
+% * <gaussianLog_help.html |gaussianLog|> - Multi-dimensional log Gaussian propability density function
+% * <gaussianLogM_help.html |gaussianLogM|> - Multi-dimensional log Gaussian propability density function
+% * <gaussianM_help.html |gaussianM|> - Multi-dimensional Gaussian propability density function
+% * <gaussianMle_help.html |gaussianMle|> - MLE (maximum likelihood estimator) for Gaussian PDF
+% * <gaussianSimilarity_help.html |gaussianSimilarity|> - Evaluation of a data set to see if it is close to a 1D Gaussian distribution
+%
+%% HMM
+% * <dpOverMap_help.html |dpOverMap|> - DP over matrix of state probability.
+% * <dpOverMapM_help.html |dpOverMapM|> - An m-file implementation of DP over matrix of state probability.
+% * <hmmEval_help.html |hmmEval|> - HMM evaluation
+%
+%% Hierarchical clustering
+% * <hierClustering_help.html |hierClustering|> - Agglomerative hierarchical clustering
+% * <hierClusteringAnim_help.html |hierClusteringAnim|> - Display the cluster formation of agglomerative hierarchical clustering
+% * <hierClusteringPlot_help.html |hierClusteringPlot|> - Plot of the result from agglomerative hierarchical clustering, also known as dendrogram
+%
+%% Image feature extraction
+% * <imFeaLbp_help.html |imFeaLbp|> - Local binary pattern for images
+%
+%% Input selection
+% * <inputSelectExhaustive_help.html |inputSelectExhaustive|> - Input selection via exhaustive search
+% * <inputSelectPlot_help.html |inputSelectPlot|> - Plot for input selection
+% * <inputSelectSequential_help.html |inputSelectSequential|> - Input selection via sequential forward selection
+%
+%% Interpolation and regression
+% * <interpViaDistance_help.html |interpViaDistance|> - Interpolation via weighting of reciprocal distance
+% * <interpViaGaussian_help.html |interpViaGaussian|> - Interpolation via normalized gaussian basis function
+% * <polyFitPiecewise_help.html |polyFitPiecewise|> - Piecewise polynomial fit (with 2 polynomials)
+%
+%% K-nearest-neighbor classifier
+% * <classFuzzify_help.html |classFuzzify|> - Initialize fuzzy membership grades for a dataset
+% * <knncEval_help.html |knncEval|> - K-nearest neighbor classifier (KNNC)
+% * <knncFuzzy_help.html |knncFuzzy|> - Fuzzy k-nearest neighbor classifier
+% * <knncLoo_help.html |knncLoo|> - Leave-one-out recognition rate of KNNC
+% * <knncLooWrtK_help.html |knncLooWrtK|> - Try various values of K in leave-one-out KNN classifier.
+% * <knncPlot_help.html |knncPlot|> - Plot the results of KNNC (k-nearest-neighbor classifier) after training
+% * <knncTrain_help.html |knncTrain|> - Training of KNNC (K-nearest neighbor classifier)
+% * <knncWrtK_help.html |knncWrtK|> - Try various values of K in KNN classifier
+%
+%% Linear classifier
+% * <lincEval_help.html |lincEval|> - Evaluation of linear classifier
+% * <lincOptSet_help.html |lincOptSet|> - Set the training options for linear classifiers
+% * <lincTrain_help.html |lincTrain|> - Linear classifier (Perceptron) training 
+% * <perceptronDemo_help.html |perceptronDemo|> - Demo of interactive perceptron training 
+%
+%% Naive Bayes classifier
+% * <nbcEval_help.html |nbcEval|> - Evaluation for the NBC (naive bayes classifier)
+% * <nbcPlot_help.html |nbcPlot|> - Plot the results of NBC (naive Bayes classifier)
+% * <nbcTrain_help.html |nbcTrain|> - Training the naive Bayes classifier
+%
+%% Nearest Neighbor Search
+% * <bbTreeGen_help.html |bbTreeGen|> - BB (branch-and-Bound) tree generation for nearest neighbor search
+% * <bbTreeSearch_help.html |bbTreeSearch|> - BB (branch-and-bound) tree search for 1 nearest neighbor
+%
+%% Performance evaluation
+% * <crossValidate_help.html |crossValidate|> - Cross validation for classifier performance evaluation
+% * <cvDataGen_help.html |cvDataGen|> - Generate m-fold cross validation (CV) data for performance evaluation
+% * <perfAll_help.html |perfAll|> - Performance evaluation for various combinations of classifiers and input normalization schemes
+% * <perfCv_help.html |perfCv|> - Leave-one-out recognition rate of given dataset and classifier
+% * <perfLoo_help.html |perfLoo|> - Leave-one-out recognition rate of given dataset and classifier
+%
+%% Quadratic classifier
+% * <qcEval_help.html |qcEval|> - Evaluation for the QC (quadratic classifier)
+% * <qcOptSet_help.html |qcOptSet|> - Set the parameters for training a quadratic classifier
+% * <qcPlot_help.html |qcPlot|> - Plot the results of QC (quadratic classifier)
+% * <qcTrain_help.html |qcTrain|> - Training the quadratic classifier (QC)
+%
+%% Sparse-representation classifier
+% * <srcEval_help.html |srcEval|> - Evaluation of SRC (sparse-representation classifier)
+% * <srcTrain_help.html |srcTrain|> - Training the SRC (sparse-representation classifier)
+%
+%% String match
+% * <dpPathPlot4strMatch_help.html |dpPathPlot4strMatch|> - Plot the path of dynamic programming for string match.
+% * <editDistance_help.html |editDistance|> - Edit distance (ED) via dynamic programming
+% * <lcs_help.html |lcs|> - Longest (maximum) common subsequence
+% * <xcorr4text_help.html |xcorr4text|> - Cross correlation of two text strings
+%
+%% Support vector machine
+% * <svmcEval_help.html |svmcEval|> - Evaluation of SVM (support vector machine) classifier
+% * <svmcTrain_help.html |svmcTrain|> - Training SVM (support vector machine) classifier
+%
+%% Utility
+% * <fileList_help.html |fileList|> - File list of given directories with a given extension name
+% * <getColor_help.html |getColor|> - Get a color from a palette
+% * <mixLogSum_help.html |mixLogSum|> - Compute the mixture log sum
+% * <mltDoc_help.html |mltDoc|> - Online document of the given MLT command
+% * <mltRoot_help.html |mltRoot|> - Root of MLT (Machine Learning Toolbox)
+% * <mltSetup_help.html |mltSetup|> - Set up MLT toolbox
+% * <peaksFunc_help.html |peaksFunc|> - Peaks function's value, gradient and Hessian.
+% * <toolboxInfo_help.html |toolboxInfo|> - Toolbox information
+%
+%% Vector quantization
+% * <clusterValidate_help.html |clusterValidate|> - Cluster validation
+% * <kMeansClustering_help.html |kMeansClustering|> - VQ (vector quantization) of K-means clustering using Forgy's batch-mode method
+% * <kMeansClusteringOnDist_help.html |kMeansClusteringOnDist|> - K-means clustering on the distance matrix only
+% * <vecQuantize_help.html |vecQuantize|> - Vector quantization using LBG method of center splitting
+% * <vqCenterInit_help.html |vqCenterInit|> - Find initial centers for VQ of k-means
+% * <vqCenterObjInit_help.html |vqCenterObjInit|> - Find the initial centers (objects) for K-means clustering with the distance matrix only
+% * <vqDataPlot_help.html |vqDataPlot|> - Plot the data and the result of vector quantization
+%
+
+##### SOURCE END #####
+--></body></html>

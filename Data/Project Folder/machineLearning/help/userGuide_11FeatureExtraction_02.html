@@ -1,0 +1,155 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Principal Component Analysis (PCA)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_11FeatureExtraction_02.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Principal Component Analysis (PCA)</h1><!--introduction--><p>Prinbcipal component analysis (PCA) is an effective statistical technique for reducing the dimensions of a given unlabeled high-dimensional dataset while keeping its spatial characteristics as much as possible. It has found immense applications in image compression, pattern recognition (face recognition in particular) and data clustering. Depending on the field of application, PCA is also known as the discrete Karhunen- Loeve transformation, or the Hotelling transform.</p><p>More specifically, PCA transforms the dataset into a new coordinate system such that the projection onto the first coordinate have the greatest variance among all possible projections, and the projection onto the second coordinate have the second greatest variances, and so on. By finding these successive coordinates (or principal components), we can visualize the distribution of the original dataset after projecting it onto a low-dimensional space. In other words, PCA provides a best meaningful viewing angle that can disperse the dataset as much as possible.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example to verify the functionality of PCA</a></li><li><a href="#3">Applying PCA to dataset for classification</a></li></ul></div><h2>A basic example to verify the functionality of PCA<a name="1"></a></h2><pre>To verify the functionity of PCA, we can display PCA-generated basis for an ovally-distributed dataset, as shown next.</pre><pre class="codeinput">clear <span class="string">j</span>
+dataNum = 1000;
+data = randn(1,dataNum)+j*randn(1,dataNum)/3;
+data = data*exp(j*pi/6);	<span class="comment">% Rotate 30 degree</span>
+data = data-mean(data);		<span class="comment">% Mean subtraction</span>
+plot(real(data), imag(data), <span class="string">'.'</span>); axis <span class="string">image</span>;
+DS.input=[real(data); imag(data)];
+[DS2, v, eigValue] = pca(DS);
+v1 = v(:, 1);
+v2 = v(:, 2);
+arrow = [-1 0 nan -0.1 0 -0.1]+1+j*[0 0 nan 0.1 0 -0.1];
+arrow1 = 2*arrow*(v1(1)+j*v1(2))*eigValue(1)/dataNum;
+arrow2 = 2*arrow*(v2(1)+j*v2(2))*eigValue(2)/dataNum;
+line(real(arrow1), imag(arrow1), <span class="string">'color'</span>, <span class="string">'r'</span>, <span class="string">'linewidth'</span>, 4);
+line(real(arrow2), imag(arrow2), <span class="string">'color'</span>, <span class="string">'k'</span>, <span class="string">'linewidth'</span>, 4);
+title(<span class="string">'Axes for PCA'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_02_01.png" alt=""> <p>It is obvious that the principal component (first direction for the projection basis) is along the direction where the data dispersion after projection is maximized.</p><h2>Applying PCA to dataset for classification<a name="3"></a></h2><p>In the next example, we perform PCA on the 150 entries of IRIS dataset:</p><pre class="codeinput">DS=prData(<span class="string">'iris'</span>);
+DS2=pca(DS);
+subplot(2,1,1); dsScatterPlot(DS2); axis <span class="string">image</span>
+xlabel(<span class="string">'Input 1'</span>); ylabel(<span class="string">'Input 2'</span>);
+title(<span class="string">'IRIS projected onto the first two dim of PCA'</span>);
+DS2.input(1:2, :)=[];	<span class="comment">% Get rid of the first two dimenions</span>
+subplot(2,1,2); dsScatterPlot(DS2); axis <span class="string">image</span>
+xlabel(<span class="string">'Input 3'</span>); ylabel(<span class="string">'Input 4'</span>);
+title(<span class="string">'IRIS projected onto the last two dim of PCA'</span>);
+</pre><pre class="codeoutput">Warning: data dim is larger than 2. The plot is based on the first 2 dimensions
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_02_02.png" alt=""> <p>The first plot demonstrates the projection of the dataset along the first and second principal components, while the second plot displays the same dataset projection along the third and fourth principal components. Again, it is obvious that the first plot has a wider dispersion than the second plot. (Note that the second plot has a much smaller range than the first plot, indicating the variance after projection is also much smaller.)</p><p>The goal of PCA is to have the maximum variance after projection, where the class labels, if exist, are not considered in the projection. As a result, PCA is not really optimized for datasets of classification problems. However, since "maximum variance after projection" and "maximum separation between classes after projection" have some characteristics in common, sometimes we use PCA for classification problems too. For instance, in the case of face recognition, the dimension of each face image is so large, and we need to apply PCA for dimension reduction and thus better accuracy.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Principal Component Analysis (PCA)
+% Prinbcipal component analysis (PCA) is an effective statistical technique for reducing the dimensions of a
+% given unlabeled high-dimensional dataset while keeping its spatial characteristics as much as possible. It
+% has found immense applications in image compression, pattern recognition (face recognition in particular)
+% and data clustering. Depending on the field of application, PCA is also known as the discrete Karhunen-
+% Loeve transformation, or the Hotelling transform.
+%
+% More specifically, PCA transforms the dataset into a new coordinate system such that the projection onto
+% the first coordinate have the greatest variance among all possible projections, and the projection onto the
+% second coordinate have the second greatest variances, and so on. By finding these successive coordinates
+% (or principal components), we can visualize the distribution of the original dataset after projecting it onto a
+% low-dimensional space. In other words, PCA provides a best meaningful viewing angle that can disperse
+% the dataset as much as possible.
+%% A basic example to verify the functionality of PCA
+%  To verify the functionity of PCA, we can display PCA-generated basis for an ovally-distributed dataset, as shown next.
+clear j
+dataNum = 1000;
+data = randn(1,dataNum)+j*randn(1,dataNum)/3;
+data = data*exp(j*pi/6);	% Rotate 30 degree
+data = data-mean(data);		% Mean subtraction
+plot(real(data), imag(data), '.'); axis image;
+DS.input=[real(data); imag(data)];
+[DS2, v, eigValue] = pca(DS);
+v1 = v(:, 1);
+v2 = v(:, 2);
+arrow = [-1 0 nan -0.1 0 -0.1]+1+j*[0 0 nan 0.1 0 -0.1];
+arrow1 = 2*arrow*(v1(1)+j*v1(2))*eigValue(1)/dataNum;
+arrow2 = 2*arrow*(v2(1)+j*v2(2))*eigValue(2)/dataNum;
+line(real(arrow1), imag(arrow1), 'color', 'r', 'linewidth', 4);
+line(real(arrow2), imag(arrow2), 'color', 'k', 'linewidth', 4);
+title('Axes for PCA');
+%%
+% It is obvious that the principal component (first direction for the projection basis) is along the direction where the data dispersion after projection is maximized. 
+%% Applying PCA to dataset for classification
+% In the next example, we perform PCA on the 150 entries of IRIS dataset: 
+DS=prData('iris');
+DS2=pca(DS);
+subplot(2,1,1); dsScatterPlot(DS2); axis image
+xlabel('Input 1'); ylabel('Input 2');
+title('IRIS projected onto the first two dim of PCA');
+DS2.input(1:2, :)=[];	% Get rid of the first two dimenions
+subplot(2,1,2); dsScatterPlot(DS2); axis image
+xlabel('Input 3'); ylabel('Input 4');
+title('IRIS projected onto the last two dim of PCA');
+%%
+% The first plot demonstrates the projection of the dataset along the first and second principal components,
+% while the second plot displays the same dataset projection along the third and fourth principal components.
+% Again, it is obvious that the first plot has a wider dispersion than the second plot.
+% (Note that the second plot has a much smaller range than the first plot, indicating the variance after projection is also much smaller.) 
+%
+% The goal of PCA is to have the maximum variance after projection, where the class labels, if exist, are not considered in the projection.
+% As a result, PCA is not really optimized for datasets of classification problems.
+% However, since "maximum variance after projection" and "maximum separation between classes after projection" have some characteristics in common, sometimes we use PCA for classification problems too.
+% For instance, in the case of face recognition, the dimension of each face image is so large, and we need to apply PCA for dimension reduction and thus better accuracy. 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

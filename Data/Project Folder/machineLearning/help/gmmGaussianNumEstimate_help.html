@@ -1,0 +1,139 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>gmmGaussianNumEstimate</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="gmmGaussianNumEstimate_help.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>gmmGaussianNumEstimate</h1><!--introduction--><p>Estimate the best number of Gaussians via cross validation</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Syntax</a></li><li><a href="#2">Description</a></li><li><a href="#3">Example</a></li><li><a href="#5">See Also</a></li></ul></div><h2>Syntax<a name="1"></a></h2><div><ul><li>[bestGaussianNum, trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData)</li><li>[...]=gmmGaussianNumEstimate(trainData, testData, gmmOpt)</li><li>[...]=gmmGaussianNumEstimate(trainData, testData, gmmOpt, plotOpt)</li></ul></div><h2>Description<a name="2"></a></h2><p>
+<p>[bestGaussianNum, trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData, gmmOpt) returns the estimated number of Gaussians, together with training and test log likelihood for both the training and test data.
+<p>The best number of gaussians is determined according to where the minimum of test log likelihood occurs. (Usually the estimated number of Gaussians is usuallylarger than the desired number of Gaussians, as shown in the example.)
+</p><h2>Example<a name="3"></a></h2><pre class="codeinput">DS=dcData(9);
+data=DS.input;
+subplot(2,1,1); hist(data, 50);
+title(<span class="string">'Histogram of the dataset'</span>);
+trainData=data(:, 1:2:end);
+testData=data(:, 2:2:end);
+gmmOpt=gmmTrain(<span class="string">'defaultOpt'</span>);
+gmmOpt.config.gaussianNum=1:2:25;
+plotOpt=1;
+subplot(2,1,2);
+[trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData, gmmOpt, plotOpt);
+</pre><pre class="codeoutput">1/13: No. of Gaussians=1, training LL=-860.930725, test LL=-858.286015
+2/13: No. of Gaussians=3, training LL=-789.718374, test LL=-791.185462
+3/13: No. of Gaussians=5, training LL=-743.663168, test LL=-764.175428
+4/13: No. of Gaussians=7, training LL=-743.582514, test LL=-764.209674
+5/13: No. of Gaussians=9, training LL=-743.195778, test LL=-764.464780
+6/13: No. of Gaussians=11, training LL=-741.537157, test LL=-765.974641
+7/13: No. of Gaussians=13, training LL=-740.710812, test LL=-769.483101
+8/13: No. of Gaussians=15, training LL=-740.728070, test LL=-769.180645
+9/13: No. of Gaussians=17, training LL=-740.736761, test LL=-769.320668
+10/13: No. of Gaussians=19, training LL=-740.617993, test LL=-769.762425
+11/13: No. of Gaussians=21, training LL=-739.386800, test LL=-771.148865
+12/13: No. of Gaussians=23, training LL=-737.828874, test LL=-771.672656
+13/13: No. of Gaussians=25, training LL=-738.260322, test LL=-771.505582
+</pre><img vspace="5" hspace="5" src="gmmGaussianNumEstimate_help_01.png" alt=""> <h2>See Also<a name="5"></a></h2><p><a href="gmmEval_help.html">gmmEval</a>, <a href="gmmTrain_help.html">gmmTrain</a>, <a href="gmmInitPrmSet_help.html">gmmInitPrmSet</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% gmmGaussianNumEstimate
+% Estimate the best number of Gaussians via cross validation
+%% Syntax
+% * 		[bestGaussianNum, trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData)
+% * 		[...]=gmmGaussianNumEstimate(trainData, testData, gmmOpt)
+% * 		[...]=gmmGaussianNumEstimate(trainData, testData, gmmOpt, plotOpt)
+%% Description
+%
+% <html>
+% <p>[bestGaussianNum, trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData, gmmOpt) returns the estimated number of Gaussians, together with training and test log likelihood for both the training and test data.
+% <p>The best number of gaussians is determined according to where the minimum of test log likelihood occurs. (Usually the estimated number of Gaussians is usuallylarger than the desired number of Gaussians, as shown in the example.)
+% </html>
+%% Example
+%%
+%
+DS=dcData(9);
+data=DS.input;
+subplot(2,1,1); hist(data, 50);
+title('Histogram of the dataset');
+trainData=data(:, 1:2:end);
+testData=data(:, 2:2:end);
+gmmOpt=gmmTrain('defaultOpt');
+gmmOpt.config.gaussianNum=1:2:25;
+plotOpt=1;
+subplot(2,1,2);
+[trainLl, testLl]=gmmGaussianNumEstimate(trainData, testData, gmmOpt, plotOpt);
+%% See Also
+% <gmmEval_help.html gmmEval>,
+% <gmmTrain_help.html gmmTrain>,
+% <gmmInitPrmSet_help.html gmmInitPrmSet>.
+
+##### SOURCE END #####
+--><hr><a href="index.html">Top page</a>&nbsp;&nbsp;&nbsp;Next: <a href="gmmEval_help.html">gmmEval.m</a>&nbsp;&nbsp;&nbsp;Prev:<a href="gmmGrow_help.html">gmmGrow.m</a>
+<script>
+function keyFunction(){
+if (event.keyCode==37) document.location="gmmEval_help.html";
+if (event.keyCode==39) document.location="gmmGrow_help.html";
+if (event.keyCode==69) document.location="matlab: edit gmmGaussianNumEstimate.m";
+}
+document.onkeydown=keyFunction;
+</script>
+</body></html>

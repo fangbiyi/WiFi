@@ -1,0 +1,187 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>K-Nearest-Neighbor Classifier (KNNC)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_03Classification_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>K-Nearest-Neighbor Classifier (KNNC)</h1><!--introduction--><p>The k-nearest-neighbor classifier (KNNC for short) is one of the most basic classifiers for pattern recognition or data classification. The principle of this method is based on the intuitive concept that data instances of the same class should be closer in the feature space. As a result, for a given data point x of unknown class, we can simply compute the distance between x and all the data points in the training data, and assign the class determined by the K nearest points of x. Due to its simplicity, KNNC is often used as a baseline method in comparison with other sophisticated approaches in pattern recognition.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A Basic example</a></li><li><a href="#3">Decision boundary</a></li><li><a href="#4">Distance function</a></li><li><a href="#5">Confusion matrix</a></li><li><a href="#7">Training of KNNC</a></li></ul></div><h2>A Basic example<a name="1"></a></h2><p>In the next example, we shall apply KNNC with K=1 for the IRIS dataset, where odd and even indexed entries are used as training and test data, respectively.</p><pre class="codeinput">[trainSet, testSet]=prData(<span class="string">'iris'</span>);
+trainSet.k=1;
+cOutputDs=knncEval(trainSet, trainSet);
+rrDs=sum(trainSet.output==cOutputDs)/length(trainSet.output);
+fprintf(<span class="string">'Inside-test recog. rate = %g%%\n'</span>, rrDs*100);
+cOutputTs=knncEval(testSet, trainSet);
+rrTs=sum(testSet.output==cOutputTs)/length(testSet.output);
+fprintf(<span class="string">'Outside-test recog. rate = %g%%\n'</span>, rrTs*100);
+</pre><pre class="codeoutput">Inside-test recog. rate = 100%
+Outside-test recog. rate = 96%
+</pre><p>It should be noted that if the design set (or training set) is used as the parameters of KNNC, the inside-test recognition rate is always 100%, which is overly optimistic.</p><h2>Decision boundary<a name="3"></a></h2><p>In the 2-dimensional space, the decision boundaries formed by KNNC with k = 1 can be derived from the Voronoi diagram. The following example demonstrates the decision boundary formed by 1NNC:</p><pre class="codeinput">DS=prData(<span class="string">'3classes'</span>);
+knncPlot(DS, [], <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_01_01.png" alt=""> <h2>Distance function<a name="4"></a></h2><p>We can also plot the posterior-likely function to each class for a given input domain:</p><pre class="codeinput">DS=prData(<span class="string">'3classes'</span>);
+knncPrm=knncTrain(DS);
+knncPrm.k=1;
+knncPlot(DS, knncPrm, <span class="string">'2dPosterior'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_01_02.png" alt=""> <h2>Confusion matrix<a name="5"></a></h2><p>In the first example, we have computed the recognition rate to be 96% without breakdown performance of each class. If we want to know the performance of each class, we can use the confusion matrix to display the result, as shown in the next example.</p><pre class="codeinput">[trainSet, testSet]=prData(<span class="string">'iris'</span>);
+trainNum=size(trainSet.input, 2);
+testNum  =size(testSet.input, 2);
+trainSet.k=1;
+predictedOutput=knncEval(testSet, trainSet);
+confMat=confMatGet(testSet.output, predictedOutput);
+opt=confMatPlot(<span class="string">'defaultOpt'</span>);
+opt.className=trainSet.outputName;
+opt.mode=<span class="string">'dataCount'</span>; figure; confMatPlot(confMat, opt);
+opt.mode=<span class="string">'percentage'</span>; figure; confMatPlot(confMat, opt);
+opt.mode=<span class="string">'both'</span>; figure; confMatPlot(confMat, opt);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_01_03.png" alt=""> <img vspace="5" hspace="5" src="userGuide_03Classification_01_04.png" alt=""> <img vspace="5" hspace="5" src="userGuide_03Classification_01_05.png" alt=""> <p>In the above example, the first plot is the confusion matrix C where C(i, j) is the number of data in class i being classified as class j. The second plot is the corresponding recognition rates for each class. And the third plot is a combination of both data counts and percentages. From the plots of the confusion matrix, the recognition rates for classes 1, 2, and 3 are 100%, 96%, and 92%, respectively, with an overall recognition rate of 96%. Moreover, from the confusion matrix, we know that classes 2 and 3 are more likely to be confused since there are only 3 cases of misclassification, one is 2 =&gt; 3, the other 3 =&gt; 2. (Here we use "i =&gt; j" to indicate an entry in class i being classified as class j.)</p><h2>Training of KNNC<a name="7"></a></h2><p>It is possible to reduce the size of the training data for KNNC. One simple way to achieve such modeling task (that is, use of less data to represent the original training set) is by k-means clustering. This has been built into the function knncTrain.m, which can be invoked as follows:</p><pre class="codeinput">[trainSet, testSet]=prData(<span class="string">'3classes'</span>);
+knncTrainPrm.method=<span class="string">'kMeans'</span>;
+knncTrainPrm.centerNum4eachClass=4;
+knncPrm=knncTrain(trainSet, knncTrainPrm);
+knncPrm.k=1;
+cOutputDs=knncEval(trainSet, knncPrm);
+rrDs=sum(trainSet.output==cOutputDs)/length(trainSet.output);
+fprintf(<span class="string">'Inside-test recog. rate = %g%%\n'</span>, rrDs*100);
+cOutputTs=knncEval(testSet, knncPrm);
+rrTs=sum(testSet.output==cOutputTs)/length(testSet.output);
+fprintf(<span class="string">'Outside-test recog. rate = %g%%\n'</span>, rrTs*100);
+</pre><pre class="codeoutput">Inside-test recog. rate = 98%
+Outside-test recog. rate = 92%
+</pre><p>We can plot the decision boundary of the KNNC, along with the training set:</p><pre class="codeinput">trainSet.hitIndex=find(cOutputDs==trainSet.output);
+figure; knncPlot(trainSet, knncPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_01_06.png" alt=""> <p>Similarly, we can plot the decision boundary of the KNNC along with the test set:</p><pre class="codeinput">testSet.hitIndex=find(cOutputTs==testSet.output);
+figure; knncPlot(testSet, knncPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_01_07.png" alt=""> <p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% K-Nearest-Neighbor Classifier (KNNC)
+% The k-nearest-neighbor classifier (KNNC for short) is one of the most basic classifiers for pattern recognition or data classification. The principle of this method is based on the intuitive concept that data instances of the same class should be closer in the feature space. As a result, for a given data point x of unknown class, we can simply compute the distance between x and all the data points in the training data, and assign the class determined by the K nearest points of x. Due to its simplicity, KNNC is often used as a baseline method in comparison with other sophisticated approaches in pattern recognition.
+%% A Basic example
+% In the next example, we shall apply KNNC with K=1 for the IRIS dataset, where odd and even indexed entries are used as training and test data, respectively.
+[trainSet, testSet]=prData('iris');
+trainSet.k=1;
+cOutputDs=knncEval(trainSet, trainSet);
+rrDs=sum(trainSet.output==cOutputDs)/length(trainSet.output);
+fprintf('Inside-test recog. rate = %g%%\n', rrDs*100);
+cOutputTs=knncEval(testSet, trainSet);
+rrTs=sum(testSet.output==cOutputTs)/length(testSet.output);
+fprintf('Outside-test recog. rate = %g%%\n', rrTs*100);
+%%
+% It should be noted that if the design set (or training set) is used as
+% the parameters of KNNC, the inside-test recognition rate is always 100%, which is overly optimistic.
+%% Decision boundary
+% In the 2-dimensional space, the decision boundaries formed by KNNC with k = 1 can be derived from the Voronoi diagram.
+% The following example demonstrates the decision boundary formed by 1NNC: 
+DS=prData('3classes');
+knncPlot(DS, [], 'decBoundary');
+%% Distance function
+% We can also plot the posterior-likely function to each class for a given input domain:
+DS=prData('3classes');
+knncPrm=knncTrain(DS);
+knncPrm.k=1;
+knncPlot(DS, knncPrm, '2dPosterior');
+%% Confusion matrix
+% In the first example, we have computed the recognition rate to be 96% without breakdown performance of each class. If we want to know the performance of each class, we can use the confusion matrix to display the result, as shown in the next example.
+[trainSet, testSet]=prData('iris');
+trainNum=size(trainSet.input, 2);
+testNum  =size(testSet.input, 2);
+trainSet.k=1;
+predictedOutput=knncEval(testSet, trainSet);
+confMat=confMatGet(testSet.output, predictedOutput);
+opt=confMatPlot('defaultOpt');
+opt.className=trainSet.outputName;
+opt.mode='dataCount'; figure; confMatPlot(confMat, opt);
+opt.mode='percentage'; figure; confMatPlot(confMat, opt);
+opt.mode='both'; figure; confMatPlot(confMat, opt);
+%%
+% In the above example, the first plot is the confusion matrix C where C(i, j) is the number of data in class i being classified as class j.
+% The second plot is the corresponding recognition rates for each class.
+% And the third plot is a combination of both data counts and percentages.
+% From the plots of the confusion matrix, the recognition rates for classes 1, 2, and 3 are 100%, 96%, and 92%, respectively, with an overall recognition rate of 96%.
+% Moreover, from the confusion matrix, we know that classes 2 and 3 are more likely to be confused since there are only 3 cases of misclassification, one is 2 => 3, the other 3 => 2. (Here we use "i => j" to indicate an entry in class i being classified as class j.) 
+%% Training of KNNC
+% It is possible to reduce the size of the training data for KNNC. One simple way to achieve such
+% modeling task (that is, use of less data to represent the original training set) is by k-means clustering.
+% This has been built into the function knncTrain.m, which can be invoked as follows:
+[trainSet, testSet]=prData('3classes');
+knncTrainPrm.method='kMeans';
+knncTrainPrm.centerNum4eachClass=4;
+knncPrm=knncTrain(trainSet, knncTrainPrm);
+knncPrm.k=1;
+cOutputDs=knncEval(trainSet, knncPrm);
+rrDs=sum(trainSet.output==cOutputDs)/length(trainSet.output);
+fprintf('Inside-test recog. rate = %g%%\n', rrDs*100);
+cOutputTs=knncEval(testSet, knncPrm);
+rrTs=sum(testSet.output==cOutputTs)/length(testSet.output);
+fprintf('Outside-test recog. rate = %g%%\n', rrTs*100);
+%%
+% We can plot the decision boundary of the KNNC, along with the training set:
+trainSet.hitIndex=find(cOutputDs==trainSet.output);
+figure; knncPlot(trainSet, knncPrm, 'decBoundary');
+%%
+% Similarly, we can plot the decision boundary of the KNNC along with the test set:
+testSet.hitIndex=find(cOutputTs==testSet.output);
+figure; knncPlot(testSet, knncPrm, 'decBoundary');
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

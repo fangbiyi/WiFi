@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Linear Discriminant Analysis (LDA)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_11FeatureExtraction_03.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Linear Discriminant Analysis (LDA)</h1><!--introduction--><p>the goal of LDA is to find the best projection (or equivalently, the best viewing angle) such that the separation between classes is maximized. Note that in order to maximize the separation between classes, LDA requires that dataset to be labeled with desired class for each data instance.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example</a></li><li><a href="#4">Applying LDA to Iris dataset</a></li><li><a href="#10">Reference</a></li></ul></div><h2>A basic example<a name="1"></a></h2><p>Let us take a look at the scatter plot of the dataset "random3" in the 3D space:</p><pre class="codeinput">DS=prData(<span class="string">'random3'</span>);
+subplot(1,2,1); dsScatterPlot3(DS);
+view(155, 46);
+subplot(1,2,2); dsScatterPlot3(DS);
+view(-44, 22);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_01.png" alt=""> <p>In the above example, the left and right plots are based on the same 300 entries except for different view angles. The left plot seems a bit random since the view angle tends to overlap the projection onto the 2D space. On the otherhand, the right plot give us a much more separation between classes after 2D projection. The goal of LDA is to find the best projection (or equivalently, the best viewing angle) such that the separation between classes is maximized.</p><p>The next example applies LDA to the dataset "random3":</p><pre class="codeinput">DS=prData(<span class="string">'random3'</span>);
+DS2=lda(DS); DS2.input=DS2.input(1:2, :);
+DS3=lda(DS); DS3.input=DS3.input(end-1:end, :);
+subplot(2,1,1); dsScatterPlot(DS2); axis <span class="string">image</span>
+xlabel(<span class="string">'Input 1'</span>); ylabel(<span class="string">'Input 2'</span>);
+title(<span class="string">'Projected to the first two dim of LDA'</span>);
+subplot(2,1,2); dsScatterPlot(DS3); axis <span class="string">image</span>
+xlabel(<span class="string">'Input 3'</span>); ylabel(<span class="string">'Input 4'</span>);
+title(<span class="string">'Projected to the last two dim of LDA'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_02.png" alt=""> <p>With the use of the first two dimensions of LDA, we have a larger separation between different classes in plot 1.</p><h2>Applying LDA to Iris dataset<a name="4"></a></h2><p>The next example applies LDA to the Iris dataset:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>);
+dataNum = size(DS.input, 2);
+DS2 = lda(DS);
+<span class="comment">% ====== Projection to the first two eigenvectors</span>
+DS3=DS2; DS3.input=DS2.input(1:2, :);
+figure;
+subplot(2,1,1);
+[recogRate, computed] = knncLoo(DS3, [], 1);
+title(sprintf(<span class="string">'LDA projection of %s data onto the first 2 discriminant vectors'</span>, DS.dataName));
+xlabel(sprintf(<span class="string">'KNNC''s leave-one-out recog. rate = %d/%d = %g%%'</span>, sum(DS3.output==computed), dataNum, 100*recogRate));
+<span class="comment">% ====== Projection to the last two eigenvectors</span>
+DS3=DS2; DS3.input=DS2.input(end-1:end, :);
+subplot(2,1,2);
+[recogRate, computed] = knncLoo(DS3, [], 1);
+title(sprintf(<span class="string">'LDA projection of %s data onto the last 2 discriminant vectors'</span>, DS.dataName));
+xlabel(sprintf(<span class="string">'KNNC''s leave-one-out recog. rate = %d/%d = %g%%'</span>, sum(DS3.output==computed), dataNum, 100*recogRate));
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_03.png" alt=""> <p>In the above example, we adopt 1-nearest-neighbor classifier and leave-one-out criterion for performance evaluation. In plot 1, the dataset is projected to the first 2 dimensions of LDA and the accuracy is 98.00%, corresponding to 3 misclassified cases. If the dataset is projected to the last 2 dimensions of LDA, as shown in plot 2 where the degree of class overlap becomes larger, the accuracy is 87.33%, corresponding to 19 misclassified cases. (In the plot, the misclassified cases are denoted by a black cross.)</p><p>We can apply LDA to the Wine dataset and plot the leave-one-out accuracy with respect to the no. of dimensions:</p><pre class="codeinput">DS=prData(<span class="string">'wine'</span>);
+rr=ldaPerfViaKnncLoo(DS);
+[featureNum, dataNum] = size(DS.input);
+figure;
+plot(1:featureNum, rr, <span class="string">'o-'</span>); grid <span class="string">on</span>
+xlabel(<span class="string">'No. of projected features based on LDA'</span>);
+ylabel(<span class="string">'LOO recognition rates using 1-NNC (%)'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_04.png" alt=""> <p>The accuracy achieves its maximum of 98.31% when the dimensionality is 6. The corresponding confusion matrix is:</p><pre class="codeinput">DS=prData(<span class="string">'wine'</span>);
+DS2 = lda(DS);
+DS3=DS2; DS3.input=DS3.input(1:6, :);
+[recogRate, computedOutput] = knncLoo(DS3);
+confMat=confMatGet(DS3.output, computedOutput);
+confMatPlot(confMat);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_05.png" alt=""> <p>Since the ranges of features of the Wine dataset vary a lot, it would be interesting to see how input normalization can improve the classification accuracy. The next example demonstrates how input normalization can help the classification:</p><pre class="codeinput">DS=prData(<span class="string">'wine'</span>);
+recogRate1=ldaPerfViaKnncLoo(DS);
+DS2=DS; DS2.input=inputNormalize(DS2.input);	<span class="comment">% Input normalization</span>
+recogRate2=ldaPerfViaKnncLoo(DS2);
+[featureNum, dataNum] = size(DS.input);
+figure;
+plot(1:featureNum, 100*recogRate1, <span class="string">'o-'</span>, 1:featureNum, 100*recogRate2, <span class="string">'^-'</span>); grid <span class="string">on</span>
+legend(<span class="string">'Raw data'</span>, <span class="string">'Normalized data'</span>);
+xlabel(<span class="string">'No. of projected features based on LDA'</span>);
+ylabel(<span class="string">'LOO recognition rates using KNNC (%)'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_06.png" alt=""> <p>For this dataset, input normalization does improve the accuracy. In particular, when the dimensionality is 6, the corresponding accuracy is 100%&#12290; The corresponding confusion matrix is:</p><pre class="codeinput">DS=prData(<span class="string">'wine'</span>);
+DS.input=inputNormalize(DS.input);	<span class="comment">% Input normalization</span>
+DS2 = lda(DS);
+DS3=DS2; DS3.input=DS3.input(1:6, :);
+[recogRate, computedOutput] = knncLoo(DS3);
+confMat=confMatGet(DS3.output, computedOutput);
+confMatPlot(confMat);
+</pre><img vspace="5" hspace="5" src="userGuide_11FeatureExtraction_03_07.png" alt=""> <h2>Reference<a name="10"></a></h2><div><ol><li>J. Duchene and S. Leclercq, "An optimal transformation for discriminant and principal component analysis", IEEE Trans. PAMI, vol. 10, pp.978-983, 1988.</li></ol></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Linear Discriminant Analysis (LDA)
+% the goal of LDA is to find the best projection (or equivalently, the best
+% viewing angle) such that the separation between classes is maximized.
+% Note that in order to maximize the separation between classes, LDA
+% requires that dataset to be labeled with desired class for each data
+% instance.
+%% A basic example
+% Let us take a look at the scatter plot of the dataset "random3" in the 3D
+% space:
+DS=prData('random3');
+subplot(1,2,1); dsScatterPlot3(DS);
+view(155, 46);
+subplot(1,2,2); dsScatterPlot3(DS);
+view(-44, 22);
+%%
+% In the above example, the left and right plots are based on the same 300 entries except for different view angles.
+% The left plot seems a bit random since the view angle tends to overlap the projection onto the 2D space.
+% On the otherhand, the right plot give us a much more separation between classes after 2D projection.
+% The goal of LDA is to find the best projection (or equivalently, the best viewing angle) such that the separation between classes is maximized. 
+%
+% The next example applies LDA to the dataset "random3": 
+DS=prData('random3');
+DS2=lda(DS); DS2.input=DS2.input(1:2, :);
+DS3=lda(DS); DS3.input=DS3.input(end-1:end, :);
+subplot(2,1,1); dsScatterPlot(DS2); axis image
+xlabel('Input 1'); ylabel('Input 2');
+title('Projected to the first two dim of LDA');
+subplot(2,1,2); dsScatterPlot(DS3); axis image
+xlabel('Input 3'); ylabel('Input 4');
+title('Projected to the last two dim of LDA');
+%%
+% With the use of the first two dimensions of LDA, we have a larger separation between different classes in plot 1. 
+%% Applying LDA to Iris dataset
+% The next example applies LDA to the Iris dataset:
+DS = prData('iris');
+dataNum = size(DS.input, 2);
+DS2 = lda(DS);
+% ====== Projection to the first two eigenvectors
+DS3=DS2; DS3.input=DS2.input(1:2, :);
+figure;
+subplot(2,1,1);
+[recogRate, computed] = knncLoo(DS3, [], 1);
+title(sprintf('LDA projection of %s data onto the first 2 discriminant vectors', DS.dataName));
+xlabel(sprintf('KNNC''s leave-one-out recog. rate = %d/%d = %g%%', sum(DS3.output==computed), dataNum, 100*recogRate));
+% ====== Projection to the last two eigenvectors
+DS3=DS2; DS3.input=DS2.input(end-1:end, :);
+subplot(2,1,2);
+[recogRate, computed] = knncLoo(DS3, [], 1);
+title(sprintf('LDA projection of %s data onto the last 2 discriminant vectors', DS.dataName));
+xlabel(sprintf('KNNC''s leave-one-out recog. rate = %d/%d = %g%%', sum(DS3.output==computed), dataNum, 100*recogRate));
+%%
+% In the above example, we adopt 1-nearest-neighbor classifier and leave-one-out criterion for performance evaluation.
+% In plot 1, the dataset is projected to the first 2 dimensions of LDA and the accuracy is 98.00%, corresponding to 3 misclassified cases.
+% If the dataset is projected to the last 2 dimensions of LDA, as shown in plot 2 where the degree of class overlap becomes larger, the accuracy is 87.33%, corresponding to 19 misclassified cases.
+% (In the plot, the misclassified cases are denoted by a black cross.) 
+%%
+% We can apply LDA to the Wine dataset and plot the leave-one-out accuracy
+% with respect to the no. of dimensions:
+DS=prData('wine');
+rr=ldaPerfViaKnncLoo(DS);
+[featureNum, dataNum] = size(DS.input);
+figure;
+plot(1:featureNum, rr, 'o-'); grid on
+xlabel('No. of projected features based on LDA');
+ylabel('LOO recognition rates using 1-NNC (%)');
+%%
+% The accuracy achieves its maximum of 98.31% when the dimensionality is 6.
+% The corresponding confusion matrix is: 
+DS=prData('wine');
+DS2 = lda(DS);
+DS3=DS2; DS3.input=DS3.input(1:6, :);
+[recogRate, computedOutput] = knncLoo(DS3);
+confMat=confMatGet(DS3.output, computedOutput);
+confMatPlot(confMat);
+%%
+% Since the ranges of features of the Wine dataset vary a lot,
+% it would be interesting to see how input normalization can improve the classification accuracy.
+% The next example demonstrates how input normalization can help the
+% classification:
+DS=prData('wine');
+recogRate1=ldaPerfViaKnncLoo(DS);
+DS2=DS; DS2.input=inputNormalize(DS2.input);	% Input normalization
+recogRate2=ldaPerfViaKnncLoo(DS2);
+[featureNum, dataNum] = size(DS.input);
+figure;
+plot(1:featureNum, 100*recogRate1, 'o-', 1:featureNum, 100*recogRate2, '^-'); grid on
+legend('Raw data', 'Normalized data');
+xlabel('No. of projected features based on LDA');
+ylabel('LOO recognition rates using KNNC (%)');
+%%
+% For this dataset, input normalization does improve the accuracy.
+% In particular, when the dimensionality is 6, the corresponding accuracy is 100%。 
+% The corresponding confusion matrix is: 
+DS=prData('wine');
+DS.input=inputNormalize(DS.input);	% Input normalization
+DS2 = lda(DS);
+DS3=DS2; DS3.input=DS3.input(1:6, :);
+[recogRate, computedOutput] = knncLoo(DS3);
+confMat=confMatGet(DS3.output, computedOutput);
+confMatPlot(confMat);
+%% Reference
+% # J. Duchene and S. Leclercq, "An optimal transformation for discriminant and principal component analysis", IEEE Trans. PAMI, vol. 10, pp.978-983, 1988. 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

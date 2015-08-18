@@ -1,0 +1,200 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Vector Quantization</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_02Clustering_03.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Vector Quantization</h1><!--introduction--><p>Vector quantization (VQ) can be viewed as an efficient techniques for k-means clustering, especially when the desired number of clusters is big. VQ is primarily designed for lossy data compression, particularly for image compression. A vanilla algorithm for VQ is:</p><div><ol><li>Set the number of clusters n = 1.</li><li>Run k-means clustering with the number of clusters equal to n.</li><li>If n is equal to or greater than the desired number of clusters, stop.</li><li>Split each of the cluster centers into two by adding and subtracting a small random vector. Now n is twice the original value.</li><li>Go back to the second step.</li></ol></div><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example</a></li><li><a href="#2">Visualization of the clustering process</a></li><li><a href="#3">Reference</a></li></ul></div><h2>A basic example<a name="1"></a></h2><p>The following example demonstrates the dendrogram after agglomerative hierarchical clustering.</p><pre class="codeinput">DS=dcData(2);
+data=DS.input;
+codeBookSize=2^5;
+codebook=vecQuantize(data, codeBookSize);
+</pre><pre class="codeoutput">No. of centers = 2, loop count = 6, distortion = 428.203
+No. of centers = 4, loop count = 21, distortion = 158.479
+No. of centers = 8, loop count = 20, distortion = 66.6857
+No. of centers = 16, loop count = 37, distortion = 34.8209
+No. of centers = 32, loop count = 15, distortion = 16.0443
+</pre><h2>Visualization of the clustering process<a name="2"></a></h2><p>If you want to see the animation of the clustering process, try the next example:</p><pre class="codeinput">DS=dcData(2);
+data=DS.input;
+codeBookSize=2^5;
+codebook=vecQuantize(data, codeBookSize, 1);
+</pre><pre class="codeoutput">Iteration count = 1/200, distortion = 691.611116
+Iteration count = 2/200, distortion = 417.476078
+Iteration count = 3/200, distortion = 417.290672
+Iteration count = 4/200, distortion = 416.986496
+Iteration count = 5/200, distortion = 416.601803
+Iteration count = 6/200, distortion = 416.166624
+Iteration count = 7/200, distortion = 415.849953
+Iteration count = 8/200, distortion = 415.555807
+Iteration count = 9/200, distortion = 415.421391
+Iteration count = 10/200, distortion = 415.365443
+Iteration count = 11/200, distortion = 415.360992
+Iteration count = 12/200, distortion = 415.346638
+Iteration count = 13/200, distortion = 415.340240
+Iteration count = 14/200, distortion = 415.336797
+Iteration count = 15/200, distortion = 415.335031
+Iteration count = 16/200, distortion = 415.335031
+No. of centers = 2, loop count = 16, distortion = 415.335
+Iteration count = 1/200, distortion = 415.335031
+Iteration count = 2/200, distortion = 283.593638
+Iteration count = 3/200, distortion = 157.555362
+Iteration count = 4/200, distortion = 156.342249
+Iteration count = 5/200, distortion = 156.063204
+Iteration count = 6/200, distortion = 155.897988
+Iteration count = 7/200, distortion = 155.724434
+Iteration count = 8/200, distortion = 155.605325
+Iteration count = 9/200, distortion = 155.399291
+Iteration count = 10/200, distortion = 155.323689
+Iteration count = 11/200, distortion = 155.319025
+Iteration count = 12/200, distortion = 155.319025
+No. of centers = 4, loop count = 12, distortion = 155.319
+Iteration count = 1/200, distortion = 155.319025
+Iteration count = 2/200, distortion = 81.671584
+Iteration count = 3/200, distortion = 73.101167
+Iteration count = 4/200, distortion = 69.789227
+Iteration count = 5/200, distortion = 69.056740
+Iteration count = 6/200, distortion = 68.885662
+Iteration count = 7/200, distortion = 68.831688
+Iteration count = 8/200, distortion = 68.805113
+Iteration count = 9/200, distortion = 68.792270
+Iteration count = 10/200, distortion = 68.789027
+Iteration count = 11/200, distortion = 68.788005
+Iteration count = 12/200, distortion = 68.788005
+No. of centers = 8, loop count = 12, distortion = 68.788
+Iteration count = 1/200, distortion = 68.788005
+Iteration count = 2/200, distortion = 41.408745
+Iteration count = 3/200, distortion = 40.231598
+Iteration count = 4/200, distortion = 39.632713
+Iteration count = 5/200, distortion = 39.036141
+Iteration count = 6/200, distortion = 38.519786
+Iteration count = 7/200, distortion = 37.932107
+Iteration count = 8/200, distortion = 37.397182
+Iteration count = 9/200, distortion = 36.950676
+Iteration count = 10/200, distortion = 36.651149
+Iteration count = 11/200, distortion = 36.457752
+Iteration count = 12/200, distortion = 36.314889
+Iteration count = 13/200, distortion = 36.254345
+Iteration count = 14/200, distortion = 36.230323
+Iteration count = 15/200, distortion = 36.203576
+Iteration count = 16/200, distortion = 36.193489
+Iteration count = 17/200, distortion = 36.187849
+Iteration count = 18/200, distortion = 36.185944
+Iteration count = 19/200, distortion = 36.185944
+No. of centers = 16, loop count = 19, distortion = 36.1859
+Iteration count = 1/200, distortion = 36.185944
+Iteration count = 2/200, distortion = 22.464215
+Iteration count = 3/200, distortion = 20.859930
+Iteration count = 4/200, distortion = 19.731841
+Iteration count = 5/200, distortion = 18.240662
+Iteration count = 6/200, distortion = 17.451923
+Iteration count = 7/200, distortion = 17.199904
+Iteration count = 8/200, distortion = 16.996129
+Iteration count = 9/200, distortion = 16.856346
+Iteration count = 10/200, distortion = 16.778240
+Iteration count = 11/200, distortion = 16.729674
+Iteration count = 12/200, distortion = 16.699396
+Iteration count = 13/200, distortion = 16.685093
+Iteration count = 14/200, distortion = 16.672753
+Iteration count = 15/200, distortion = 16.662450
+Iteration count = 16/200, distortion = 16.654783
+Iteration count = 17/200, distortion = 16.642651
+Iteration count = 18/200, distortion = 16.630944
+Iteration count = 19/200, distortion = 16.611577
+Iteration count = 20/200, distortion = 16.559080
+Iteration count = 21/200, distortion = 16.533710
+Iteration count = 22/200, distortion = 16.518239
+Iteration count = 23/200, distortion = 16.515601
+Iteration count = 24/200, distortion = 16.515601
+No. of centers = 32, loop count = 24, distortion = 16.5156
+</pre><img vspace="5" hspace="5" src="userGuide_02Clustering_03_01.png" alt=""> <h2>Reference<a name="3"></a></h2><p>Y. Linde, A. Buzo, and R.M. Gray, "An Algorithm for Vector Quantizer Design", IEEE Transactions on Communications, vol. 28, pp. 84-94, 1980.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Vector Quantization
+% Vector quantization (VQ) can be viewed as an efficient techniques for k-means clustering, especially when the desired number of clusters is big.
+% VQ is primarily designed for lossy data compression, particularly for image compression.
+% A vanilla algorithm for VQ is:
+%
+% # Set the number of clusters n = 1.
+% # Run k-means clustering with the number of clusters equal to n.
+% # If n is equal to or greater than the desired number of clusters, stop. 
+% # Split each of the cluster centers into two by adding and subtracting a small random vector. Now n is twice the original value. 
+% # Go back to the second step.
+%% A basic example
+% The following example demonstrates the dendrogram after agglomerative hierarchical clustering. 
+DS=dcData(2);
+data=DS.input;
+codeBookSize=2^5;
+codebook=vecQuantize(data, codeBookSize);
+%% Visualization of the clustering process
+% If you want to see the animation of the clustering process, try the next example: 
+DS=dcData(2);
+data=DS.input;
+codeBookSize=2^5;
+codebook=vecQuantize(data, codeBookSize, 1);
+%% Reference
+% Y. Linde, A. Buzo, and R.M. Gray, "An Algorithm for Vector Quantizer Design", IEEE Transactions on Communications, vol. 28, pp. 84-94, 1980.
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

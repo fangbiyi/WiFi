@@ -1,0 +1,175 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Dynamic Time Warping (DTW)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_07DynamicTimeWarping_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Dynamic Time Warping (DTW)</h1><!--introduction--><p>The distance between two point <img src="userGuide_07DynamicTimeWarping_01_eq49550.png" alt="$\vec{x} = [x_1, x_2, ..., x_n]$"> and <img src="userGuide_07DynamicTimeWarping_01_eq33249.png" alt="$\vec{y} = [y_1, y_2, ..., y_n]$"> in a n-dimensional space can be computed via the Euclidean distance:</p><p><img src="userGuide_07DynamicTimeWarping_01_eq34428.png" alt="$$ dist(\vec{x}, \vec{y}) = ||\vec{x} - \vec{y}|| = \sqrt{(x_1-y_1)^2 + (x_2-y_2)^2 + ... + (x_n-y_n)^2} $$"></p><p>However, if the length of x is different from y, then we cannot use the above formula to compute the distance. Instead, we need a more flexible method that can find the best mapping from elements in x to those in y in order to compute the distance.</p><p>The goal of dynamic time warping (DTW for short) is to find the best mapping with the minimum distance by the use of dynamic programming. The method is called "time warping" since both x and y are usually vectors of time series and we need to compress or expand in time in order to find the best mapping.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Basic concept</a></li><li><a href="#2">Examples</a></li><li><a href="#5">Visualization</a></li></ul></div><h2>Basic concept<a name="1"></a></h2><p>Let t and r be two vectors of lengths m and n, respectively. The goal of DTW is to find a mapping path <img src="userGuide_07DynamicTimeWarping_01_eq12146.png" alt="${(p_1, q_1), (p_2, q_2), ..., (p_k, q_k)}$"> such that the distance on this mapping path <img src="userGuide_07DynamicTimeWarping_01_eq65296.png" alt="$\sum_1^k{|x(p_i) - y(q_i)|}$"> is minimized, with the following constraints:</p><div><ul><li>Boundary conditions: <img src="userGuide_07DynamicTimeWarping_01_eq26300.png" alt="$(p_1, q_1) = (1, 1), (p_k, q_k) = (m, n)$">. This is a typical example of "anchored beginning" and "anchored end".</li><li>Local constraint: For any given node (i, j) in the path, the possible fan-in nodes are restricted to (i-1, j), (i, j-1), (i-1, j-1). This local constraint guarantees that the mapping path is monotonically non-decreasing in its first and second arguments. Moreover, for any given element in t, we should be able to find at least one corresponding element in r, and vice versa.</li></ul></div><p><img vspace="5" hspace="5" src="dtwLocalPathConstraint2.gif" alt=""> </p><p>How can we find the optimum mapping path in DTW? An obvious choice is forward DP, which can be summarized in the following three steps:</p><div><ol><li>Optimum-value function: Define D(i, j) as the DTW distance between t(1:i) and r(1:j), with the mapping path from (1, 1) to (i, j).</li><li>Recursion: D(i, j) = &#8739;x(i) - y(j)&#8739; + min{D(i-1, j), D(i-1, j-1), D(i, j-1)}, with the initial condition D(1, 1) = &#8739;x(1) - y(1)&#8739;.</li><li>Final answer: D(m, n)</li></ol></div><p>Another commonly used local path constraint is to set the fan-in of 27&deg;-45&deg;-63&deg; only, as shown in the following figure:</p><p><img vspace="5" hspace="5" src="dtwLocalPathConstraint1.gif" alt=""> </p><h2>Examples<a name="2"></a></h2><p>In the following, we shall give some examples of DTW. For simplicity, we shall distinguish two types of DTW:</p><div><ul><li>Type-1 DTW uses 27&deg;-45&deg;-63&deg; local path constraint.</li><li>Type-2 DTW uses 0&deg;-45&deg;-90&deg; local path constraint.</li></ul></div><p>First, we can use dtw.m (with dtwOpt.type=1) and dtwPathPlot.m to plot the mapping path of type-1 DTW in the following example:</p><pre class="codeinput">vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1;
+[minDist, dtwPath, dtwTable] = dtw(vec1, vec2, dtwOpt);
+figure; dtwPathPlot(vec1, vec2, dtwPath);
+</pre><img vspace="5" hspace="5" src="userGuide_07DynamicTimeWarping_01_01.png" alt=""> <p>In the above example, we deliberately put an outliner in vec1. Due to the local path constraints of type-1 DTW, this outliner is skipped in the optimum mapping path.</p><p>Similarly, we can use dtw.m (with dtwOpt.type=2) and dtwPathPlot.m to plot the mapping path of type-2 DTW:</p><pre class="codeinput">vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=2;
+[minDist, dtwPath, dtwTable] = dtw(vec1, vec2, dtwOpt);
+figure; dtwPathPlot(vec1, vec2, dtwPath);
+</pre><img vspace="5" hspace="5" src="userGuide_07DynamicTimeWarping_01_02.png" alt=""> <p>The outliner cannot be skipped since the local path constraints require each point in a vector has at least one correspondence in the other vector.</p><h2>Visualization<a name="5"></a></h2><p>By using dtwBridgePlot.m, we can use red lines to connect corresponding points in two vectors, as follows:</p><pre class="codeinput">vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1; [minDist1, dtwPath1, dtwTable1] = dtw(vec1, vec2, dtwOpt);
+dtwOpt.type=2; [minDist2, dtwPath2, dtwTable2] = dtw(vec1, vec2, dtwOpt);
+subplot(2,1,1); dtwBridgePlot(vec1, vec2, dtwPath1); title(<span class="string">'DTW alignment by type-1 DTW'</span>);
+subplot(2,1,2); dtwBridgePlot(vec1, vec2, dtwPath2); title(<span class="string">'DTW alignment by type-2 DTW'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_07DynamicTimeWarping_01_03.png" alt=""> <p>It becomes more obvious that type-1 DTW can have empty correspondence while type-2 DTW can have multiple correspondences. Moreover, we can use an extra argument for dtwBridgePlot.m to put the two vectors in 3D space to have a more interesting representation:</p><pre class="codeinput">vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1; [minDist1, dtwPath1, dtwTable1] = dtw(vec1, vec2, dtwOpt);
+dtwOpt.type=2; [minDist2, dtwPath2, dtwTable2] = dtw(vec1, vec2, dtwOpt);
+subplot(2,1,1); dtwBridgePlot(vec1, vec2, dtwPath1, <span class="string">'3d'</span>); title(<span class="string">'DTW alignment by type-1 DTW'</span>); view(-10, 70);
+subplot(2,1,2); dtwBridgePlot(vec1, vec2, dtwPath2, <span class="string">'3d'</span>); title(<span class="string">'DTW alignment by type-2 DTW'</span>); view(-10, 70);
+</pre><img vspace="5" hspace="5" src="userGuide_07DynamicTimeWarping_01_04.png" alt=""> <p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Dynamic Time Warping (DTW)
+% The distance between two point $\vec{x} = [x_1, x_2, ..., x_n]$ and $\vec{y} = [y_1, y_2, ..., y_n]$ in a n-dimensional space can be computed via the Euclidean distance: 
+%
+% $$ dist(\vec{x}, \vec{y}) = ||\vec{x} - \vec{y}|| = \sqrt{(x_1-y_1)^2 + (x_2-y_2)^2 + ... + (x_n-y_n)^2} $$
+%
+% However, if the length of x is different from y, then we cannot use the above formula to compute the distance.
+% Instead, we need a more flexible method that can find the best mapping from elements in x to those in y in order to compute the distance.
+%
+% The goal of dynamic time warping (DTW for short) is to find the best mapping with the minimum distance by the use of dynamic programming.
+% The method is called "time warping" since both x and y are usually vectors of time series and we need to compress or expand in time in order to find the best mapping.
+%% Basic concept
+% Let t and r be two vectors of lengths m and n, respectively.
+% The goal of DTW is to find a mapping path ${(p_1, q_1), (p_2, q_2), ..., (p_k, q_k)}$ such that the distance on this mapping path
+% $\sum_1^k{|x(p_i) - y(q_i)|}$ is minimized, with the following constraints: 
+%
+% * Boundary conditions: $(p_1, q_1) = (1, 1), (p_k, q_k) = (m, n)$. This is a typical example of "anchored beginning" and "anchored end".
+% * Local constraint: For any given node (i, j) in the path, the possible fan-in nodes are restricted to (i-1, j), (i, j-1), (i-1, j-1). This local constraint guarantees that the mapping path is monotonically non-decreasing in its first and second arguments. Moreover, for any given element in t, we should be able to find at least one corresponding element in r, and vice versa. 
+%
+% <<dtwLocalPathConstraint2.gif>>
+%
+% How can we find the optimum mapping path in DTW? An obvious choice is forward DP, which can be summarized in the following three steps: 
+%
+% # Optimum-value function: Define D(i, j) as the DTW distance between t(1:i) and r(1:j), with the mapping path from (1, 1) to (i, j). 
+% # Recursion: D(i, j) = ∣x(i) - y(j)∣ + min{D(i-1, j), D(i-1, j-1), D(i, j-1)}, with the initial condition D(1, 1) = ∣x(1) - y(1)∣. 
+% # Final answer: D(m, n) 
+%
+% Another commonly used local path constraint is to set the fan-in of 27°-45°-63° only, as shown in the following figure:
+%
+% <<dtwLocalPathConstraint1.gif>>
+%% Examples
+% In the following, we shall give some examples of DTW. For simplicity, we shall distinguish two types of DTW: 
+%
+% * Type-1 DTW uses 27°-45°-63° local path constraint. 
+% * Type-2 DTW uses 0°-45°-90° local path constraint. 
+%
+% First, we can use dtw.m (with dtwOpt.type=1) and dtwPathPlot.m to plot the mapping path of type-1 DTW in the following example: 
+vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1;
+[minDist, dtwPath, dtwTable] = dtw(vec1, vec2, dtwOpt);
+figure; dtwPathPlot(vec1, vec2, dtwPath);
+%%
+% In the above example, we deliberately put an outliner in vec1.
+% Due to the local path constraints of type-1 DTW, this outliner is skipped in the optimum mapping path. 
+%
+% Similarly, we can use dtw.m (with dtwOpt.type=2) and dtwPathPlot.m to plot the mapping path of type-2 DTW: 
+vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=2;
+[minDist, dtwPath, dtwTable] = dtw(vec1, vec2, dtwOpt);
+figure; dtwPathPlot(vec1, vec2, dtwPath);
+%%
+% The outliner cannot be skipped since the local path constraints require each point in a vector has at least one correspondence in the other vector. 
+%% Visualization
+% By using dtwBridgePlot.m, we can use red lines to connect corresponding points in two vectors, as follows: 
+vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1; [minDist1, dtwPath1, dtwTable1] = dtw(vec1, vec2, dtwOpt);
+dtwOpt.type=2; [minDist2, dtwPath2, dtwTable2] = dtw(vec1, vec2, dtwOpt);
+subplot(2,1,1); dtwBridgePlot(vec1, vec2, dtwPath1); title('DTW alignment by type-1 DTW');
+subplot(2,1,2); dtwBridgePlot(vec1, vec2, dtwPath2); title('DTW alignment by type-2 DTW');
+%%
+% It becomes more obvious that type-1 DTW can have empty correspondence while type-2 DTW can have multiple correspondences.
+% Moreover, we can use an extra argument for dtwBridgePlot.m to put the two vectors in 3D space to have a more interesting representation: 
+vec1=[71 73 75 80 80 80 78 76 75 73 71 71 71 73 75 76 76 68 76 76 75 73 71 70 70 69 68 68 72 74 78 79 80 80 78];
+vec2=[69 69 73 75 79 80 79 78 76 73 72 71 70 70 69 69 69 71 73 75 76 76 76 76 76 75 73 71 70 70 71 73 75 80 80 80 78];
+dtwOpt=dtwOptSet;
+dtwOpt.type=1; [minDist1, dtwPath1, dtwTable1] = dtw(vec1, vec2, dtwOpt);
+dtwOpt.type=2; [minDist2, dtwPath2, dtwTable2] = dtw(vec1, vec2, dtwOpt);
+subplot(2,1,1); dtwBridgePlot(vec1, vec2, dtwPath1, '3d'); title('DTW alignment by type-1 DTW'); view(-10, 70);
+subplot(2,1,2); dtwBridgePlot(vec1, vec2, dtwPath2, '3d'); title('DTW alignment by type-2 DTW'); view(-10, 70);
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

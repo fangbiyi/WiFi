@@ -1,0 +1,229 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>GMM-based Classifiers (GMMC)</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_03Classification_05.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>GMM-based Classifiers (GMMC)</h1><!--introduction--><p>We can also use GMM as a classifier for pattern recognition. We shall use GMMC (GMM classifier) to denote such a GMM-based classifiers. The workflow of a GMMC involves the following steps:</p><div><ul><li>At the training stage, we need to obtain a GMM for each class. In other words, we need to use the data of a class to train a GMM. There is no interactions between GMM of different classes.</li><li>At the application stage, we need to send the unknown-class data to the GMM of each class. The predicted class wlll have a GMM with the maximum probability.</li></ul></div><p>The following example demonstrates the use of GMM for classification of iris dataset:</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">A basic example</a></li><li><a href="#2">2D PDFs and posterior probabilities</a></li><li><a href="#4">Decision boundary</a></li><li><a href="#6">The best number of Gaussian components</a></li></ul></div><h2>A basic example<a name="1"></a></h2><p>In the following example, we shall use dimensions 3 and 4 of the Iris dataset for the GMMC classifier.</p><pre class="codeinput">[DS, TS]=prData(<span class="string">'iris'</span>);
+DS.input=DS.input(3:4, :);	<span class="comment">% Only use the last 2 dim</span>
+TS.input=TS.input(3:4, :);	<span class="comment">% Only use the last 2 dim</span>
+gmmcOpt=gmmcTrain(<span class="string">'defaultOpt'</span>);
+gmmcPrm=gmmcTrain(DS, gmmcOpt);
+cOutputDs=gmmcEval(DS, gmmcPrm);
+rrDs=sum(DS.output==cOutputDs)/length(DS.output);
+fprintf(<span class="string">'Inside-test recog. rate = %g%%\n'</span>, rrDs*100);
+cOutputTs=gmmcEval(TS, gmmcPrm);
+rrTs=sum(TS.output==cOutputTs)/length(TS.output);
+fprintf(<span class="string">'Outside-test recog. rate = %g%%\n'</span>, rrTs*100);
+</pre><pre class="codeoutput">Inside-test recog. rate = 97.3333%
+Outside-test recog. rate = 97.3333%
+</pre><h2>2D PDFs and posterior probabilities<a name="2"></a></h2><p>Once we have obtained the parameters of GMMC, we can plot the 2D PDF of the GMM of each of the class:</p><pre class="codeinput">gmmcPlot(DS, gmmcPrm, <span class="string">'2dPdf'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_01.png" alt=""> <p>The 2D posterior probability function for each class can be display similarly:</p><pre class="codeinput">gmmcPlot(DS, gmmcPrm, <span class="string">'2dPosterior'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_02.png" alt=""> <h2>Decision boundary<a name="4"></a></h2><p>Based on the computed PDF for each class, we can plot the decision boundaries along with the design set, as follows:</p><pre class="codeinput">DS.hitIndex=find(cOutputDs==DS.output);	<span class="comment">% This is used in gmmcPlot.</span>
+gmmcPlot(DS, gmmcPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_03.png" alt=""> <p>The decision boundaries and the test set can be plotted similarly:</p><pre class="codeinput">TS.hitIndex=find(cOutputTs==TS.output);	<span class="comment">% This is used in gmmcPlot.</span>
+gmmcPlot(TS, gmmcPrm, <span class="string">'decBoundary'</span>);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_04.png" alt=""> <h2>The best number of Gaussian components<a name="6"></a></h2><p>In the above example, we set the number of Gaussians to be 3 by default. It is obvious that the performance of GMMC is highly related to its number of Gaussian components. In the following example, we can plot the relationship between the recognition rate and the number of Gaussian components in a GMMC.</p><pre class="codeinput">[DS, TS]=prData(<span class="string">'wine'</span>);
+count1=dsClassSize(DS); count2=dsClassSize(TS);
+gmmcOpt=gmmcTrain(<span class="string">'defaultOpt'</span>);
+gmmcOpt.config.gaussianNum=1:min([count1, count2]);
+plotOpt=1;
+[gmmData, recogRate1, recogRate2]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+</pre><pre class="codeoutput">DS data count = 89, TS data count = 89
+DS class data count = [29 36 24]
+TS class data count = [30 35 24]
+1/24: No. of Gaussian = [1;1;1] ===&gt; inside RR = 97.7528%, outside RR = 98.8764%
+2/24: No. of Gaussian = [2;2;2] ===&gt; inside RR = 98.8764%, outside RR = 98.8764%
+3/24: No. of Gaussian = [3;3;3] ===&gt; inside RR = 100%, outside RR = 100%
+4/24: No. of Gaussian = [4;4;4] ===&gt; inside RR = 100%, outside RR = 98.8764%
+5/24: No. of Gaussian = [5;5;5] ===&gt; inside RR = 100%, outside RR = 96.6292%
+6/24: No. of Gaussian = [6;6;6] ===&gt; inside RR = 100%, outside RR = 97.7528%
+7/24: No. of Gaussian = [7;7;7] ===&gt; inside RR = 100%, outside RR = 97.7528%
+8/24: No. of Gaussian = [8;8;8] ===&gt; inside RR = 100%, outside RR = 93.2584%
+9/24: No. of Gaussian = [9;9;9] ===&gt; inside RR = 100%, outside RR = 94.382%
+10/24: No. of Gaussian = [10;10;10] ===&gt; inside RR = 100%, outside RR = 94.382%
+11/24: No. of Gaussian = [11;11;11] ===&gt; inside RR = 100%, outside RR = 95.5056%
+12/24: No. of Gaussian = [12;12;12] ===&gt; inside RR = 100%, outside RR = 89.8876%
+13/24: No. of Gaussian = [13;13;13] ===&gt; inside RR = 100%, outside RR = 83.1461%
+14/24: No. of Gaussian = [14;14;14] ===&gt; inside RR = 100%, outside RR = 91.0112%
+15/24: No. of Gaussian = [15;15;15] ===&gt; inside RR = 100%, outside RR = 78.6517%
+16/24: No. of Gaussian = [16;16;16] ===&gt; inside RR = 100%, outside RR = 84.2697%
+17/24: No. of Gaussian = [17;17;17] ===&gt; inside RR = 100%, outside RR = 79.7753%
+18/24: No. of Gaussian = [18;18;18] ===&gt; inside RR = 100%, outside RR = 83.1461%
+19/24: No. of Gaussian = [19;19;19] ===&gt; inside RR = 100%, outside RR = 83.1461%
+20/24: No. of Gaussian = [20;20;20] ===&gt; inside RR = 100%, outside RR = 66.2921%
+21/24: No. of Gaussian = [21;21;21] ===&gt; inside RR = 100%, outside RR = 67.4157%
+22/24: No. of Gaussian = [22;22;22] ===&gt; inside RR = 100%, outside RR = 70.7865%
+23/24: No. of Gaussian = [23;23;23] ===&gt; inside RR = 100%, outside RR = 70.7865%
+24/24: No. of Gaussian = [24;24;24] ===&gt; Error out on errorTrialIndex=24 and errorClassIndex=3
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_05.png" alt=""> <p>The above plot is a bit unusual since the outside-test recognition rate reach its maximum when the number of Gaussians is 1. The first step to debug is to plot the range of all features:</p><pre class="codeinput">[DS, TS]=prData(<span class="string">'wine'</span>);
+dsRangePlot(DS);
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_06.png" alt=""> <p>Obviously the last feature has a much wider range than the others. We can perform input normalization before GMM training, as follows:</p><pre class="codeinput">[DS, TS]=prData(<span class="string">'wine'</span>);
+[DS.input, mu, sigma]=inputNormalize(DS.input);		<span class="comment">% Input normalization for DS</span>
+TS.input=inputNormalize(TS.input, mu, sigma);	<span class="comment">% Input normalization for TS</span>
+count1=dsClassSize(DS); count2=dsClassSize(TS);
+gmmcOpt=gmmcTrain(<span class="string">'defaultOpt'</span>);
+gmmcOpt.config.gaussianNum=1:min([count1, count2]);
+plotOpt=1;
+[gmmData, recogRate1, recogRate2]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+</pre><pre class="codeoutput">DS data count = 89, TS data count = 89
+DS class data count = [29 36 24]
+TS class data count = [30 35 24]
+1/24: No. of Gaussian = [1;1;1] ===&gt; inside RR = 97.7528%, outside RR = 98.8764%
+2/24: No. of Gaussian = [2;2;2] ===&gt; inside RR = 98.8764%, outside RR = 98.8764%
+3/24: No. of Gaussian = [3;3;3] ===&gt; inside RR = 100%, outside RR = 98.8764%
+4/24: No. of Gaussian = [4;4;4] ===&gt; inside RR = 100%, outside RR = 100%
+5/24: No. of Gaussian = [5;5;5] ===&gt; inside RR = 100%, outside RR = 98.8764%
+6/24: No. of Gaussian = [6;6;6] ===&gt; inside RR = 100%, outside RR = 95.5056%
+7/24: No. of Gaussian = [7;7;7] ===&gt; inside RR = 100%, outside RR = 96.6292%
+8/24: No. of Gaussian = [8;8;8] ===&gt; inside RR = 100%, outside RR = 85.3933%
+9/24: No. of Gaussian = [9;9;9] ===&gt; inside RR = 100%, outside RR = 86.5169%
+10/24: No. of Gaussian = [10;10;10] ===&gt; inside RR = 100%, outside RR = 83.1461%
+11/24: No. of Gaussian = [11;11;11] ===&gt; inside RR = 100%, outside RR = 87.6404%
+12/24: No. of Gaussian = [12;12;12] ===&gt; inside RR = 100%, outside RR = 88.764%
+13/24: No. of Gaussian = [13;13;13] ===&gt; inside RR = 100%, outside RR = 88.764%
+14/24: No. of Gaussian = [14;14;14] ===&gt; inside RR = 100%, outside RR = 91.0112%
+15/24: No. of Gaussian = [15;15;15] ===&gt; inside RR = 100%, outside RR = 78.6517%
+16/24: No. of Gaussian = [16;16;16] ===&gt; inside RR = 100%, outside RR = 64.0449%
+17/24: No. of Gaussian = [17;17;17] ===&gt; inside RR = 100%, outside RR = 74.1573%
+18/24: No. of Gaussian = [18;18;18] ===&gt; inside RR = 100%, outside RR = 65.1685%
+19/24: No. of Gaussian = [19;19;19] ===&gt; inside RR = 100%, outside RR = 65.1685%
+20/24: No. of Gaussian = [20;20;20] ===&gt; inside RR = 100%, outside RR = 57.3034%
+21/24: No. of Gaussian = [21;21;21] ===&gt; inside RR = 100%, outside RR = 57.3034%
+22/24: No. of Gaussian = [22;22;22] ===&gt; inside RR = 100%, outside RR = 56.1798%
+23/24: No. of Gaussian = [23;23;23] ===&gt; inside RR = 100%, outside RR = 56.1798%
+24/24: No. of Gaussian = [24;24;24] ===&gt; Error out on errorTrialIndex=24 and errorClassIndex=3
+</pre><img vspace="5" hspace="5" src="userGuide_03Classification_05_07.png" alt=""> <p>The number of Gaussians in GMM represents the flexibility of a GMM. In the above example, we can observe a common characteristics of a classifier:</p><div><ul><li>When the classifier have more and more tunable parameters, the inside-test recognition rate will go up all the way, while the outside-test recognition rate will go up initially and then fall down eventually.</li><li>The optimum configuration of a classifier is usually chosen as the one that can have the maximum outside-test recognition rate.</li></ul></div><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% GMM-based Classifiers (GMMC)
+% We can also use GMM as a classifier for pattern recognition. We shall use GMMC (GMM classifier) to denote such a GMM-based classifiers. The workflow of a GMMC involves the following steps: 
+%
+% * At the training stage, we need to obtain a GMM for each class. In other words, we need to use the data of a class to train a GMM. There is no interactions between GMM of different classes. 
+% * At the application stage, we need to send the unknown-class data to the GMM of each class. The predicted class wlll have a GMM with the maximum probability. 
+%
+% The following example demonstrates the use of GMM for classification of iris dataset: 
+%% A basic example
+% In the following example, we shall use dimensions 3 and 4 of the Iris dataset for the GMMC classifier.
+[DS, TS]=prData('iris');
+DS.input=DS.input(3:4, :);	% Only use the last 2 dim
+TS.input=TS.input(3:4, :);	% Only use the last 2 dim
+gmmcOpt=gmmcTrain('defaultOpt');
+gmmcPrm=gmmcTrain(DS, gmmcOpt);
+cOutputDs=gmmcEval(DS, gmmcPrm);
+rrDs=sum(DS.output==cOutputDs)/length(DS.output);
+fprintf('Inside-test recog. rate = %g%%\n', rrDs*100);
+cOutputTs=gmmcEval(TS, gmmcPrm);
+rrTs=sum(TS.output==cOutputTs)/length(TS.output);
+fprintf('Outside-test recog. rate = %g%%\n', rrTs*100);
+%% 2D PDFs and posterior probabilities
+% Once we have obtained the parameters of GMMC, we can plot the 2D PDF of the GMM of each of the class: 
+gmmcPlot(DS, gmmcPrm, '2dPdf');
+%%
+% The 2D posterior probability function for each class can be display
+% similarly:
+gmmcPlot(DS, gmmcPrm, '2dPosterior');
+%% Decision boundary
+% Based on the computed PDF for each class, we can plot the decision boundaries along with the design set, as follows: 
+DS.hitIndex=find(cOutputDs==DS.output);	% This is used in gmmcPlot.
+gmmcPlot(DS, gmmcPrm, 'decBoundary');
+%%
+% The decision boundaries and the test set can be plotted similarly:
+TS.hitIndex=find(cOutputTs==TS.output);	% This is used in gmmcPlot.
+gmmcPlot(TS, gmmcPrm, 'decBoundary');
+%% The best number of Gaussian components
+% In the above example, we set the number of Gaussians to be 3 by default.
+% It is obvious that the performance of GMMC is highly related to its number of Gaussian components.
+% In the following example, we can plot the relationship between the recognition rate and the number of Gaussian components in a GMMC.
+[DS, TS]=prData('wine');
+count1=dsClassSize(DS); count2=dsClassSize(TS);
+gmmcOpt=gmmcTrain('defaultOpt');
+gmmcOpt.config.gaussianNum=1:min([count1, count2]);
+plotOpt=1;
+[gmmData, recogRate1, recogRate2]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+%%
+% The above plot is a bit unusual since the outside-test recognition rate reach its maximum when the number of Gaussians is 1.
+% The first step to debug is to plot the range of all features: 
+[DS, TS]=prData('wine');
+dsRangePlot(DS);
+%%
+% Obviously the last feature has a much wider range than the others. We can perform input normalization before GMM training, as follows: 
+[DS, TS]=prData('wine');
+[DS.input, mu, sigma]=inputNormalize(DS.input);		% Input normalization for DS
+TS.input=inputNormalize(TS.input, mu, sigma);	% Input normalization for TS
+count1=dsClassSize(DS); count2=dsClassSize(TS);
+gmmcOpt=gmmcTrain('defaultOpt');
+gmmcOpt.config.gaussianNum=1:min([count1, count2]);
+plotOpt=1;
+[gmmData, recogRate1, recogRate2]=gmmcGaussianNumEstimate(DS, TS, gmmcOpt, plotOpt);
+%%
+% The number of Gaussians in GMM represents the flexibility of a GMM. In the above example, we can observe a common characteristics of a classifier: 
+%
+% * When the classifier have more and more tunable parameters, the inside-test recognition rate will go up all the way, while the outside-test recognition rate will go up initially and then fall down eventually. 
+% * The optimum configuration of a classifier is usually chosen as the one that can have the maximum outside-test recognition rate. 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

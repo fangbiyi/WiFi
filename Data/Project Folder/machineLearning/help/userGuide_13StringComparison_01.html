@@ -1,0 +1,127 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>String Comparison</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_13StringComparison_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>String Comparison</h1><!--introduction--><p>MLT provides two basic functions for string comparison: the longest common subsequence and the edit distance.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Longest common subsequence (LCS)</a></li><li><a href="#3">Edit distance</a></li></ul></div><h2>Longest common subsequence (LCS)<a name="1"></a></h2><p>Given a sequence, we can delete any elements to form a subsequence of the original sequence. For instance, given a string <b>s</b> = "uvwxyz", we can delete v and x to get a subsequence "uwyz". For any given two sequences <b>A</b> and <b>B</b>, the similarity between them can be defined as the length of the <b>longest common subsequence</b> ( <b>LCS</b> for short) of these two sequences, which can be computed efficiently by dynamic programming.</p><p>Let us define the optimum-value function LCS( <b>A</b>, <b>B</b> ) as the length of the longest common subsequence between <b>A</b> and <b>B</b> . Then the recursive formula for LCS can be defined as follows:</p><div><ul><li>LCS( <b>A</b> x, <b>B</b> y) = LCS( <b>A</b> , <b>B</b> )+1 if x = y.</li><li>LCS( <b>A</b> x, <b>B</b> y) = max(LCS( <b>A</b> x, <b>B</b> ), LCS( <b>A</b>, <b>B</b> y)) if x &#8800; y.</li></ul></div><p>The boundary conditions are LCS( <b>A</b>, []) = 0, LCS([], <b>B</b> ) = 0. The following example demonstrates a typical result of LCS of strings "prosperity" and "properties":</p><pre class="codeinput">str1 = <span class="string">'prosperity'</span>;
+str2 = <span class="string">'properties'</span>;
+plotOpt = 1;
+[lcscount, lcsPath, lcsStr, lcsTable] = lcs(str1, str2, plotOpt);
+</pre><img vspace="5" hspace="5" src="userGuide_13StringComparison_01_01.png" alt=""> <p>As shown in the plot, the circle positions indicate common characters.</p><h2>Edit distance<a name="3"></a></h2><p>We can use three basic operations of "delete", "insert", and "substitute" to convert a string into another one. The edit distance between two strings is defined as the minimum number of the basic operations that are required to converting a string into another. Similarly, we can also define the costs of these operations and then find the required operations for conversion one string to another with the minimum cost.</p><p>We can also use the concept of dynamic programming to compute the edit distance between two strings. Let the optimum-value function ED( <b>A</b> , <b>B</b> ) defined as the edit distance between strings <b>A</b> and <b>B</b>. Then the recursive formula for ED is shown next, assuming the costs of "delete" and "insert" are 1, while "substitute" is 2.</p><div><ul><li>ED( <b>A</b> x, <b>B</b> y) = ED( <b>A</b> , <b>B</b> ) if x = y.</li><li>ED( <b>A</b> x, <b>B</b> y) = min(ED( <b>A</b> , <b>B</b> )+2, ED( <b>A</b> x, <b>B</b> )+1, ED( <b>A</b> , <b>B</b> y)+1) if x &#8800; y.</li></ul></div><p>The boundary conditions are ED( <b>A</b> , []) = len( <b>A</b> ), ED([], <b>B</b> ) = len( <b>B</b> ).</p><p>The following example demonstrates a typical result of edit distance of strings "prosperity" and "properties":</p><pre class="codeinput">str1 = <span class="string">'prosperity'</span>;
+str2 = <span class="string">'properties'</span>;
+substituteCost=2;
+plotOpt = 1;
+[minDist, edPath, edTable] = editDistance(str1, str2, substituteCost, plotOpt);
+</pre><img vspace="5" hspace="5" src="userGuide_13StringComparison_01_02.png" alt=""> <p>As shown in the plot, the circle positions indicate common characters.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% String Comparison
+% MLT provides two basic functions for string comparison: the longest common subsequence and the edit distance.
+%% Longest common subsequence (LCS)
+% Given a sequence, we can delete any elements to form a subsequence of the original sequence.
+% For instance, given a string *s* = "uvwxyz", we can delete v and x to get a subsequence "uwyz".
+% For any given two sequences *A* and *B*, the similarity between them can be defined as the length of the *longest common subsequence* ( *LCS* for short) of these two sequences, which can be computed efficiently by dynamic programming.
+%
+% Let us define the optimum-value function LCS( *A*, *B* ) as the length of the longest common subsequence between *A* and *B* .
+% Then the recursive formula for LCS can be defined as follows:
+%
+% * LCS( *A* x, *B* y) = LCS( *A* , *B* )+1 if x = y.
+% * LCS( *A* x, *B* y) = max(LCS( *A* x, *B* ), LCS( *A*, *B* y)) if x ≠ y.
+%
+% The boundary conditions are LCS( *A*, []) = 0, LCS([], *B* ) = 0.
+% The following example demonstrates a typical result of LCS of strings "prosperity" and "properties":
+str1 = 'prosperity';
+str2 = 'properties';
+plotOpt = 1;
+[lcscount, lcsPath, lcsStr, lcsTable] = lcs(str1, str2, plotOpt);
+%%
+% As shown in the plot, the circle positions indicate common characters.
+%% Edit distance
+% We can use three basic operations of "delete", "insert", and "substitute" to convert a string into another one.
+% The edit distance between two strings is defined as the minimum number of the basic operations that are required to converting a string into another.
+% Similarly, we can also define the costs of these operations and then find the required operations for conversion one string to another with the minimum cost. 
+%
+% We can also use the concept of dynamic programming to compute the edit distance between two strings.
+% Let the optimum-value function ED( *A* , *B* ) defined as the edit distance between strings *A* and *B*.
+% Then the recursive formula for ED is shown next, assuming the costs of "delete" and "insert" are 1, while "substitute" is 2. 
+%
+% * ED( *A* x, *B* y) = ED( *A* , *B* ) if x = y. 
+% * ED( *A* x, *B* y) = min(ED( *A* , *B* )+2, ED( *A* x, *B* )+1, ED( *A* , *B* y)+1) if x ≠ y. 
+%
+% The boundary conditions are ED( *A* , []) = len( *A* ), ED([], *B* ) = len( *B* ). 
+%
+% The following example demonstrates a typical result of edit distance of strings "prosperity" and "properties": 
+str1 = 'prosperity';
+str2 = 'properties';
+substituteCost=2;
+plotOpt = 1;
+[minDist, edPath, edTable] = editDistance(str1, str2, substituteCost, plotOpt);
+%%
+% As shown in the plot, the circle positions indicate common characters. 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

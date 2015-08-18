@@ -1,0 +1,165 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Visualization of the Iris Dataset</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_01Datasets_02.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Visualization of the Iris Dataset</h1><!--introduction--><p>Iris dataset is by far the earliest and the most commonly used dataset in the literature of pattern recognition. The dataset contains 150 instances of <a href="http://images.google.com.tw/images?hl=zh-TW&amp;rlz=1T4GGIE_enTW295TW308&amp;um=1&amp;sa=3&amp;q=iris+flower&amp;btnG=%E6%90%9C%E5%B0%8B+Google+%E5%9C%96%E7%89%87">iris flowers</a> collected in Hawaii. These instances are divided into 3 classes of Iris Setosa, Iris Versicolour and Iris Virginica, based on 4 measures of sepal's width and length, and petal's width and length. These measures are taken for each iris flower, as shown next:</p><p><img vspace="5" hspace="5" src="iris.gif" alt=""> </p><p>Detailed information of the dataset is listed next:</p><div><ul><li>4 features with numerical values, including sepal length, sepal width, petal length, petal width (all in cm), with no missing data</li><li>3 classes, including Iris Setosa, Iris Versicolour, Iris Virginica</li><li>data size: 150 entries</li><li>data distribution: 50 entries for each class</li></ul></div><p>In the dataset, Iris Setosa is easier to be distinguished from the other two classes, while the other two classes are partially overlapped and harder to be separated.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Class size distribution</a></li><li><a href="#2">Plots of Classes vs. features</a></li><li><a href="#3">2D scatter plot</a></li><li><a href="#4">Projection to 2 of the most separated features</a></li><li><a href="#5">Feature combination</a></li><li><a href="#6">3D scatter plot</a></li></ul></div><h2>Class size distribution<a name="1"></a></h2><p>We can display the data distribution among all classes, as follows:</p><pre class="codeinput">DS=prData(<span class="string">'iris'</span>);
+[classSize, classLabel]=dsClassSize(DS, 1);
+</pre><pre class="codeoutput">4 features
+150 instances
+3 classes
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_01.png" alt=""> <h2>Plots of Classes vs. features<a name="2"></a></h2><p>We can plot the classes w.r.t. each of the features:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>);
+dsProjPlot1(DS);
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_02.png" alt=""> <h2>2D scatter plot<a name="3"></a></h2><p>We can have a scatter plot after projecting the dataset onto a 2D plane:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>);
+dsProjPlot2(DS);
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_03.png" alt=""> <h2>Projection to 2 of the most separated features<a name="4"></a></h2><p>From the above plot, it seems that the projection over features 3 and 4 can separate the classes most appropriately. If we need to identify a point in the scatter plot, we need to put annotation to each data point first. Then when we draw the mouse near a specific data point, the corresponding annotation will appear. The next example demonstrate how to achieve this. Please move the cursor to any point to see the corresponding annotation.</p><pre class="codeinput">clf;
+DS=prData(<span class="string">'iris'</span>);
+DS.input=DS.input(3:4, :);
+<span class="keyword">for</span> i=1:length(DS.output)
+	DS.annotation{i}=sprintf(<span class="string">'Data index=%d, class=%s'</span>, i, DS.outputName{DS.output(i)});
+<span class="keyword">end</span>
+opt.showAnnotation=1;
+opt.showLegend=1;
+dsScatterPlot(DS, opt);
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_04.png" alt=""> <h2>Feature combination<a name="5"></a></h2><p>In fact, the area of sepals and petals is an effective feature for classifying three species of iris. We can use the multiplication of sepal's width and length as the area of the sepal. And similar for petal. We can then use these area-based features to have the scatter plot, as follows:</p><pre class="codeinput">DS=prData(<span class="string">'iris'</span>);
+DS.input=[DS.input(1,:).*DS.input(2,:); DS.input(3,:).*DS.input(4,:)];
+DS.inputName=<span class="string">''</span>;
+DS.inputName{1}=<span class="string">'Area of sepal'</span>;
+DS.inputName{2}=<span class="string">'Area of petal'</span>;
+dsScatterPlot(DS);
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_05.png" alt=""> <h2>3D scatter plot<a name="6"></a></h2><p>From the plot, it is obvious that Setosa is quite separated from the other two classes, while the other two classes have partial overlap at their boundaries.</p><p>We can have another scatter plot after projecting the dataset onto a 3D space:</p><pre class="codeinput">DS = prData(<span class="string">'iris'</span>);
+dsProjPlot3(DS);
+</pre><img vspace="5" hspace="5" src="userGuide_01Datasets_02_06.png" alt=""> <p>Basically, we can only visualize data points scattered in a 2D plane or a 3D space. If we want to visualize data points in a 4D space, then the fourth feature can be viewed as the time and the other three features becomes moving points in a 3D space.</p><p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Visualization of the Iris Dataset
+% Iris dataset is by far the earliest and the most commonly used dataset in the literature of pattern recognition.
+% The dataset contains 150 instances of <http://images.google.com.tw/images?hl=zh-TW&rlz=1T4GGIE_enTW295TW308&um=1&sa=3&q=iris+flower&btnG=%E6%90%9C%E5%B0%8B+Google+%E5%9C%96%E7%89%87 iris flowers> collected in Hawaii.
+% These instances are divided into 3 classes of Iris Setosa, Iris Versicolour and Iris Virginica,
+% based on 4 measures of sepal's width and length, and petal's width and length.
+% These measures are taken for each iris flower, as shown next: 
+%
+% <<iris.gif>>
+%
+% Detailed information of the dataset is listed next: 
+%
+% * 4 features with numerical values, including sepal length, sepal width, petal length, petal width (all in cm), with no missing data
+% * 3 classes, including Iris Setosa, Iris Versicolour, Iris Virginica 
+% * data size: 150 entries 
+% * data distribution: 50 entries for each class 
+%
+% In the dataset, Iris Setosa is easier to be distinguished from the other two classes, 
+% while the other two classes are partially overlapped and harder to be separated.
+%% Class size distribution
+% We can display the data distribution among all classes, as follows: 
+DS=prData('iris');
+[classSize, classLabel]=dsClassSize(DS, 1);
+%% Plots of Classes vs. features
+% We can plot the classes w.r.t. each of the features: 
+DS = prData('iris');
+dsProjPlot1(DS);
+%% 2D scatter plot
+% We can have a scatter plot after projecting the dataset onto a 2D plane: 
+DS = prData('iris');
+dsProjPlot2(DS);
+%% Projection to 2 of the most separated features
+% From the above plot, it seems that the projection over features 3 and 4 can separate the classes most appropriately.
+% If we need to identify a point in the scatter plot, we need to put annotation to each data point first.
+% Then when we draw the mouse near a specific data point, the corresponding annotation will appear.
+% The next example demonstrate how to achieve this. Please move the cursor to any point to see the corresponding annotation.
+clf;
+DS=prData('iris');
+DS.input=DS.input(3:4, :);
+for i=1:length(DS.output)
+	DS.annotation{i}=sprintf('Data index=%d, class=%s', i, DS.outputName{DS.output(i)});
+end
+opt.showAnnotation=1;
+opt.showLegend=1;
+dsScatterPlot(DS, opt);
+%% Feature combination
+% In fact, the area of sepals and petals is an effective feature for classifying three species of iris.
+% We can use the multiplication of sepal's width and length as the area of the sepal.
+% And similar for petal. We can then use these area-based features to have the scatter plot, as follows: 
+DS=prData('iris');
+DS.input=[DS.input(1,:).*DS.input(2,:); DS.input(3,:).*DS.input(4,:)];
+DS.inputName='';
+DS.inputName{1}='Area of sepal';
+DS.inputName{2}='Area of petal';
+dsScatterPlot(DS);
+%% 3D scatter plot
+% From the plot, it is obvious that Setosa is quite separated from the other two classes,
+% while the other two classes have partial overlap at their boundaries. 
+%
+% We can have another scatter plot after projecting the dataset onto a 3D space: 
+DS = prData('iris');
+dsProjPlot3(DS);
+%%
+% Basically, we can only visualize data points scattered in a 2D plane or a 3D space.
+% If we want to visualize data points in a 4D space, then the fourth feature can be viewed as the time and the other three features becomes moving points in a 3D space. 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>

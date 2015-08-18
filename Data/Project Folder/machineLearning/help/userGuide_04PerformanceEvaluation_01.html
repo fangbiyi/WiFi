@@ -1,0 +1,503 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Performance Evaluation for Data Classification</title><meta name="generator" content="MATLAB 8.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-10-02"><meta name="DC.source" content="userGuide_04PerformanceEvaluation_01.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Performance Evaluation for Data Classification</h1><!--introduction--><p>Once we have constructed a classifier using a certain pattern recognition method, we need to objectively evaluate its performance in terms of the recognition rate. In general, there are several ways to do performance evaluation, as described next.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Inside-test recognition rate (resubstitution recognition rate)</a></li><li><a href="#3">Outside-test recognition rate (holdout recognition rate)</a></li><li><a href="#4">M-fold cross validation</a></li><li><a href="#5">Leave-one-out test</a></li></ul></div><h2>Inside-test recognition rate (resubstitution recognition rate)<a name="1"></a></h2><p>If we use the same dataset for both training and test, then the obtained recognition rate is referred to as the inside-test recognition rate or the resubstitution recognition rate. This inside-test result is usually overly optimistical since all data is used for training and the test is also based on the same data. In particular, if we use 1-NNR for our classifier, then the inside-test recognition rate will always be 100%. The following example gives the inside-test recognition rate of the "3classes" dataset using the quadratic classifier:</p><pre class="codeinput">DS=prData(<span class="string">'3classes'</span>);
+[prm, logLike, rr, hitIndex]=qcTrain(DS);
+DS.hitIndex=hitIndex;  <span class="comment">% Attach hitIndex to DS for plotting</span>
+qcPlot(DS, prm, <span class="string">'decBoundary'</span>);
+fprintf(<span class="string">'Inside-test recognition rate = %.2f%%\n'</span>, rr*100);
+</pre><pre class="codeoutput">Inside-test recognition rate = 89.00%
+</pre><img vspace="5" hspace="5" src="userGuide_04PerformanceEvaluation_01_01.png" alt=""> <p>Though the inside-test recognition rate is not objective, it can serve as the upper-bound of the true recognition rate. In general, we use the inside-test recognition rate as a first step for examining our classifier. If the inside-test recognition rate is already low, there are two possible reasons:</p><div><ul><li>The design method for the classifier is not good enough.</li><li>The features of the training set do not have good discrinimative power.</li></ul></div><p>However, if the inside-test recognition rate is high, it does not mean we have reach a reliable classifier. Usually we need to prepare a set of "unseen" data to test the classifier, as explained next.</p><h2>Outside-test recognition rate (holdout recognition rate)<a name="3"></a></h2><p>After a classifier is constructed, usually it will face unseen data for further application. Therefore it is better to prepare a set of "unseen" data for evaluating the recognition rate of the classifier. In practice, we usually divide the available data set into two disjoint part of a training set and a test set. The training set is used for designing the classifier, while the test set is used for evaluating the recognition rate of the classifier. The obtained recognition rate is referred to as the outside-test recognition rate or the holdout recognition rate, with the following characteristics:</p><div><ul><li>Since the test set is not used for designing the classifier, the obtained recognition rate is more objective.</li><li>Since the available data set is of limited size in the real world, the outside-test recognition rate is a little bit lower than the true recognition rate since a part of the data set is set aside for test.</li><li>The complexity of a classifier is defined as the number of free parameters in the classifier. In general, the inside-test recognition goes up with the complexity of the classifier. On the other hand, the outside-test recognition rate goes up with the complexity of the classifier initially, but then goes down afterwords due to over-training. Usually we select the number of free parameters of a classifier which can optimize the outside-test recognition rate.</li><li>After we set up the complexity of the classifier, we can then use the whole dataset for training. We can expect the true recognition rate of the thus-constructed classifier should be a little bit higher than the optimum outside-test recognition rate mentioned earlier.</li></ul></div><p>The following example gives both the inside-test and outside-test recognition rates of the "3classes" dataset using the quadratic classifier:</p><pre class="codeinput">[DS, TS]=prData(<span class="string">'3classes'</span>);
+[qcPrm, logLike, rrDs, hitIndex]=qcTrain(DS);
+fprintf(<span class="string">'Inside-test recog. rate = %g%%\n'</span>, rrDs*100);
+cOutputTs=qcEval(TS, qcPrm);
+rrTs=sum(TS.output==cOutputTs)/length(TS.output);
+fprintf(<span class="string">'Outside-test recog. rate = %g%%\n'</span>, rrTs*100);
+</pre><pre class="codeoutput">Inside-test recog. rate = 96%
+Outside-test recog. rate = 88%
+</pre><h2>M-fold cross validation<a name="4"></a></h2><p>We can extend the concept of outside test to have the so-called two-fold cross validation or two-way outside-test recognition rate. Namely, we can divide the data set into part A and B of equal size. In the first run, we use part A as the training set and part B as the test set. In the second run, we reverse the roles of part A and B. The overall recognition rate will be the average of these two outside-test recognition rates.</p><p>In two-fold cross validation, the dataset is divided into two equal-size parts, which lead to slight lower outside-test recognition rates since each classifier can only use 50% of the dataset. In order to estimate the recognition rate better, we can have m-fold cross validation in which the dataset is divided into m subsets of about equal size. Then we estimate the recognition rate according to the following steps:</p><div><ul><li>Use subset i as the test set, while all the others as the training set to design a classifier. Test the classifier using subset i to obtain the outside-test recognition rate.</li><li>Repeat the above step for each i, i = 1 to m. Compute the overall average outside-test recognition rate.</li></ul></div><p>The following example using the command crossValidate to partition the dataset into 10 folds in order to compute the 10-fold cross validation:</p><pre class="codeinput">DS=prData(<span class="string">'iris'</span>);
+cvPrm.nFolds=10;		<span class="comment">% 10 folds</span>
+cvPrm.classifier=<span class="string">'qc'</span>;	<span class="comment">% Quadratic classifier</span>
+plotOpt=1;
+figure; [tRrMean, vRrMean, tRr, vRr]=crossValidate(DS, cvPrm, plotOpt);
+</pre><pre class="codeoutput">Fold = 1/150
+Fold = 2/150
+Fold = 3/150
+Fold = 4/150
+Fold = 5/150
+Fold = 6/150
+Fold = 7/150
+Fold = 8/150
+Fold = 9/150
+Fold = 10/150
+Fold = 11/150
+Fold = 12/150
+Fold = 13/150
+Fold = 14/150
+Fold = 15/150
+Fold = 16/150
+Fold = 17/150
+Fold = 18/150
+Fold = 19/150
+Fold = 20/150
+Fold = 21/150
+Fold = 22/150
+Fold = 23/150
+Fold = 24/150
+Fold = 25/150
+Fold = 26/150
+Fold = 27/150
+Fold = 28/150
+Fold = 29/150
+Fold = 30/150
+Fold = 31/150
+Fold = 32/150
+Fold = 33/150
+Fold = 34/150
+Fold = 35/150
+Fold = 36/150
+Fold = 37/150
+Fold = 38/150
+Fold = 39/150
+Fold = 40/150
+Fold = 41/150
+Fold = 42/150
+Fold = 43/150
+Fold = 44/150
+Fold = 45/150
+Fold = 46/150
+Fold = 47/150
+Fold = 48/150
+Fold = 49/150
+Fold = 50/150
+Fold = 51/150
+Fold = 52/150
+Fold = 53/150
+Fold = 54/150
+Fold = 55/150
+Fold = 56/150
+Fold = 57/150
+Fold = 58/150
+Fold = 59/150
+Fold = 60/150
+Fold = 61/150
+Fold = 62/150
+Fold = 63/150
+Fold = 64/150
+Fold = 65/150
+Fold = 66/150
+Fold = 67/150
+Fold = 68/150
+Fold = 69/150
+Fold = 70/150
+Fold = 71/150
+Fold = 72/150
+Fold = 73/150
+Fold = 74/150
+Fold = 75/150
+Fold = 76/150
+Fold = 77/150
+Fold = 78/150
+Fold = 79/150
+Fold = 80/150
+Fold = 81/150
+Fold = 82/150
+Fold = 83/150
+Fold = 84/150
+Fold = 85/150
+Fold = 86/150
+Fold = 87/150
+Fold = 88/150
+Fold = 89/150
+Fold = 90/150
+Fold = 91/150
+Fold = 92/150
+Fold = 93/150
+Fold = 94/150
+Fold = 95/150
+Fold = 96/150
+Fold = 97/150
+Fold = 98/150
+Fold = 99/150
+Fold = 100/150
+Fold = 101/150
+Fold = 102/150
+Fold = 103/150
+Fold = 104/150
+Fold = 105/150
+Fold = 106/150
+Fold = 107/150
+Fold = 108/150
+Fold = 109/150
+Fold = 110/150
+Fold = 111/150
+Fold = 112/150
+Fold = 113/150
+Fold = 114/150
+Fold = 115/150
+Fold = 116/150
+Fold = 117/150
+Fold = 118/150
+Fold = 119/150
+Fold = 120/150
+Fold = 121/150
+Fold = 122/150
+Fold = 123/150
+Fold = 124/150
+Fold = 125/150
+Fold = 126/150
+Fold = 127/150
+Fold = 128/150
+Fold = 129/150
+Fold = 130/150
+Fold = 131/150
+Fold = 132/150
+Fold = 133/150
+Fold = 134/150
+Fold = 135/150
+Fold = 136/150
+Fold = 137/150
+Fold = 138/150
+Fold = 139/150
+Fold = 140/150
+Fold = 141/150
+Fold = 142/150
+Fold = 143/150
+Fold = 144/150
+Fold = 145/150
+Fold = 146/150
+Fold = 147/150
+Fold = 148/150
+Fold = 149/150
+Fold = 150/150
+Training RR=98.00%, Validating RR=97.33%, classifier=qc, no. of folds=150
+</pre><img vspace="5" hspace="5" src="userGuide_04PerformanceEvaluation_01_02.png" alt=""> <h2>Leave-one-out test<a name="5"></a></h2><p>When m is equal to the size of the dataset, we have the so-called leave-one-out method (also known as the jackknife procedure) which is the most objective method for recognition rate estimate since almost all the data (except one entry) is used for constructing the classifier. The obtained recognition rate is known as the leave-one-out (LOO for short) recognition rate. The leave-one-out method has the following characteristics:</p><p>Each classifier uses almost all the dataset (except one entry), therefore the outside-test recognition rate should be able to approach the true recognition rate closely. For classifiers that require massive computation in the design stage (such as artificial neural networks, Gaussian mixture models), the leave-one-out method is impractical for a moderate dataset. Since the leave-one-out method require a lot more computation, usually we only choose a simple classifier such as KNNC for estimating the LOO recognition rate. The obtained LOO recognition rate can help us have a rough idea of the discriminating power of the features in the dataset.</p><p>In the following example, we use the function knncLoo.m to find the LOO recognition rates of "random2" dataset using 1-NNR. Each misclassified data point is labeled with a cross for easy visual inspection, as follows:</p><pre class="codeinput">DS=prData(<span class="string">'random2'</span>);
+dsScatterPlot(DS);
+knncPrm.k=1;
+plotOpt=1;
+clf; [recogRate, computed, nearestIndex]=knncLoo(DS, knncPrm, plotOpt);
+</pre><img vspace="5" hspace="5" src="userGuide_04PerformanceEvaluation_01_03.png" alt=""> <p>The function knncLoo.m is efficient in computing the LOO recognition rate of 1-NNC. For a more sophisticated classifier, the LOO test is usually time consuming. By setting the no. of folds to be inf, the following example employs the command crossValidate to compute the LOO recognition rate of the Iris dataset using the quadratic classifier:</p><pre class="codeinput">DS=prData(<span class="string">'iris'</span>);
+cvPrm.nFolds=inf;		<span class="comment">% for leave-one-out</span>
+cvPrm.classifier=<span class="string">'qc'</span>;	<span class="comment">% Quadratic classifier</span>
+plotOpt=1;
+figure; [tRrMean, vRrMean, tRr, vRr]=crossValidate(DS, cvPrm, plotOpt);
+</pre><pre class="codeoutput">Fold = 1/150
+Fold = 2/150
+Fold = 3/150
+Fold = 4/150
+Fold = 5/150
+Fold = 6/150
+Fold = 7/150
+Fold = 8/150
+Fold = 9/150
+Fold = 10/150
+Fold = 11/150
+Fold = 12/150
+Fold = 13/150
+Fold = 14/150
+Fold = 15/150
+Fold = 16/150
+Fold = 17/150
+Fold = 18/150
+Fold = 19/150
+Fold = 20/150
+Fold = 21/150
+Fold = 22/150
+Fold = 23/150
+Fold = 24/150
+Fold = 25/150
+Fold = 26/150
+Fold = 27/150
+Fold = 28/150
+Fold = 29/150
+Fold = 30/150
+Fold = 31/150
+Fold = 32/150
+Fold = 33/150
+Fold = 34/150
+Fold = 35/150
+Fold = 36/150
+Fold = 37/150
+Fold = 38/150
+Fold = 39/150
+Fold = 40/150
+Fold = 41/150
+Fold = 42/150
+Fold = 43/150
+Fold = 44/150
+Fold = 45/150
+Fold = 46/150
+Fold = 47/150
+Fold = 48/150
+Fold = 49/150
+Fold = 50/150
+Fold = 51/150
+Fold = 52/150
+Fold = 53/150
+Fold = 54/150
+Fold = 55/150
+Fold = 56/150
+Fold = 57/150
+Fold = 58/150
+Fold = 59/150
+Fold = 60/150
+Fold = 61/150
+Fold = 62/150
+Fold = 63/150
+Fold = 64/150
+Fold = 65/150
+Fold = 66/150
+Fold = 67/150
+Fold = 68/150
+Fold = 69/150
+Fold = 70/150
+Fold = 71/150
+Fold = 72/150
+Fold = 73/150
+Fold = 74/150
+Fold = 75/150
+Fold = 76/150
+Fold = 77/150
+Fold = 78/150
+Fold = 79/150
+Fold = 80/150
+Fold = 81/150
+Fold = 82/150
+Fold = 83/150
+Fold = 84/150
+Fold = 85/150
+Fold = 86/150
+Fold = 87/150
+Fold = 88/150
+Fold = 89/150
+Fold = 90/150
+Fold = 91/150
+Fold = 92/150
+Fold = 93/150
+Fold = 94/150
+Fold = 95/150
+Fold = 96/150
+Fold = 97/150
+Fold = 98/150
+Fold = 99/150
+Fold = 100/150
+Fold = 101/150
+Fold = 102/150
+Fold = 103/150
+Fold = 104/150
+Fold = 105/150
+Fold = 106/150
+Fold = 107/150
+Fold = 108/150
+Fold = 109/150
+Fold = 110/150
+Fold = 111/150
+Fold = 112/150
+Fold = 113/150
+Fold = 114/150
+Fold = 115/150
+Fold = 116/150
+Fold = 117/150
+Fold = 118/150
+Fold = 119/150
+Fold = 120/150
+Fold = 121/150
+Fold = 122/150
+Fold = 123/150
+Fold = 124/150
+Fold = 125/150
+Fold = 126/150
+Fold = 127/150
+Fold = 128/150
+Fold = 129/150
+Fold = 130/150
+Fold = 131/150
+Fold = 132/150
+Fold = 133/150
+Fold = 134/150
+Fold = 135/150
+Fold = 136/150
+Fold = 137/150
+Fold = 138/150
+Fold = 139/150
+Fold = 140/150
+Fold = 141/150
+Fold = 142/150
+Fold = 143/150
+Fold = 144/150
+Fold = 145/150
+Fold = 146/150
+Fold = 147/150
+Fold = 148/150
+Fold = 149/150
+Fold = 150/150
+Training RR=98.00%, Validating RR=97.33%, classifier=qc, no. of folds=150
+</pre><img vspace="5" hspace="5" src="userGuide_04PerformanceEvaluation_01_04.png" alt=""> <p>Copyright 2011-2012 <a href="http://mirlab.org/jang">Jyh-Shing Roger Jang</a>.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Performance Evaluation for Data Classification
+% Once we have constructed a classifier using a certain pattern recognition
+% method, we need to objectively evaluate its performance in terms of the recognition rate. In general,
+% there are several ways to do performance evaluation, as described next.
+%
+%% Inside-test recognition rate (resubstitution recognition rate)
+% If we use the same dataset for both training and test, then the obtained recognition rate is referred to as the inside-test recognition rate or the resubstitution recognition rate.
+% This inside-test result is usually overly optimistical since all data is used for training and the test is also based on the same data.
+% In particular, if we use 1-NNR for our classifier, then the inside-test
+% recognition rate will always be 100%.
+% The following example gives the inside-test recognition rate of the "3classes" dataset using the quadratic classifier: 
+DS=prData('3classes');
+[prm, logLike, rr, hitIndex]=qcTrain(DS);
+DS.hitIndex=hitIndex;  % Attach hitIndex to DS for plotting
+qcPlot(DS, prm, 'decBoundary');
+fprintf('Inside-test recognition rate = %.2f%%\n', rr*100);
+%%
+% Though the inside-test recognition rate is not objective, it can serve as the upper-bound of the true recognition rate.
+% In general, we use the inside-test recognition rate as a first step for examining our classifier.
+% If the inside-test recognition rate is already low, there are two possible reasons: 
+%
+% * The design method for the classifier is not good enough. 
+% * The features of the training set do not have good discrinimative power. 
+%
+% However, if the inside-test recognition rate is high, it does not mean we have reach a reliable classifier.
+% Usually we need to prepare a set of "unseen" data to test the classifier, as explained next. 
+%% Outside-test recognition rate (holdout recognition rate)
+% After a classifier is constructed, usually it will face unseen data for further application.
+% Therefore it is better to prepare a set of "unseen" data for evaluating the recognition rate of the classifier.
+% In practice, we usually divide the available data set into two disjoint part of a training set and a test set.
+% The training set is used for designing the classifier, while the test set is used for evaluating the recognition rate of the classifier.
+% The obtained recognition rate is referred to as the outside-test recognition rate or the holdout recognition rate, with the following characteristics: 
+%
+% * Since the test set is not used for designing the classifier, the obtained recognition rate is more objective. 
+% * Since the available data set is of limited size in the real world, the outside-test recognition rate is a little bit lower than the true recognition rate since a part of the data set is set aside for test. 
+% * The complexity of a classifier is defined as the number of free parameters in the classifier. In general, the inside-test recognition goes up with the complexity of the classifier. On the other hand, the outside-test recognition rate goes up with the complexity of the classifier initially, but then goes down afterwords due to over-training. Usually we select the number of free parameters of a classifier which can optimize the outside-test recognition rate. 
+% * After we set up the complexity of the classifier, we can then use the whole dataset for training. We can expect the true recognition rate of the thus-constructed classifier should be a little bit higher than the optimum outside-test recognition rate mentioned earlier. 
+%
+% The following example gives both the inside-test and outside-test
+% recognition rates of the "3classes" dataset using the quadratic
+% classifier:
+[DS, TS]=prData('3classes');
+[qcPrm, logLike, rrDs, hitIndex]=qcTrain(DS);
+fprintf('Inside-test recog. rate = %g%%\n', rrDs*100);
+cOutputTs=qcEval(TS, qcPrm);
+rrTs=sum(TS.output==cOutputTs)/length(TS.output);
+fprintf('Outside-test recog. rate = %g%%\n', rrTs*100);
+%% M-fold cross validation
+% We can extend the concept of outside test to have the so-called two-fold cross validation or two-way outside-test recognition rate.
+% Namely, we can divide the data set into part A and B of equal size.
+% In the first run, we use part A as the training set and part B as the test set.
+% In the second run, we reverse the roles of part A and B.
+% The overall recognition rate will be the average of these two outside-test recognition rates. 
+%
+% In two-fold cross validation, the dataset is divided into two equal-size parts, which lead to slight lower outside-test recognition rates since each classifier can only use 50% of the dataset.
+% In order to estimate the recognition rate better, we can have m-fold
+% cross validation in which the dataset is divided into m subsets of about
+% equal size. Then we estimate the recognition rate according to the following steps: 
+%
+% * Use subset i as the test set, while all the others as the training set to design a classifier. Test the classifier using subset i to obtain the outside-test recognition rate.
+% * Repeat the above step for each i, i = 1 to m. Compute the overall average outside-test recognition rate. 
+%
+% The following example using the command crossValidate to partition the
+% dataset into 10 folds in order to compute the 10-fold cross validation:
+DS=prData('iris');
+cvPrm.nFolds=10;		% 10 folds
+cvPrm.classifier='qc';	% Quadratic classifier
+plotOpt=1;
+figure; [tRrMean, vRrMean, tRr, vRr]=crossValidate(DS, cvPrm, plotOpt);
+%% Leave-one-out test
+% When m is equal to the size of the dataset, we have the so-called leave-one-out method (also known as the jackknife procedure)
+% which is the most objective method for recognition rate estimate since almost all the data (except one entry) is used for constructing the classifier.
+% The obtained recognition rate is known as the leave-one-out (LOO for short) recognition rate.
+% The leave-one-out method has the following characteristics: 
+%
+% Each classifier uses almost all the dataset (except one entry), therefore the outside-test recognition rate should be able to approach the true recognition rate closely. 
+% For classifiers that require massive computation in the design stage (such as artificial neural networks, Gaussian mixture models), the leave-one-out method is impractical for a moderate dataset. 
+% Since the leave-one-out method require a lot more computation, usually we only choose a simple classifier such as KNNC for estimating the LOO recognition rate. The obtained LOO recognition rate can help us have a rough idea of the discriminating power of the features in the dataset. 
+%
+% In the following example, we use the function knncLoo.m to find the LOO recognition rates of "random2" dataset using 1-NNR.
+% Each misclassified data point is labeled with a cross for easy visual inspection, as follows:
+DS=prData('random2');
+dsScatterPlot(DS);
+knncPrm.k=1;
+plotOpt=1;
+clf; [recogRate, computed, nearestIndex]=knncLoo(DS, knncPrm, plotOpt);
+%%
+% The function knncLoo.m is efficient in computing the LOO recognition rate
+% of 1-NNC. For a more sophisticated classifier, the LOO test is usually
+% time consuming.
+% By setting the no. of folds to be inf, the following example employs the command crossValidate to compute the LOO
+% recognition rate of the Iris dataset using the quadratic classifier:
+DS=prData('iris');
+cvPrm.nFolds=inf;		% for leave-one-out
+cvPrm.classifier='qc';	% Quadratic classifier
+plotOpt=1;
+figure; [tRrMean, vRrMean, tRr, vRr]=crossValidate(DS, cvPrm, plotOpt); 
+%%
+% Copyright 2011-2012 <http://mirlab.org/jang Jyh-Shing Roger Jang>.
+
+##### SOURCE END #####
+--></body></html>
