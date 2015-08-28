@@ -2,7 +2,7 @@
 % 2015.8.15
 % Test Visualize the first batch of data
 
-csi_trace = read_bf_file('sample_data/test.dat');
+csi_trace = read_bf_file('sample_data/shield.dat');
 NUM_Tx = 1;
 NUM_Rx = 1;
 NUM_Subcarrier = 1;
