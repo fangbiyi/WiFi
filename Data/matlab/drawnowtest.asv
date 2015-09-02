@@ -1,0 +1,11 @@
+for i = 1:10000
+    if i == 10000
+        disp(i);
+    end
+end
+
+parfor j = 1:100
+    if j == 100
+        disp(j);
+    end
+end
